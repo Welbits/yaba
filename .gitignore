@@ -18,3 +18,14 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+
+*~
+*.swp
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
