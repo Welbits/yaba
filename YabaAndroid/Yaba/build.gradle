@@ -23,5 +23,11 @@ android {
 }
 
 dependencies {
-	compile 'com.android.support:appcompat-v7:18.0.0'
+    compile project(':Volley')
+    compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.jakewharton:butterknife:3.0.0'
+    compile 'com.squareup.dagger:dagger:1.1.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.jakewharton.timber:timber:1.1.0'
+    compile files('libs/simple-xml-2.7.1.jar')
 }
