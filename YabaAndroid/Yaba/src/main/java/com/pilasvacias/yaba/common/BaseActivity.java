@@ -4,16 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.pilasvacias.yaba.application.YabaApplication;
-import com.pilasvacias.yaba.modules.LogModule;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import dagger.Lazy;
 import dagger.ObjectGraph;
-import timber.log.Timber;
 
 /**
  * Created by pablo on 10/9/13.
@@ -21,10 +16,7 @@ import timber.log.Timber;
  */
 public class BaseActivity extends FragmentActivity {
 
-    @Inject Lazy<Timber> timberLazy;
-
     //@Inject LocationManager locationManager;
-
     private ObjectGraph activityGraph;
 
     YabaApplication getYabaApplication() {
@@ -33,11 +25,7 @@ public class BaseActivity extends FragmentActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //activityGraph = getYabaApplication().getApplicationGraph().plus(getModules().toArray());
-        activityGraph = ObjectGraph.create(new LogModule());
-        activityGraph.inject(this);
-        //locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
+        activityGraph = getYabaApplication().getApplicationGraph().plus(getModules().toArray());
     }
 
     @Override protected void onDestroy() {
@@ -46,11 +34,7 @@ public class BaseActivity extends FragmentActivity {
     }
 
     protected List<Object> getModules() {
-        return Arrays.<Object>asList(new LogModule());
-    }
-
-    protected Timber getTimber() {
-        return timberLazy.get();
+        return new ArrayList<Object>();
     }
 
     public ObjectGraph getActivityGraph() {

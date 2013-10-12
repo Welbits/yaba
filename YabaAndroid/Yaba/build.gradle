@@ -44,10 +44,11 @@ android {
 android.applicationVariants.all { variant ->
     //Where to place the generated code
     variant.ext.set("dagger_gen_${variant.dirName}", file("${project.buildDir}/source/dagger_gen/${variant.dirName}"))
+    File out = variant.ext.get("dagger_gen_${variant.dirName}")
+    delete(out.getPath())
 
     //Do the actual preprocessor things
     variant.javaCompile.doFirst {
-        File out = variant.ext.get("dagger_gen_${variant.dirName}")
         out.mkdirs()
         variant.javaCompile.options.compilerArgs += [
                 '-processorpath', configurations.preprocess.getAsPath(),

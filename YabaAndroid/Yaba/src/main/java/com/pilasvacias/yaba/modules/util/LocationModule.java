@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules;
+package com.pilasvacias.yaba.modules.util;
 
 import android.content.Context;
 import android.location.LocationManager;
@@ -14,7 +14,8 @@ import dagger.Provides;
  * Created by pablo on 10/9/13.
  * welvi-android
  */
-@Module(library = true)
+@Module(injects = {},
+        library = true)
 public class LocationModule {
 
     private YabaApplication app;

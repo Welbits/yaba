@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.application;
 
 import android.app.Application;
 
-import com.pilasvacias.yaba.modules.LocationModule;
+import com.pilasvacias.yaba.modules.util.LocationModule;
 
 import java.util.Arrays;
 import java.util.List;
