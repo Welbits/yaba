@@ -13,7 +13,7 @@ repositories {
 }
 
 configurations {
-    preprocess
+    apt
 }
 
 dependencies {
@@ -21,10 +21,12 @@ dependencies {
     compile project(':Volley')
     compile 'com.android.support:appcompat-v7:18.0.0'
 
+    apt 'com.jakewharton:butterknife:3.0.0'
     compile 'com.jakewharton:butterknife:3.0.0'
+
     compile 'com.jakewharton.timber:timber:1.1.0'
 
-    preprocess 'com.squareup.dagger:dagger-compiler:1.1.0'
+    apt 'com.squareup.dagger:dagger-compiler:1.1.0'
     compile 'com.squareup.dagger:dagger:1.1.0'
 
     compile 'com.google.code.gson:gson:2.2.4'
@@ -42,18 +44,13 @@ android {
 }
 
 android.applicationVariants.all { variant ->
-    //Where to place the generated code
-    variant.ext.set("dagger_gen_${variant.dirName}", file("${project.buildDir}/source/dagger_gen/${variant.dirName}"))
-    File out = variant.ext.get("dagger_gen_${variant.dirName}")
-    delete(out.getPath())
+    aptOutput = file("${project.buildDir}/source/apt/${variant.dirName}")
 
-    //Do the actual preprocessor things
     variant.javaCompile.doFirst {
-        out.mkdirs()
+        aptOutput.mkdirs()
         variant.javaCompile.options.compilerArgs += [
-                '-processorpath', configurations.preprocess.getAsPath(),
-                '-s', out
+                '-processorpath', configurations.apt.getAsPath(),
+                '-s', aptOutput
         ]
     }
-
 }

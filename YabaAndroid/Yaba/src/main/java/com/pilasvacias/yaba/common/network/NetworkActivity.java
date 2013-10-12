@@ -1,9 +1,10 @@
 package com.pilasvacias.yaba.common.network;
 
+import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.common.BaseActivity;
-import com.pilasvacias.yaba.modules.soap.SoapModule;
+import com.pilasvacias.yaba.modules.soap.EnvelopeSerializer;
 
-import java.util.List;
+import javax.inject.Inject;
 
 /**
  * Created by pablo on 10/9/13.
@@ -11,9 +12,8 @@ import java.util.List;
  */
 public class NetworkActivity extends BaseActivity {
 
-    @Override protected List<Object> getModules() {
-        List<Object> modules = super.getModules();
-        modules.add(new SoapModule());
-        return modules;
-    }
+    //Also don't use getters because they are 7x times slower than direct access.
+    @Inject protected EnvelopeSerializer envelopeSerializer;
+    @Inject protected RequestQueue requestQueue;
+
 }

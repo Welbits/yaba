@@ -18,6 +18,7 @@ public class BaseActivity extends FragmentActivity {
 
     //@Inject LocationManager locationManager;
     private ObjectGraph activityGraph;
+    private List<Object> modules = new ArrayList<Object>();
 
     YabaApplication getYabaApplication() {
         return (YabaApplication) getApplication();
@@ -25,7 +26,9 @@ public class BaseActivity extends FragmentActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityGraph = getYabaApplication().getApplicationGraph().plus(getModules().toArray());
+        onCreateExtraModules(modules);
+        activityGraph = getYabaApplication().getApplicationGraph().plus(modules.toArray());
+        activityGraph.inject(this);
     }
 
     @Override protected void onDestroy() {
@@ -34,10 +37,20 @@ public class BaseActivity extends FragmentActivity {
     }
 
     protected List<Object> getModules() {
-        return new ArrayList<Object>();
+        return modules;
     }
 
     public ObjectGraph getActivityGraph() {
         return activityGraph;
+    }
+
+    /**
+     * Add the extra modules you may need. The application modules
+     * are injected by default in all activities
+     *
+     * @param modules
+     */
+    protected void onCreateExtraModules(List<Object> modules) {
+
     }
 }

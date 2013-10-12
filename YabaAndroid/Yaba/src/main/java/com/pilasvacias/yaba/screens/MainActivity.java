@@ -1,11 +1,14 @@
 package com.pilasvacias.yaba.screens;
 
 import android.os.Bundle;
+import android.webkit.WebView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.common.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.soap.EnvelopeSerializer;
-import com.pilasvacias.yaba.modules.util.L;
 
 import org.simpleframework.xml.Default;
 import org.simpleframework.xml.Root;
@@ -13,18 +16,21 @@ import org.simpleframework.xml.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import butterknife.InjectView;
+import butterknife.Views;
 
 public class MainActivity extends NetworkActivity {
 
-    @Inject EnvelopeSerializer envelopeSerializer;
+    @InjectView(R.id.text)
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getActivityGraph().inject(this);
+        Views.setDebug(true);
+        Views.inject(this);
 
         Test in = new Test();
         in.lista.add(new Otro());
@@ -33,9 +39,22 @@ public class MainActivity extends NetworkActivity {
         Test rec = envelopeSerializer.fromXML(xml1, Test.class);
         String xml2 = envelopeSerializer.toXML(rec);
 
-        L.og.w("-\n%s", xml1);
-        L.og.w("-\n%s", xml2);
-        L.og.e("ok -> %b", xml1.equalsIgnoreCase(xml2));
+        requestQueue.add(new StringRequest(Request.Method.GET, "http://www.google.com/mobile/", new Response.Listener<String>() {
+            @Override public void onResponse(String response) {
+                final String mimeType = "text/html; charset=utf-8";
+                final String encoding = "utf-8";
+                webView.loadData(response, mimeType, encoding);
+            }
+        }, new Response.ErrorListener() {
+            @Override public void onErrorResponse(VolleyError error) {
+
+            }
+        }
+        ));
+
+        //L.og.w("-\n%s", xml1);
+        //L.og.w("-\n%s", xml2);
+        //L.og.e("ok -> %b", xml1.equalsIgnoreCase(xml2));
 
 
     }
