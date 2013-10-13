@@ -3,18 +3,16 @@ package com.pilasvacias.yaba.screens;
 import android.os.Bundle;
 import android.webkit.WebView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.common.network.NetworkActivity;
+import com.pilasvacias.yaba.modules.soap.emt.EmtBody;
+import com.pilasvacias.yaba.modules.soap.emt.EmtRequest;
+import com.pilasvacias.yaba.modules.soap.emt.EmtResult;
+import com.pilasvacias.yaba.modules.util.L;
 
 import org.simpleframework.xml.Default;
-import org.simpleframework.xml.Root;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -29,24 +27,17 @@ public class MainActivity extends NetworkActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Views.setDebug(true);
         Views.inject(this);
 
-        Test in = new Test();
-        in.lista.add(new Otro());
-        in.lista.add(new Otro());
-        String xml1 = envelopeSerializer.toXML(in);
-        Test rec = envelopeSerializer.fromXML(xml1, Test.class);
-        String xml2 = envelopeSerializer.toXML(rec);
+        requestQueue.add(new EmtRequest<GetGroupsResult>(new GetGroups(), GetGroupsResult.class, new Response.Listener<GetGroupsResult>() {
+            @Override public void onResponse(GetGroupsResult response) {
 
-        requestQueue.add(new StringRequest(Request.Method.GET, "http://www.google.com/mobile/", new Response.Listener<String>() {
-            @Override public void onResponse(String response) {
-                final String mimeType = "text/html; charset=utf-8";
-                final String encoding = "utf-8";
-                webView.loadData(response, mimeType, encoding);
             }
         }, new Response.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
+
+                String res = new String(error.networkResponse.data);
+                L.og.e("error => %s", res.isEmpty() ? "No response" : res);
 
             }
         }
@@ -59,27 +50,15 @@ public class MainActivity extends NetworkActivity {
 
     }
 
-    @Default
-    @Root
-    private static class Test extends Base {
-        int x = 3;
-        int y = 9;
-        List<Otro> lista = new ArrayList<Otro>();
+    @Default(required = false)
+    private static class GetGroups extends EmtBody {
+
     }
 
-    @Default
-    @Root
-    private static class Otro {
-        static int x = 0;
-        String elem_t = "===============";
+    private static class GetGroupsResult extends EmtResult {
+        String ReturnCode;
+        String Description;
+        String Expiration;
     }
-
-    @Default
-    @Root
-    private static class Base {
-        int auth = 335;
-        String key = "key";
-    }
-
 
 }

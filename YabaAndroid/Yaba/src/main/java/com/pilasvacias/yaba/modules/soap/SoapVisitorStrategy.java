@@ -103,11 +103,18 @@ class SoapVisitorStrategy implements Strategy {
         }
 
         @Override public void read(Type type, NodeMap<InputNode> node) throws Exception {
-            if (node.getName().equals("Body"))
-                node.getNode().getAttributes().put("class", outClass.getName());
+            if (node.getNode().isRoot()) {
+                node.getNode().skip();//Skip the Envelop
+                node.getNode().getNext().skip();//Skip the Body
+                node.getNode().getNext().getNext().skip();//Skip the Response
+                //Only the result left.
+            }
         }
 
         @Override public void write(Type type, NodeMap<OutputNode> node) throws Exception {
+            if (node.getNode().isRoot()) {
+                node.getNode().setName(type.getType().getSimpleName());
+            }
             node.getNode().getAttributes().remove("class");
         }
     }

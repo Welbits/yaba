@@ -22,8 +22,8 @@ import dagger.Provides;
         library = true)
 public class SoapModule {
 
-    @Provides @Singleton EnvelopeSerializer provideEnvelopeSerializer() {
-        return new EnvelopeSerializer();
+    @Provides @Singleton EmtEnvelopeSerializer provideEnvelopeSerializer() {
+        return new EmtEnvelopeSerializer();
     }
 
 }
