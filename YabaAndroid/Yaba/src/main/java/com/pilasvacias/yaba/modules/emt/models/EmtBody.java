@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.soap.emt;
+package com.pilasvacias.yaba.modules.emt.models;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;

@@ -1,4 +1,6 @@
-package com.pilasvacias.yaba.modules.soap;
+package com.pilasvacias.yaba.modules.emt;
+
+import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.strategy.Strategy;
@@ -34,7 +36,7 @@ public class EmtEnvelopeSerializer {
         return instance;
     }
 
-    public String toXML(Object body) {
+    public String toXML(EmtBody body) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             SERIALIZER.write(body, out);
@@ -45,6 +47,8 @@ public class EmtEnvelopeSerializer {
             // PARSER QUE LLEVA AÑOS EN DESARROLLO Y TIENE TODAS LAS
             // FUNCIONALIDADES INIMAGINABLES MENOS ESA PORQUE NO ES FUNCIONALIDAD, ES
             // PURO RETRASO MENTAL.
+            String action = body.getSoapAction();
+            xml = String.format(xml, action, action);
             return String.format(ENVELOPE_TEMPLATE, xml);
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,7 +56,6 @@ public class EmtEnvelopeSerializer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T fromXML(String xml, Class<T> bodyClass) {
 
         // Nazismo time 2x, se quitan las 2 capas inútiles
@@ -68,7 +71,7 @@ public class EmtEnvelopeSerializer {
             if (first == -1 || end == -1)
                 throw new ClassNotFoundException("body class is not in the EMT response, " +
                         "make sure the name of the class" +
-                        "and the name of the response are exactly the same (eg: GetGroups)");
+                        "and the name of the response are exactly the same (eg: GetGroupsResult)");
             return SERIALIZER.read(bodyClass, xml, false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,8 +87,9 @@ public class EmtEnvelopeSerializer {
 
         @Override public void write(Type type, NodeMap<OutputNode> node) throws Exception {
             //The SOAPAction and the class name must Match, so force it in the root element.
+            //Introduce two format strings that latter will be replaced
             if (node.getNode().isRoot()) {
-                node.getNode().setName(type.getType().getSimpleName());
+                node.getNode().setName("%s");
             }
             //To avoid com.pack.Something attributes for List<Something>
             node.getNode().getAttributes().remove("class");

@@ -57,7 +57,7 @@ public class MainActivity extends NetworkActivity {
         // Configure action bar
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle(R.string.app_name);
+        actionBar.setTitle("Tab 1");
 
         // Add tabs to action bar
         ActionBar.TabListener tabListener = ViewPagerAdapter.getTabListener(viewPager);
@@ -90,6 +90,14 @@ public class MainActivity extends NetworkActivity {
             return fragment;
         }
 
+        private static int randomColor() {
+            Random random = new Random();
+            int r = random.nextInt(256);
+            int g = random.nextInt(256);
+            int b = random.nextInt(256);
+            return Color.argb(255, r, g, b);
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
@@ -105,19 +113,10 @@ public class MainActivity extends NetworkActivity {
             return rootView;
         }
 
-        private static int randomColor() {
-            Random random = new Random();
-            int r = random.nextInt(256);
-            int g = random.nextInt(256);
-            int b = random.nextInt(256);
-            return Color.argb(255, r, g, b);
-        }
-
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putString(TITLE_KEY, title);
         }
     }
-
 }
