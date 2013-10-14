@@ -2,6 +2,7 @@ package com.pilasvacias.yaba.modules.soap;
 
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
+import com.pilasvacias.yaba.screens.ProbaActivity;
 
 import javax.inject.Singleton;
 
@@ -15,7 +16,9 @@ import dagger.Provides;
  */
 @Module(injects =
         {
-                MainActivity.class
+                MainActivity.class,
+                MainActivity.DummyFragment.class,
+                ProbaActivity.class
         },
         includes = VolleyModule.class,
         complete = false,
