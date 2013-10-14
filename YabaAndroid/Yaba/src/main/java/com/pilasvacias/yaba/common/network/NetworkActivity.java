@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.common.network;
 
 import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.common.BaseActivity;
-import com.pilasvacias.yaba.modules.soap.EmtEnvelopeSerializer;
+import com.pilasvacias.yaba.modules.emt.EmtRequestManager;
 
 import javax.inject.Inject;
 
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public class NetworkActivity extends BaseActivity {
 
     //Also don't use getters because they are 7x times slower than direct access.
-    @Inject protected EmtEnvelopeSerializer envelopeSerializer;
     @Inject protected RequestQueue requestQueue;
+    @Inject protected EmtRequestManager requestManager;
 
 }

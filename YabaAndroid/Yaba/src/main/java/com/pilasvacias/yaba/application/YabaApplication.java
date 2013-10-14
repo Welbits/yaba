@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.application;
 
 import android.app.Application;
 
-import com.pilasvacias.yaba.modules.soap.SoapModule;
+import com.pilasvacias.yaba.modules.emt.EmtModule;
 import com.pilasvacias.yaba.modules.util.ContextModule;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class YabaApplication extends Application {
     protected List<Object> getModules() {
         return Arrays.<Object>asList(
                 new ContextModule(this),
-                new SoapModule());
+                new EmtModule());
     }
 
     public ObjectGraph getApplicationGraph() {

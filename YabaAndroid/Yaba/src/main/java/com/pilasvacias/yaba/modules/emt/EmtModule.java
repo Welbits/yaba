@@ -1,5 +1,6 @@
-package com.pilasvacias.yaba.modules.soap;
+package com.pilasvacias.yaba.modules.emt;
 
+import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
 
@@ -11,19 +12,21 @@ import dagger.Provides;
 /**
  * Created by pablo on 10/11/13.
  * welvi-android
- *
  */
 @Module(injects =
         {
                 MainActivity.class
         },
         includes = VolleyModule.class,
-        complete = false,
         library = true)
-public class SoapModule {
+public class EmtModule {
 
     @Provides @Singleton EmtEnvelopeSerializer provideEnvelopeSerializer() {
         return new EmtEnvelopeSerializer();
+    }
+
+    @Provides EmtRequestManager provideEmtRequestManager(RequestQueue requestQueue) {
+        return new EmtRequestManager(requestQueue);
     }
 
 }
