@@ -1,7 +1,5 @@
 package com.pilasvacias.yaba.modules.soap;
 
-import com.pilasvacias.yaba.modules.util.L;
-
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.strategy.Strategy;
 import org.simpleframework.xml.strategy.Type;
@@ -10,15 +8,8 @@ import org.simpleframework.xml.strategy.VisitorStrategy;
 import org.simpleframework.xml.stream.InputNode;
 import org.simpleframework.xml.stream.NodeMap;
 import org.simpleframework.xml.stream.OutputNode;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by pablo on 10/12/13.
@@ -48,6 +39,12 @@ public class EmtEnvelopeSerializer {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             SERIALIZER.write(body, out);
             String xml = new String(out.toByteArray());
+            // Nazismo time, fuck Soap y sus mierdas anidadas que no sirven
+            // para absolutamente nada y que junto con EMT meten 4 PUTOS NIVLES
+            // DE ETIQUETAS XML VACÍAS QUE HACE IMPOSIBLE METERLAS EN UN
+            // PARSER QUE LLEVA AÑOS EN DESARROLLO Y TIENE TODAS LAS
+            // FUNCIONALIDADES INIMAGINABLES MENOS ESA PORQUE NO ES FUNCIONALIDAD, ES
+            // PURO RETRASO MENTAL.
             return String.format(ENVELOPE_TEMPLATE, xml);
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,38 +54,40 @@ public class EmtEnvelopeSerializer {
 
     @SuppressWarnings("unchecked")
     public <T> T fromXML(String xml, Class<T> bodyClass) {
+
+        // Nazismo time 2x, se quitan las 2 capas inútiles
+        // de Soap + las 2 de EMT parseando el XML a mano.
+        final String targetTag = bodyClass.getSimpleName();
+        final String openTag = "<" + targetTag + ">";
+        final String closeTag = "</" + targetTag + ">";
+        int first = xml.indexOf(openTag);
+        int end = xml.indexOf(closeTag);
+        xml = xml.substring(first, end + closeTag.length());
+
         try {
-            InputStream inStream = new ByteArrayInputStream(xml.getBytes("utf-8"));
-            XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(inStream, "utf-8");
-            while (!parser.getName().equals(bodyClass.getSimpleName())) {
-                parser.nextTag();
-                L.og.d("tag => %s", parser.getName());
-            }
-
-
-        } catch (XmlPullParserException e) {
+            if (first == -1 || end == -1)
+                throw new ClassNotFoundException("body class is not in the EMT response, " +
+                        "make sure the name of the class" +
+                        "and the name of the response are exactly the same (eg: GetGroups)");
+            return SERIALIZER.read(bodyClass, xml, false);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
 
-        return null;
     }
 
     private static class EmtVisitor implements Visitor {
 
         @Override public void read(Type type, NodeMap<InputNode> node) throws Exception {
-
         }
 
         @Override public void write(Type type, NodeMap<OutputNode> node) throws Exception {
+            //The SOAPAction and the class name must Match, so force it in the root element.
             if (node.getNode().isRoot()) {
                 node.getNode().setName(type.getType().getSimpleName());
             }
+            //To avoid com.pack.Something attributes for List<Something>
             node.getNode().getAttributes().remove("class");
         }
     }

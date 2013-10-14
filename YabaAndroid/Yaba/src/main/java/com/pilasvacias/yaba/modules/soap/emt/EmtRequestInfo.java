@@ -5,4 +5,8 @@ package com.pilasvacias.yaba.modules.soap.emt;
  * welvi-android
  */
 public class EmtRequestInfo {
+
+    int ResturnCode;
+    String Description;
+
 }
