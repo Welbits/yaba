@@ -5,6 +5,7 @@ import com.android.volley.Response;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
 import com.pilasvacias.yaba.modules.emt.models.EmtResult;
+import com.pilasvacias.yaba.modules.network.LoadingHandler;
 
 /**
  * Created by pablo on 10/14/13.
@@ -15,8 +16,9 @@ public class EmtRequestBuilder<T extends EmtResult> {
     private EmtBody body;
     private Class<T> responseType;
     private Response.Listener<T> listener = null;
-    private Response.ErrorListener errorListener = null;
+    private EmtErrorHandler errorHandler = null;
     private RequestQueue requestQueue;
+    private LoadingHandler loadingHandler;
     private Object tag;
     private boolean verbose;
 
@@ -55,8 +57,13 @@ public class EmtRequestBuilder<T extends EmtResult> {
     }
 
 
-    public EmtRequestBuilder<T> error(Response.ErrorListener errorListener) {
-        this.errorListener = errorListener;
+    public EmtRequestBuilder<T> error(EmtErrorHandler errorListener) {
+        this.errorHandler = errorListener;
+        return this;
+    }
+
+    public EmtRequestBuilder<T> loading(LoadingHandler loadingHandler) {
+        this.loadingHandler = loadingHandler;
         return this;
     }
 
@@ -71,7 +78,7 @@ public class EmtRequestBuilder<T extends EmtResult> {
     }
 
     public EmtRequest<T> execute() {
-        EmtRequest<T> request = new EmtRequest<T>(body, listener, errorListener, responseType);
+        EmtRequest<T> request = new EmtRequest<T>(body, listener, errorHandler, responseType);
         request.setTag(tag);
         request.addMarker(body.getSoapAction());
         request.setVerbose(verbose);

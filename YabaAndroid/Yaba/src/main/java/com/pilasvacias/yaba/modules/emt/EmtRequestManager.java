@@ -15,7 +15,7 @@ public class EmtRequestManager {
         this.requestQueue = requestQueue;
     }
 
-    public <T extends EmtResult> EmtRequestBuilder<T> beginRequest() {
-        return new EmtRequestBuilder<T>(requestQueue);
+    public <T extends EmtResult> EmtRequestBuilder<T> beginRequest(Class<T> responseType) {
+        return new EmtRequestBuilder<T>(requestQueue).responseType(responseType);
     }
 }

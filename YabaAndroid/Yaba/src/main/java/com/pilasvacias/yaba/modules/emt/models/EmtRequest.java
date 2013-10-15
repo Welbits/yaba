@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
+import com.pilasvacias.yaba.modules.emt.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.util.L;
 
 import java.io.UnsupportedEncodingException;
@@ -20,13 +21,15 @@ import java.util.Map;
 public class EmtRequest<T extends EmtResult> extends Request<T> {
 
     private final EmtBody body;
+    private EmtErrorHandler emtErrorHandler;
     private final Class<T> responseType;
     private final Response.Listener<T> listener;
     private boolean verbose = false;
 
-    public EmtRequest(EmtBody body, Response.Listener<T> listener, Response.ErrorListener errorListener, Class<T> responseType) {
-        super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", errorListener);
+    public EmtRequest(EmtBody body, Response.Listener<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
+        super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", emtErrorHandler);
         this.body = body;
+        this.emtErrorHandler = emtErrorHandler;
         this.responseType = responseType;
         this.listener = listener;
     }
@@ -45,10 +48,13 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
                     data.getRequestInfo().getReturnCode(),
                     data.getRequestInfo().getDescription());
 
-        if (data != null)
+
+
+        if (emtErrorHandler.responseIsOk(response))
             return Response.success(data, HttpHeaderParser.parseCacheHeaders(response));
         else
             return Response.error(new VolleyError(response));
+
 
     }
 

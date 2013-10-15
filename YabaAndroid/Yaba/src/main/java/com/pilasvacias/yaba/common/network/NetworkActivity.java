@@ -16,4 +16,11 @@ public class NetworkActivity extends BaseActivity {
     @Inject protected RequestQueue requestQueue;
     @Inject protected EmtRequestManager requestManager;
 
+    public RequestQueue getRequestQueue() {
+        return requestQueue;
+    }
+
+    public EmtRequestManager getRequestManager() {
+        return requestManager;
+    }
 }

@@ -30,23 +30,23 @@ public class ProbaActivity extends NetworkActivity {
     }
 
     private void createRequest() {
-        requestManager
-                .<GetGroupsResult>beginRequest()
-                .body("GetGroups")
-                .responseType(GetGroupsResult.class)
-                .listener(new Response.Listener<GetGroupsResult>() {
-                    @Override public void onResponse(GetGroupsResult response) {
-                    }
-                })
-                .error(new Response.ErrorListener() {
-                    @Override public void onErrorResponse(VolleyError error) {
-                    }
-                })
-                .verbose(true)
-                .execute();
+//        requestManager
+//                .beginRequest(GetGroupsResult.class)
+//                .body("GetGroups")
+//                .listener(new Response.Listener<GetGroupsResult>() {
+//                    @Override public void onResponse(GetGroupsResult response) {
+//                    }
+//                })
+//                .error(new Response.ErrorListener() {
+//                    @Override public void onErrorResponse(VolleyError error) {
+//                    }
+//                })
+//                .verbose(true)
+//                .execute();
     }
 
     private static class GetGroupsResult extends EmtResult {
+        //Cosasss naziss
     }
 
 }
