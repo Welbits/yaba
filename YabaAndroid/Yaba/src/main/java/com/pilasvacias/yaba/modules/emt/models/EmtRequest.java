@@ -4,11 +4,12 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.pilasvacias.yaba.BuildConfig;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
-import com.pilasvacias.yaba.modules.emt.EmtErrorHandler;
-import com.pilasvacias.yaba.modules.util.L;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
+import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.util.l;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -21,12 +22,13 @@ import java.util.Map;
 public class EmtRequest<T extends EmtResult> extends Request<T> {
 
     private final EmtBody body;
-    private EmtErrorHandler emtErrorHandler;
     private final Class<T> responseType;
-    private final Response.Listener<T> listener;
+    private final SuccessHandler<T> listener;
+    private EmtErrorHandler emtErrorHandler;
     private boolean verbose = false;
+    private long fakeTime = 0;
 
-    public EmtRequest(EmtBody body, Response.Listener<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
+    public EmtRequest(EmtBody body, SuccessHandler<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
         super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", emtErrorHandler);
         this.body = body;
         this.emtErrorHandler = emtErrorHandler;
@@ -34,38 +36,56 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
         this.listener = listener;
     }
 
+    public void setFakeTime(long fakeTime) {
+        this.fakeTime = fakeTime;
+    }
+
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
 
     @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
-        String xml = new String(response.data);
+        if (fakeTime > 0)
+            fakeLongRequest();
 
+        String xml = new String(response.data);
         T data = EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType);
+
         if (verbose && data != null)
-            L.og.d("Result for %s => status: %d : message: %s",
+            l.og.d("Result for %s => status: %d : message: %s",
                     body.getSoapAction(),
                     data.getRequestInfo().getReturnCode(),
                     data.getRequestInfo().getDescription());
 
 
-
-        if (emtErrorHandler.responseIsOk(response))
+        if (emtErrorHandler.responseIsOk(data, response))
             return Response.success(data, HttpHeaderParser.parseCacheHeaders(response));
         else
-            return Response.error(new VolleyError(response));
+            return Response.error(new EmtError(response, data));
 
 
     }
 
+    private void fakeLongRequest() {
+        //Just in case someone uses it and forgets
+        if (!BuildConfig.DEBUG)
+            return;
+
+        try {
+            Thread.sleep(fakeTime);
+        } catch (InterruptedException e) {
+        }
+    }
+
     @Override protected void deliverResponse(T response) {
-        listener.onResponse(response);
+        if (listener != null)
+            listener.onResponse(response);
     }
 
     @Override public byte[] getBody() throws AuthFailureError {
         String xml = EmtEnvelopeSerializer.getInstance().toXML(body);
         if (verbose)
-            L.og.d("emt sent body => \n%s", xml);
+            l.og.d("emt sent body => \n%s", xml);
         try {
             return xml.getBytes("utf-8");
         } catch (UnsupportedEncodingException e) {

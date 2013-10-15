@@ -1,0 +1,2 @@
+package: com.pilasvacias.yaba
+regex tag: ^(?!Genymotion|libEGL|EGL_emulation|OpenGLRenderer|TilesManager|GLWebViewState|dalvikvm|Trace|\s)(\w.*)$

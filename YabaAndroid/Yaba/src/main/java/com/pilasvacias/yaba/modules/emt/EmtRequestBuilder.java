@@ -1,11 +1,14 @@
 package com.pilasvacias.yaba.modules.emt;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.pilasvacias.yaba.common.network.NetworkActivity;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
 import com.pilasvacias.yaba.modules.emt.models.EmtResult;
-import com.pilasvacias.yaba.modules.network.LoadingHandler;
+import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
+import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.network.handlers.impl.DialogLoadingHandler;
 
 /**
  * Created by pablo on 10/14/13.
@@ -15,12 +18,16 @@ public class EmtRequestBuilder<T extends EmtResult> {
 
     private EmtBody body;
     private Class<T> responseType;
-    private Response.Listener<T> listener = null;
+    private SuccessHandler<T> sucessHandler = null;
     private EmtErrorHandler errorHandler = null;
     private RequestQueue requestQueue;
     private LoadingHandler loadingHandler;
+    private NetworkActivity networkActivity;
     private Object tag;
-    private boolean verbose;
+    private boolean verbose = false;
+    private boolean ignoreLoading = false;
+    private boolean ignoreErrors = false;
+    private long fakeTime = 0L;
 
     /**
      * Use {@link com.pilasvacias.yaba.modules.emt.EmtRequestManager}
@@ -33,6 +40,11 @@ public class EmtRequestBuilder<T extends EmtResult> {
 
     public EmtRequestBuilder<T> body(EmtBody body) {
         this.body = body;
+        return this;
+    }
+
+    public EmtRequestBuilder<T> fakeTime(long fakeTime) {
+        this.fakeTime = fakeTime;
         return this;
     }
 
@@ -50,20 +62,28 @@ public class EmtRequestBuilder<T extends EmtResult> {
         return this;
     }
 
-
-    public EmtRequestBuilder<T> listener(Response.Listener<T> listener) {
-        this.listener = listener;
+    public EmtRequestBuilder<T> success(SuccessHandler<T> successHandler) {
+        this.sucessHandler = successHandler;
         return this;
     }
 
-
-    public EmtRequestBuilder<T> error(EmtErrorHandler errorListener) {
-        this.errorHandler = errorListener;
+    public EmtRequestBuilder<T> error(EmtErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
         return this;
     }
 
     public EmtRequestBuilder<T> loading(LoadingHandler loadingHandler) {
         this.loadingHandler = loadingHandler;
+        return this;
+    }
+
+    public EmtRequestBuilder<T> ignoreLoading(boolean ignore) {
+        this.ignoreLoading = ignore;
+        return this;
+    }
+
+    public EmtRequestBuilder<T> ignoreErrors(boolean ignore) {
+        this.ignoreErrors = ignore;
         return this;
     }
 
@@ -77,13 +97,49 @@ public class EmtRequestBuilder<T extends EmtResult> {
         return this;
     }
 
+    public EmtRequestBuilder<T> activity(NetworkActivity networkActivity) {
+        this.networkActivity = networkActivity;
+        return this;
+    }
+
     public EmtRequest<T> execute() {
-        EmtRequest<T> request = new EmtRequest<T>(body, listener, errorHandler, responseType);
+        EmtRequest<T> request = create();
+        requestQueue.add(request);
+
+        if (loadingHandler != null)
+            loadingHandler.showLoading("h3h3h3");
+
+        return request;
+    }
+
+    public EmtRequest<T> create() {
+        if (!ignoreErrors) {
+            if (errorHandler == null)
+                errorHandler = new EmtErrorHandler();
+
+            errorHandler.setNetworkActivity(networkActivity);
+        }
+
+        EmtRequest<T> request = new EmtRequest<T>(body, sucessHandler, errorHandler, responseType);
         request.setTag(tag);
         request.addMarker(body.getSoapAction());
         request.setVerbose(verbose);
-        requestQueue.add(request);
+        request.setFakeTime(fakeTime);
+
+
+        if (!ignoreLoading && loadingHandler == null)
+            loadingHandler = new DialogLoadingHandler(networkActivity, request);
+
+        if (errorHandler != null) {
+            errorHandler.setLoadingHandler(loadingHandler);
+        }
+
+        if (sucessHandler != null) {
+            sucessHandler.setLoadingHandler(loadingHandler);
+        }
+
         return request;
     }
+
 
 }

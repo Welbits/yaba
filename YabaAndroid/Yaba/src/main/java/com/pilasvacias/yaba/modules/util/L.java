@@ -10,9 +10,9 @@ import timber.log.Timber;
  * <p/>
  * Log module. Inspiration moment with the name.
  * <p/>
- * L.og.
+ * l.og.
  */
-public class L {
+public class l {
 
     public static final Timber og = BuildConfig.DEBUG ? Timber.DEBUG : Timber.PROD;
 

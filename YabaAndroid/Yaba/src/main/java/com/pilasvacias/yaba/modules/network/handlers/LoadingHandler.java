@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.network;
+package com.pilasvacias.yaba.modules.network.handlers;
 
 /**
  * Created by pablo on 15/10/13.
