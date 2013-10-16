@@ -43,12 +43,12 @@ public class MainActivity extends NetworkActivity {
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(ViewPagerAdapter
                 .with(getSupportFragmentManager())
-                .setFragments(new Fragment[]{
+                .setFragments(
                         DummyFragment.newInstance("Tab 1"),
                         DummyFragment.newInstance("Tab 2"),
                         DummyFragment.newInstance("Tab 3"),
                         DummyFragment.newInstance("Tab 4")
-                }));
+                ));
         viewPager.setOnPageChangeListener(ViewPagerAdapter.getPageChangeListener(this));
         viewPager.setPageTransformer(true, new Random().nextBoolean() ? new DepthPageTransformer() : new ZoomOutPageTransformer());
     }

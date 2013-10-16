@@ -34,8 +34,8 @@ public class ProbaActivity extends NetworkActivity {
 
                     }
                 })
-                .fakeTime(Time.seconds(2))
-                .cacheTime(Time.seconds(15), Time.mins(1))
+                .fakeTime(Time.seconds(0))
+                .cacheTime(Time.w(1).h(3).s(5).get(), Time.minutes(1))
                 .execute();
     }
 

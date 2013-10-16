@@ -25,12 +25,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return viewPagerAdapter;
     }
 
-    public ViewPagerAdapter setFragments(Fragment[] fragments) {
+    public ViewPagerAdapter setFragments(Fragment... fragments) {
         this.fragments = fragments;
         return this;
     }
 
-    public ViewPagerAdapter setTitles(CharSequence[] titles) {
+    public ViewPagerAdapter setTitles(CharSequence... titles) {
         this.titles = titles;
         return this;
     }

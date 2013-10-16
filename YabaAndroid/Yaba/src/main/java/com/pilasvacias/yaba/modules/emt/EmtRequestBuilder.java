@@ -50,7 +50,6 @@ public class EmtRequestBuilder<T extends EmtResult> {
         return this;
     }
 
-
     public EmtRequestBuilder<T> cacheTime(long cacheTime) {
         return cacheTime(cacheTime, cacheTime);
     }
@@ -116,10 +115,14 @@ public class EmtRequestBuilder<T extends EmtResult> {
     }
 
     public EmtRequest<T> execute() {
+        return execute(create());
+    }
+
+    public EmtRequest<T> execute(EmtRequest<T> emtRequest) {
         EmtRequest<T> request = create();
         requestQueue.add(request);
 
-        if (loadingHandler != null)
+        if (loadingHandler != null && !ignoreLoading)
             loadingHandler.showLoading("h3h3h3");
 
         return request;
