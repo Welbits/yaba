@@ -4,10 +4,10 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.pilasvacias.yaba.BuildConfig;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
+import com.pilasvacias.yaba.modules.network.CacheMaker;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.util.l;
 
@@ -26,7 +26,9 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
     private final SuccessHandler<T> listener;
     private EmtErrorHandler emtErrorHandler;
     private boolean verbose = false;
-    private long fakeTime = 0;
+    private long fakeExecutionTime = 0;
+    private long cacheRefreshTime = 0;
+    private long cacheExpireTime = 0;
 
     public EmtRequest(EmtBody body, SuccessHandler<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
         super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", emtErrorHandler);
@@ -36,8 +38,16 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
         this.listener = listener;
     }
 
-    public void setFakeTime(long fakeTime) {
-        this.fakeTime = fakeTime;
+    public void setCacheExpireTime(long cacheExpireTime) {
+        this.cacheExpireTime = cacheExpireTime;
+    }
+
+    public void setCacheRefreshTime(long cacheRefreshTime) {
+        this.cacheRefreshTime = cacheRefreshTime;
+    }
+
+    public void setFakeExecutionTime(long fakeTime) {
+        this.fakeExecutionTime = fakeTime;
     }
 
     public void setVerbose(boolean verbose) {
@@ -45,7 +55,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
     }
 
     @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
-        if (fakeTime > 0)
+        if (fakeExecutionTime > 0)
             fakeLongRequest();
 
         String xml = new String(response.data);
@@ -59,7 +69,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
 
 
         if (emtErrorHandler.responseIsOk(data, response))
-            return Response.success(data, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(data, CacheMaker.generateCache(response, cacheRefreshTime, cacheExpireTime));
         else
             return Response.error(new EmtError(response, data));
 
@@ -72,7 +82,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
             return;
 
         try {
-            Thread.sleep(fakeTime);
+            Thread.sleep(fakeExecutionTime);
         } catch (InterruptedException e) {
         }
     }

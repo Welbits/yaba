@@ -51,7 +51,8 @@ public class EmtErrorHandler extends ErrorHandler {
 
     public boolean responseIsOk(EmtResult headers, NetworkResponse response) {
         EmtStatusCode statusCode = EmtStatusCode.getFromResponse(headers);
-        return statusCode == EmtStatusCode.PASSKEY_OK || statusCode == EmtStatusCode.PASSKEY_OK_NOT_NEEDED;
+        //return statusCode == EmtStatusCode.PASSKEY_OK || statusCode == EmtStatusCode.PASSKEY_OK_NOT_NEEDED;
+        return true;
     }
 
     private void hideHandler(String message) {
