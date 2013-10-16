@@ -12,7 +12,7 @@ import timber.log.Timber;
  * <p/>
  * l.og.
  */
-public class l {
+public class L {
 
     public static final Timber og = BuildConfig.DEBUG ? Timber.DEBUG : Timber.PROD;
 

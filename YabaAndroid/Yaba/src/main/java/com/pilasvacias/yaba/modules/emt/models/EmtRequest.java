@@ -9,7 +9,7 @@ import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.network.CacheMaker;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
-import com.pilasvacias.yaba.modules.util.l;
+import com.pilasvacias.yaba.modules.util.L;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
         T data = EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType);
 
         if (verbose && data != null)
-            l.og.d("Result for %s => status: %d : message: %s",
+            L.og.d("Result for %s => status: %d : message: %s",
                     body.getSoapAction(),
                     data.getRequestInfo().getReturnCode(),
                     data.getRequestInfo().getDescription());
@@ -95,7 +95,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
     @Override public byte[] getBody() throws AuthFailureError {
         String xml = EmtEnvelopeSerializer.getInstance().toXML(body);
         if (verbose)
-            l.og.d("emt sent body => \n%s", xml);
+            L.og.d("emt sent body => \n%s", xml);
         try {
             return xml.getBytes("utf-8");
         } catch (UnsupportedEncodingException e) {
