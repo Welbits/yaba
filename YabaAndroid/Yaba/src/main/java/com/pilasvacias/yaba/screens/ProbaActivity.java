@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
@@ -36,7 +37,7 @@ public class ProbaActivity extends NetworkActivity {
 
     private void createRequest() {
 
-        //VolleyLog.DEBUG = true;
+        VolleyLog.DEBUG = true;
 
         requestManager
                 .beginRequest(Line.class)
@@ -62,14 +63,13 @@ public class ProbaActivity extends NetworkActivity {
                     }
                 })
                 .verbose(true)
-                .useCache(false)
-                .cacheTime(Time.seconds(30), Time.minutes(1))
+                .cacheTime(Time.minutes(1.5))
                 .execute();
     }
 
     public static class GetListLines extends EmtBody {
         String SelectDate = "19-8-2013";
-        String Lines = " ";
+        String Lines = "145|90|1";
     }
 
     public static class Line {

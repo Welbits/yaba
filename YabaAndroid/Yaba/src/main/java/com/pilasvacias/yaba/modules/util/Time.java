@@ -17,27 +17,27 @@ public class Time {
         this.sum = init;
     }
 
-    public static long seconds(float factor) {
+    public static long seconds(double factor) {
         return (long) (ONE_SECOND * factor);
     }
 
-    public static long minutes(float factor) {
+    public static long minutes(double factor) {
         return (long) (ONE_MINUTE * factor);
     }
 
-    public static long hours(float factor) {
+    public static long hours(double factor) {
         return (long) (ONE_HOUR * factor);
     }
 
-    public static long days(float factor) {
+    public static long days(double factor) {
         return (long) (ONE_DAY * factor);
     }
 
-    public static long weeks(float factor) {
+    public static long weeks(double factor) {
         return (long) (ONE_WEEK * factor);
     }
 
-    public static long millis(float factor){
+    public static long millis(double factor){
         return (long) factor;
     }
 

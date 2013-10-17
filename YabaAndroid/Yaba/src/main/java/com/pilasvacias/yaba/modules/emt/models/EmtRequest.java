@@ -4,6 +4,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.google.gson.Gson;
 import com.pilasvacias.yaba.BuildConfig;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
@@ -30,6 +31,8 @@ public class EmtRequest<T> extends Request<EmtData<T>> {
     private long fakeExecutionTime = 0;
     private long cacheRefreshTime = 0;
     private long cacheExpireTime = 0;
+    private String cacheKey;
+    private static final Gson gson = new Gson();
 
     public EmtRequest(EmtBody body, EmtSuccessHandler<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
         super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", emtErrorHandler);
@@ -106,5 +109,9 @@ public class EmtRequest<T> extends Request<EmtData<T>> {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("SOAPAction", "http://tempuri.org/" + body.getSoapAction());
         return headers;
+    }
+
+    @Override public String getCacheKey() {
+        return body.getCacheKey();
     }
 }

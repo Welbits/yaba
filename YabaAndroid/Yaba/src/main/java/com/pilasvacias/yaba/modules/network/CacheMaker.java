@@ -21,6 +21,8 @@ public abstract class CacheMaker {
             throw new IllegalArgumentException("cacheRefreshTime must be smaller than cacheExpireTime");
 
         Cache.Entry entry = new Cache.Entry();
+
+
         entry.data = response.data;
         entry.etag = response.headers.get("ETag");
         entry.softTtl = softExpire;
