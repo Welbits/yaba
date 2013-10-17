@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.modules.emt;
 
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.modules.util.L;
+import com.pilasvacias.yaba.util.L;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.converters.Converter;
@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 
 /**
@@ -122,7 +121,7 @@ public class EmtEnvelopeSerializer {
                     result.getPayload().add((T) object);
             } while (object != null);
 
-        } catch (EOFException e){
+        } catch (EOFException e) {
             //everything is read
         } catch (IOException e) {
             e.printStackTrace();

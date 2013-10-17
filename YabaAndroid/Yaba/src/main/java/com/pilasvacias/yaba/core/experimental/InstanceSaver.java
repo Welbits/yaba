@@ -3,7 +3,7 @@ package com.pilasvacias.yaba.core.experimental;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
-import com.pilasvacias.yaba.modules.util.L;
+import com.pilasvacias.yaba.util.L;
 
 import java.lang.reflect.Field;
 
@@ -16,30 +16,34 @@ public class InstanceSaver {
     private static final Gson gson = new Gson();
 
     public static void save(Object target, Bundle bundle) {
+        L.time.begin("save state");
         for (Field field : target.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(SaveState.class)) {
-
                 Object saving = getField(field, target);
                 String key = createBundleKey(target, field);
                 String value = gson.toJson(saving);
-
                 L.og.d("saving %s -> %s", field.getName(), value);
                 bundle.putString(key, value);
+                L.time.addMark(field.getName());
+
             }
         }
+        L.time.end();
     }
 
     public static void restore(Object target, Bundle bundle) {
+        L.time.begin("restore state");
         for (Field field : target.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(SaveState.class)) {
-
                 String restoring = bundle.getString(createBundleKey(target, field));
                 String key = target.getClass().getName() + field.getName();
                 Object value = gson.fromJson(restoring, field.getType());
                 L.og.d("restoring %s -> %s", field.getName(), value);
                 setField(field, target, value);
+                L.time.addMark(field.getName());
             }
         }
+        L.time.end();
     }
 
     private static Object getField(Field field, Object target) {

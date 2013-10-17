@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.util;
+package com.pilasvacias.yaba.util;
 
 /**
  * Created by pablo on 10/12/13.
@@ -37,7 +37,7 @@ public class Time {
         return (long) (ONE_WEEK * factor);
     }
 
-    public static long millis(double factor){
+    public static long millis(double factor) {
         return (long) factor;
     }
 

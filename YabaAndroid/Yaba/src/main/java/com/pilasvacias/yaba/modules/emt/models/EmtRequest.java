@@ -10,11 +10,10 @@ import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.network.CacheMaker;
-import com.pilasvacias.yaba.modules.util.L;
+import com.pilasvacias.yaba.util.L;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

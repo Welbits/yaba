@@ -23,8 +23,8 @@ import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.modules.util.L;
-import com.pilasvacias.yaba.modules.util.Time;
+import com.pilasvacias.yaba.util.L;
+import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.ToastUtils;
 
 import butterknife.InjectView;

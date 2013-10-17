@@ -17,9 +17,8 @@ import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.modules.util.L;
-import com.pilasvacias.yaba.modules.util.Time;
-import com.pilasvacias.yaba.util.ToastUtils;
+import com.pilasvacias.yaba.util.L;
+import com.pilasvacias.yaba.util.Time;
 
 import java.util.List;
 
@@ -90,7 +89,6 @@ public class ProbaActivity extends NetworkActivity {
     @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         InstanceSaver.restore(this, savedInstanceState);
-        ToastUtils.showShort(this, lineTest);
     }
 
     public static class Line {

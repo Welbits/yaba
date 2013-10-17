@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.util;
+package com.pilasvacias.yaba.util;
 
 import com.pilasvacias.yaba.BuildConfig;
 
@@ -15,5 +15,7 @@ import timber.log.Timber;
 public class L {
 
     public static final Timber og = BuildConfig.DEBUG ? Timber.DEBUG : Timber.PROD;
+
+    public static final TimeProfiler time = BuildConfig.DEBUG ? TimeProfiler.DEBUG : TimeProfiler.PROD;
 
 }
