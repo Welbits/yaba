@@ -1,12 +1,12 @@
 package com.pilasvacias.yaba.core.adapter.pager;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
 /**
  * Created by IzanRodrigo on 14/10/13.
@@ -35,7 +35,11 @@ public class WPagerAdapter extends FragmentPagerAdapter {
         return this;
     }
 
-    public static ViewPager.OnPageChangeListener getPageChangeListener(final FragmentActivity activity) {
+    public void into(ViewPager viewPager) {
+        viewPager.setAdapter(this);
+    }
+
+    public static ViewPager.OnPageChangeListener getPageChangeListener(final ActionBarActivity activity) {
         return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
@@ -44,7 +48,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
 
             @Override
             public void onPageSelected(int i) {
-                ActionBar actionBar = activity.getActionBar();
+                ActionBar actionBar = activity.getSupportActionBar();
                 actionBar.setSelectedNavigationItem(i);
                 actionBar.setTitle(actionBar.getTabAt(i).getText());
             }

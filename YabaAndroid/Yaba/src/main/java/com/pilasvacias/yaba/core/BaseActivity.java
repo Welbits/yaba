@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.pilasvacias.yaba.application.YabaApplication;
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 

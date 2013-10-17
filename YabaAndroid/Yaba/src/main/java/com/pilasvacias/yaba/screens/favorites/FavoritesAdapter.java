@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.WArrayAdapter;
+import com.pilasvacias.yaba.core.adapter.WBaseAdapter;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -13,7 +14,7 @@ import butterknife.Views;
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public class FavoritesAdapter extends WArrayAdapter<String, FavoritesAdapter.ViewHolder> {
+public class FavoritesAdapter extends WBaseAdapter<String, FavoritesAdapter.ViewHolder> {
 
     public FavoritesAdapter(Context context, int layoutResource) {
         super(context, layoutResource);

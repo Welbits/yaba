@@ -11,10 +11,10 @@ import android.widget.TextView;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.BaseFragment;
-import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
-import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.core.adapter.pager.DepthPageTransformer;
+import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
 import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
@@ -33,7 +33,6 @@ public class MainActivity extends NetworkActivity {
     @InjectView(R.id.main_viewPager)
     ViewPager viewPager;
     // Fields
-    private String[] titles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +43,9 @@ public class MainActivity extends NetworkActivity {
     }
 
     private void configureViewPager() {
-        titles = getResources().getStringArray(R.array.tab_titles);
+        String[] titles = getResources().getStringArray(R.array.tab_titles);
         viewPager.setOffscreenPageLimit(4);
-        viewPager.setAdapter(WPagerAdapter
+        WPagerAdapter
                 .with(getSupportFragmentManager())
                 .setFragments(
                         new FavoritesFragment(),
@@ -54,7 +53,8 @@ public class MainActivity extends NetworkActivity {
                         DummyFragment.newInstance(titles[2]),
                         DummyFragment.newInstance(titles[3])
                 )
-                .setTitles(titles));
+                .setTitles(titles)
+                .into(viewPager);
         viewPager.setPageTransformer(true, new Random().nextBoolean()
                 ? new DepthPageTransformer()
                 : new ZoomOutPageTransformer());
