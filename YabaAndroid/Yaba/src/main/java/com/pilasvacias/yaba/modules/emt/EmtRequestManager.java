@@ -1,7 +1,7 @@
 package com.pilasvacias.yaba.modules.emt;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.common.network.NetworkActivity;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
 
 /**
  * Created by pablo on 10/14/13.
