@@ -5,6 +5,7 @@ import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
 import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
+import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
 import javax.inject.Singleton;
 
@@ -20,6 +21,7 @@ import dagger.Provides;
                 MainActivity.class,
                 MainActivity.DummyFragment.class,
                 FavoritesFragment.class,
+                LinesFragment.class,
                 ProbaActivity.class
         },
         includes = VolleyModule.class,

@@ -69,7 +69,7 @@ public class ProbaActivity extends NetworkActivity {
 
     public static class GetListLines extends EmtBody {
         String SelectDate = "19-8-2013";
-        String Lines = "145|90|1";
+        String Lines = "143|90|1";
     }
 
     public static class Line {

@@ -16,6 +16,7 @@ import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.core.adapter.pager.DepthPageTransformer;
 import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
 import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
+import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
 import java.util.Random;
 
@@ -49,7 +50,7 @@ public class MainActivity extends NetworkActivity {
                 .with(getSupportFragmentManager())
                 .setFragments(
                         new FavoritesFragment(),
-                        DummyFragment.newInstance(titles[1]),
+                        new LinesFragment(),
                         DummyFragment.newInstance(titles[2]),
                         DummyFragment.newInstance(titles[3])
                 )

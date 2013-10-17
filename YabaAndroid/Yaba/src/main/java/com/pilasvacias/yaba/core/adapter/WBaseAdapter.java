@@ -12,12 +12,10 @@ import java.util.List;
 
 import butterknife.Views;
 
-import static com.pilasvacias.yaba.core.adapter.WBaseAdapter.ViewHolder;
-
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public abstract class WBaseAdapter<T, U extends ViewHolder> extends BaseAdapter {
+public abstract class WBaseAdapter<T, U> extends BaseAdapter {
 
     private ArrayList<T> items;
     private int layoutResource;
@@ -103,10 +101,4 @@ public abstract class WBaseAdapter<T, U extends ViewHolder> extends BaseAdapter 
     protected abstract void changeView(T item, U viewHolder);
 
     protected abstract U createViewHolder(View view);
-
-    public static abstract class ViewHolder {
-        public ViewHolder(View view) {
-            Views.inject(this, view);
-        }
-    }
 }

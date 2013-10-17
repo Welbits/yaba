@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.screens.favorites;
+package com.pilasvacias.yaba.screens.lines;
 
 import android.content.Context;
 import android.view.View;
@@ -13,15 +13,15 @@ import butterknife.Views;
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public class FavoritesAdapter extends WArrayAdapter<String, FavoritesAdapter.ViewHolder> {
+public class LinesAdapter extends WArrayAdapter<Line, LinesAdapter.ViewHolder> {
 
-    public FavoritesAdapter(Context context, int layoutResource) {
+    public LinesAdapter(Context context, int layoutResource) {
         super(context, layoutResource);
     }
 
     @Override
-    protected void changeView(String item, ViewHolder viewHolder) {
-        viewHolder.textView.setText(item);
+    protected void changeView(Line item, ViewHolder viewHolder) {
+        viewHolder.textView.setText(item.toString());
     }
 
     @Override

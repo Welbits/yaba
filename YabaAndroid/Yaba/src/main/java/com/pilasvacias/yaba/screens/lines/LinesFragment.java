@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.screens.favorites;
+package com.pilasvacias.yaba.screens.lines;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.BaseFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
+import com.pilasvacias.yaba.modules.emt.models.EmtBody;
+import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.modules.util.L;
+import com.pilasvacias.yaba.modules.util.Time;
 import com.pilasvacias.yaba.util.ToastUtils;
 
 import butterknife.InjectView;
@@ -26,7 +33,7 @@ import butterknife.Views;
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public class FavoritesFragment extends BaseFragment {
+public class LinesFragment extends BaseFragment {
 
     // Constants
     private static final String ITEMS_KEY = "items";
@@ -34,13 +41,13 @@ public class FavoritesFragment extends BaseFragment {
     @InjectView(R.id.simple_list_listView)
     ListView listView;
     // Fields
-    private FavoritesAdapter adapter;
+    private LinesAdapter adapter;
     private ActionMode actionMode;
 
-    private static Intent getShareIntent(String item) {
+    private static Intent getShareIntent(Line item) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, item);
+        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
         return intent;
     }
 
@@ -56,17 +63,14 @@ public class FavoritesFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_simple_list, container, false);
         Views.inject(this, rootView);
 
-        adapter = new FavoritesAdapter(getBaseActivity(), R.layout.simple_list_item);
-        for (int i = 0; i < 50; i++) {
-            adapter.add("Favorito " + i);
-        }
+        adapter = new LinesAdapter(getBaseActivity(), R.layout.simple_list_item);
 
         listView.setEmptyView(EmptyView.makeText(listView, R.string.empty_list));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (actionMode == null) {
-                    String item = adapter.getItem(position);
+                    Line item = adapter.getItem(position);
                     ToastUtils.showShort(getBaseActivity(), item);
                 } else {
                     actionMode.finish();
@@ -92,6 +96,8 @@ public class FavoritesFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             listView.onRestoreInstanceState(savedInstanceState.getParcelable(ITEMS_KEY));
+        } else {
+            loadLines();
         }
     }
 
@@ -131,12 +137,34 @@ public class FavoritesFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public void loadLines() {
+        getBaseActivity().getRequestManager()
+                .beginRequest(Line.class)
+                .body(new GetListLines())
+                .success(new EmtSuccessHandler<Line>() {
+                    @Override
+                    public void onSuccess(final EmtData<Line> result) {
+                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                        L.og.d("result =>\n %s", gson.toJson(result));
+                        adapter.addAll(result.getPayload());
+                    }
+                })
+                .verbose(true)
+                .cacheTime(Time.minutes(1.5))
+                .execute();
+    }
+
+    public static class GetListLines extends EmtBody {
+        String SelectDate = "19-8-2013";
+        String Lines = "145|90|1";
+    }
+
     private class ItemModeCallback implements ActionMode.Callback {
 
         private ShareActionProvider mShareActionProvider;
-        private String item;
+        private Line item;
 
-        public ItemModeCallback(String item) {
+        public ItemModeCallback(Line item) {
             this.item = item;
         }
 
@@ -156,7 +184,7 @@ public class FavoritesFragment extends BaseFragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            FavoritesFragment.this.actionMode = actionMode;
+            LinesFragment.this.actionMode = actionMode;
             return false;
         }
 
@@ -173,7 +201,7 @@ public class FavoritesFragment extends BaseFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            FavoritesFragment.this.actionMode = null;
+            LinesFragment.this.actionMode = null;
         }
     }
 }

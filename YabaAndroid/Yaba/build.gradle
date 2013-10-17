@@ -57,3 +57,7 @@ android.applicationVariants.all { variant ->
         ]
     }
 }
+
+tasks.withType(Compile) {
+    options.encoding = "UTF-8"
+}
