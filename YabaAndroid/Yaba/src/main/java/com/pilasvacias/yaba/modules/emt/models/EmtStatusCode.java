@@ -22,12 +22,9 @@ public enum EmtStatusCode {
         this.code = code;
     }
 
-    public static EmtStatusCode getFromResponse(EmtResult result) {
-        if (result == null || result.getRequestInfo() == null)
-            return UNKNOWN;
-
+    public static EmtStatusCode getFromResponse(EmtInfo info) {
         for (EmtStatusCode emtStatusCode : EmtStatusCode.values()) {
-            if (emtStatusCode.code == result.getRequestInfo().getReturnCode())
+            if (emtStatusCode.code == info.getResultCode())
                 return emtStatusCode;
         }
         return UNKNOWN;

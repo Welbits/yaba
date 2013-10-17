@@ -25,6 +25,6 @@ public abstract class SuccessHandler<T> implements Response.Listener<T> {
         onSuccess(response);
     }
 
-    public abstract void onSuccess(T data);
+    public abstract void onSuccess(T result);
 
 }

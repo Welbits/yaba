@@ -7,30 +7,31 @@ import com.android.volley.Response;
 import com.pilasvacias.yaba.BuildConfig;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.network.CacheMaker;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.util.L;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by pablo on 10/12/13.
  * welvi-android
  */
-public class EmtRequest<T extends EmtResult> extends Request<T> {
+public class EmtRequest<T> extends Request<EmtData<T>> {
 
     private final EmtBody body;
     private final Class<T> responseType;
-    private final SuccessHandler<T> listener;
+    private final EmtSuccessHandler<T> listener;
     private EmtErrorHandler emtErrorHandler;
     private boolean verbose = false;
     private long fakeExecutionTime = 0;
     private long cacheRefreshTime = 0;
     private long cacheExpireTime = 0;
 
-    public EmtRequest(EmtBody body, SuccessHandler<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
+    public EmtRequest(EmtBody body, EmtSuccessHandler<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
         super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", emtErrorHandler);
         this.body = body;
         this.emtErrorHandler = emtErrorHandler;
@@ -54,19 +55,12 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
         this.verbose = verbose;
     }
 
-    @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
+    @Override protected Response<EmtData<T>> parseNetworkResponse(NetworkResponse response) {
         if (fakeExecutionTime > 0)
             fakeLongRequest();
 
         String xml = new String(response.data);
-        T data = EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType);
-
-        if (verbose && data != null)
-            L.og.d("Result for %s => status: %d : message: %s",
-                    body.getSoapAction(),
-                    data.getRequestInfo().getReturnCode(),
-                    data.getRequestInfo().getDescription());
-
+        EmtData<T> data = EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType, body);
 
         if (emtErrorHandler.responseIsOk(data, response))
             return Response.success(data, CacheMaker.generateCache(response, cacheRefreshTime, cacheExpireTime));
@@ -87,7 +81,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
         }
     }
 
-    @Override protected void deliverResponse(T response) {
+    @Override protected void deliverResponse(EmtData<T> response) {
         if (listener != null)
             listener.onResponse(response);
     }
@@ -95,7 +89,7 @@ public class EmtRequest<T extends EmtResult> extends Request<T> {
     @Override public byte[] getBody() throws AuthFailureError {
         String xml = EmtEnvelopeSerializer.getInstance().toXML(body);
         if (verbose)
-            L.og.d("emt sent body => \n%s", xml);
+            L.og.d("emt sent action %s with body => \n%s", body.getSoapAction(), xml);
         try {
             return xml.getBytes("utf-8");
         } catch (UnsupportedEncodingException e) {

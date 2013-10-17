@@ -1,18 +1,19 @@
 package com.pilasvacias.yaba.modules.emt.models;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Namespace;
+
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 /**
  * Created by pablo on 10/12/13.
  * welvi-android
  */
-@Namespace(reference = "http://tempuri.org/")
 public class EmtBody {
-    @Element
-    private String idClient = "string";
-    @Element
-    private String PassKey = "string";
+
+    @XStreamAsAttribute
+    String xmlns = "http://tempuri.org/";
+
+    private String idClient = "WEB.PORTALMOVIL.OTROS";
+    private String PassKey = "0810DDE4-02FC-4C0E-A440-1BD171B397C8";
 
     public String getPassKey() {
         return PassKey;

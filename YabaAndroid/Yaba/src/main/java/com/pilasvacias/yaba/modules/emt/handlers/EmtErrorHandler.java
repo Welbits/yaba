@@ -3,7 +3,7 @@ package com.pilasvacias.yaba.modules.emt.handlers;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.common.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.emt.models.EmtResult;
+import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.models.EmtStatusCode;
 import com.pilasvacias.yaba.modules.network.ErrorCause;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
@@ -49,10 +49,8 @@ public class EmtErrorHandler extends ErrorHandler {
         hideHandler(cause.name());
     }
 
-    public boolean responseIsOk(EmtResult headers, NetworkResponse response) {
-        EmtStatusCode statusCode = EmtStatusCode.getFromResponse(headers);
-        //return statusCode == EmtStatusCode.PASSKEY_OK || statusCode == EmtStatusCode.PASSKEY_OK_NOT_NEEDED;
-        return true;
+    public boolean responseIsOk(EmtData<?> result, NetworkResponse response) {
+        return result != null && result.getEmtInfo().getResultCode() == 0;
     }
 
     private void hideHandler(String message) {

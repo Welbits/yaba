@@ -3,22 +3,23 @@ package com.pilasvacias.yaba.modules.emt;
 import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.common.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
-import com.pilasvacias.yaba.modules.emt.models.EmtResult;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.network.handlers.impl.DialogLoadingHandler;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
  * Created by pablo on 10/14/13.
  * welvi-android
  */
-public class EmtRequestBuilder<T extends EmtResult> {
+public class EmtRequestBuilder<T> {
 
     private EmtBody body;
     private Class<T> responseType;
-    private SuccessHandler<T> sucessHandler = null;
+    private EmtSuccessHandler<T> successHandler = null;
     private EmtErrorHandler errorHandler = null;
     private RequestQueue requestQueue;
     private LoadingHandler loadingHandler;
@@ -27,6 +28,7 @@ public class EmtRequestBuilder<T extends EmtResult> {
     private boolean verbose = false;
     private boolean ignoreLoading = false;
     private boolean ignoreErrors = false;
+    private boolean useCache = true;
     private long fakeTime = 0L;
     private long expireTime = 0L;
     private long refreshTime = 0L;
@@ -61,11 +63,7 @@ public class EmtRequestBuilder<T extends EmtResult> {
     }
 
     public EmtRequestBuilder<T> body(final String bodyAsAction) {
-        this.body = new EmtBody() {
-            @Override public String getSoapAction() {
-                return bodyAsAction;
-            }
-        };
+        this.body = new BodyLessEmtBody(bodyAsAction);
         return this;
     }
 
@@ -74,8 +72,8 @@ public class EmtRequestBuilder<T extends EmtResult> {
         return this;
     }
 
-    public EmtRequestBuilder<T> success(SuccessHandler<T> successHandler) {
-        this.sucessHandler = successHandler;
+    public EmtRequestBuilder<T> success(EmtSuccessHandler<T> successHandler) {
+        this.successHandler = successHandler;
         return this;
     }
 
@@ -96,6 +94,12 @@ public class EmtRequestBuilder<T extends EmtResult> {
 
     public EmtRequestBuilder<T> ignoreErrors(boolean ignore) {
         this.ignoreErrors = ignore;
+        return this;
+    }
+
+
+    public EmtRequestBuilder<T> useCache(boolean use) {
+        this.useCache = use;
         return this;
     }
 
@@ -136,13 +140,14 @@ public class EmtRequestBuilder<T extends EmtResult> {
             errorHandler.setNetworkActivity(networkActivity);
         }
 
-        EmtRequest<T> request = new EmtRequest<T>(body, sucessHandler, errorHandler, responseType);
+        EmtRequest<T> request = new EmtRequest<T>(body, successHandler, errorHandler, responseType);
         request.setTag(tag);
         request.addMarker(body.getSoapAction());
         request.setVerbose(verbose);
         request.setFakeExecutionTime(fakeTime);
         request.setCacheRefreshTime(refreshTime);
         request.setCacheExpireTime(expireTime);
+        request.setShouldCache(useCache);
 
 
         if (!ignoreLoading && loadingHandler == null)
@@ -152,11 +157,24 @@ public class EmtRequestBuilder<T extends EmtResult> {
             errorHandler.setLoadingHandler(loadingHandler);
         }
 
-        if (sucessHandler != null) {
-            sucessHandler.setLoadingHandler(loadingHandler);
+        if (successHandler != null) {
+            successHandler.setLoadingHandler(loadingHandler);
         }
 
         return request;
+    }
+
+    public static class BodyLessEmtBody extends EmtBody{
+        @XStreamOmitField
+        String action;
+
+        public BodyLessEmtBody(String action) {
+            this.action = action;
+        }
+
+        @Override public String getSoapAction() {
+            return action;
+        }
     }
 
 

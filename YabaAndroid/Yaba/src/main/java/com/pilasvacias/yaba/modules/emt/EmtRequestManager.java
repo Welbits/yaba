@@ -2,7 +2,6 @@ package com.pilasvacias.yaba.modules.emt;
 
 import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.common.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.emt.models.EmtResult;
 
 /**
  * Created by pablo on 10/14/13.
@@ -52,7 +51,7 @@ public class EmtRequestManager {
         this.tag = tag;
     }
 
-    public <T extends EmtResult> EmtRequestBuilder<T> beginRequest(Class<T> responseType) {
+    public <T> EmtRequestBuilder<T> beginRequest(Class<T> responseType) {
         return new EmtRequestBuilder<T>(requestQueue)
                 .responseType(responseType)
                 .tag(tag)

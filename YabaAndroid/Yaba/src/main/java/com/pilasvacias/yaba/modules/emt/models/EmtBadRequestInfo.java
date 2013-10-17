@@ -4,7 +4,7 @@ package com.pilasvacias.yaba.modules.emt.models;
  * Created by pablo on 10/14/13.
  * welvi-android
  */
-public class EmtRequestInfo {
+public class EmtBadRequestInfo {
 
     private int ReturnCode;
     private String Description;
