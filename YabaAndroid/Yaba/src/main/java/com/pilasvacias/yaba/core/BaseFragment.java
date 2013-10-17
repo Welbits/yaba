@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.common;
+package com.pilasvacias.yaba.core;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

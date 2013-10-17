@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.common.widget;
+package com.pilasvacias.yaba.core.adapter.pager;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -11,26 +11,26 @@ import android.support.v4.view.ViewPager;
 /**
  * Created by IzanRodrigo on 14/10/13.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class WPagerAdapter extends FragmentPagerAdapter {
 
     private Fragment[] fragments;
     private CharSequence[] titles;
 
-    private ViewPagerAdapter(FragmentManager fm) {
+    private WPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public static ViewPagerAdapter with(FragmentManager fragmentManager) {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
+    public static WPagerAdapter with(FragmentManager fragmentManager) {
+        WPagerAdapter viewPagerAdapter = new WPagerAdapter(fragmentManager);
         return viewPagerAdapter;
     }
 
-    public ViewPagerAdapter setFragments(Fragment... fragments) {
+    public WPagerAdapter setFragments(Fragment... fragments) {
         this.fragments = fragments;
         return this;
     }
 
-    public ViewPagerAdapter setTitles(CharSequence... titles) {
+    public WPagerAdapter setTitles(CharSequence... titles) {
         this.titles = titles;
         return this;
     }

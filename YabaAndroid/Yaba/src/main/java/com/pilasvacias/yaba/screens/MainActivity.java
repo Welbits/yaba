@@ -1,21 +1,21 @@
 package com.pilasvacias.yaba.screens;
 
-import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.common.BaseFragment;
-import com.pilasvacias.yaba.common.network.NetworkActivity;
-import com.pilasvacias.yaba.common.widget.DepthPageTransformer;
-import com.pilasvacias.yaba.common.widget.ViewPagerAdapter;
-import com.pilasvacias.yaba.common.widget.ZoomOutPageTransformer;
+import com.pilasvacias.yaba.core.BaseFragment;
+import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
+import com.pilasvacias.yaba.core.adapter.pager.DepthPageTransformer;
+import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
+import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
 
 import java.util.Random;
 
@@ -27,8 +27,12 @@ import butterknife.Views;
  */
 public class MainActivity extends NetworkActivity {
     // Inject views
+    @InjectView(R.id.main_tabStrip)
+    PagerSlidingTabStrip tabStrip;
     @InjectView(R.id.main_viewPager)
     ViewPager viewPager;
+    // Fields
+    private String[] titles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,43 +40,24 @@ public class MainActivity extends NetworkActivity {
         setContentView(R.layout.activity_main);
         Views.inject(this);
         configureViewPager();
-        configureTabs();
     }
 
     private void configureViewPager() {
+        titles = getResources().getStringArray(R.array.tab_titles);
         viewPager.setOffscreenPageLimit(4);
-        viewPager.setAdapter(ViewPagerAdapter
+        viewPager.setAdapter(WPagerAdapter
                 .with(getSupportFragmentManager())
                 .setFragments(
-                        DummyFragment.newInstance("Tab 1"),
-                        DummyFragment.newInstance("Tab 2"),
-                        DummyFragment.newInstance("Tab 3"),
-                        DummyFragment.newInstance("Tab 4")
-                ));
-        viewPager.setOnPageChangeListener(ViewPagerAdapter.getPageChangeListener(this));
-        viewPager.setPageTransformer(true, new Random().nextBoolean() ? new DepthPageTransformer() : new ZoomOutPageTransformer());
-    }
-
-    private void configureTabs() {
-        // Configure action bar
-        final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle("Tab 1");
-
-        // Add tabs to action bar
-        ActionBar.TabListener tabListener = ViewPagerAdapter.getTabListener(viewPager);
-        actionBar.addTab(actionBar.newTab()
-                .setText("Tab 1")
-                .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab()
-                .setText("Tab 2")
-                .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab()
-                .setText("Tab 3")
-                .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab()
-                .setText("Tab 4")
-                .setTabListener(tabListener));
+                        new FavoritesFragment(),
+                        DummyFragment.newInstance(titles[1]),
+                        DummyFragment.newInstance(titles[2]),
+                        DummyFragment.newInstance(titles[3])
+                )
+                .setTitles(titles));
+        viewPager.setPageTransformer(true, new Random().nextBoolean()
+                ? new DepthPageTransformer()
+                : new ZoomOutPageTransformer());
+        tabStrip.setViewPager(viewPager);
     }
 
     public static class DummyFragment extends BaseFragment {

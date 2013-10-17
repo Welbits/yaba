@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.android.volley.VolleyLog;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.common.network.NetworkActivity;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.models.EmtResult;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.util.Time;

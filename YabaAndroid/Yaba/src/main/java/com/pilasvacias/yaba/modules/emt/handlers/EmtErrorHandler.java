@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.modules.emt.handlers;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
-import com.pilasvacias.yaba.common.network.NetworkActivity;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.models.EmtResult;
 import com.pilasvacias.yaba.modules.emt.models.EmtStatusCode;
 import com.pilasvacias.yaba.modules.network.ErrorCause;

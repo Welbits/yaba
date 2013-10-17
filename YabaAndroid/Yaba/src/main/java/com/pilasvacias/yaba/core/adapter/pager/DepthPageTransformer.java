@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.common.widget;
+package com.pilasvacias.yaba.core.adapter.pager;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

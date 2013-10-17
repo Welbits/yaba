@@ -1,1 +1,1 @@
-include ':Yaba', ':Volley'
+include ':Yaba', ':Volley', ':PagerSlidingTabStrip'

@@ -1,7 +1,7 @@
-package com.pilasvacias.yaba.common;
+package com.pilasvacias.yaba.core;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.pilasvacias.yaba.application.YabaApplication;
 
@@ -14,7 +14,7 @@ import dagger.ObjectGraph;
  * Created by pablo on 10/9/13.
  * welvi-android
  */
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends ActionBarActivity {
 
     //@Inject LocationManager locationManager;
     private ObjectGraph activityGraph;

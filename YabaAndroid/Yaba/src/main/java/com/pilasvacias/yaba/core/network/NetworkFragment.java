@@ -1,9 +1,9 @@
-package com.pilasvacias.yaba.common.network;
+package com.pilasvacias.yaba.core.network;
 
 import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.common.BaseActivity;
+import com.pilasvacias.yaba.core.BaseFragment;
 import com.pilasvacias.yaba.modules.emt.EmtRequestManager;
 
 import javax.inject.Inject;
@@ -12,15 +12,14 @@ import javax.inject.Inject;
  * Created by pablo on 10/9/13.
  * welvi-android
  */
-public class NetworkActivity extends BaseActivity {
+public class NetworkFragment extends BaseFragment {
 
-    //Also don't use getters if not needed because they are 7x times slower than direct access.
     @Inject protected RequestQueue requestQueue;
     @Inject protected EmtRequestManager requestManager;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestManager.setNetworkActivity(this);
+    @Override public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        requestManager.setNetworkActivity((NetworkActivity) getActivity());
     }
 
     public RequestQueue getRequestQueue() {
@@ -31,9 +30,12 @@ public class NetworkActivity extends BaseActivity {
         return requestManager;
     }
 
-    @Override protected void onDestroy() {
+    @Override public void onDestroy() {
         requestManager.cancelAllRequests();
         requestManager = null;
+        requestQueue = null;
         super.onDestroy();
     }
+
+
 }

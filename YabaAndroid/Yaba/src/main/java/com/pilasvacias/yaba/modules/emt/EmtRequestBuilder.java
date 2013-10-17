@@ -1,7 +1,7 @@
 package com.pilasvacias.yaba.modules.emt;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.common.network.NetworkActivity;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;

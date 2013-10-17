@@ -19,6 +19,7 @@ configurations {
 dependencies {
 
     compile project(':Volley')
+    compile project(':PagerSlidingTabStrip')
     compile 'com.android.support:appcompat-v7:18.0.0'
 
     apt 'com.jakewharton:butterknife:3.0.0'
@@ -38,7 +39,7 @@ android {
     buildToolsVersion "18.1.0"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 10
         targetSdkVersion 18
     }
 }
