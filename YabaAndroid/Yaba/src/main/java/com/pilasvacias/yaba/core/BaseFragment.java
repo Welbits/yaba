@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.pilasvacias.yaba.core.network.NetworkActivity;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 /**
  * Created by pablo on 10/9/13.
@@ -19,4 +22,5 @@ public class BaseFragment extends Fragment {
     public NetworkActivity getBaseActivity() {
         return (NetworkActivity) getActivity();
     }
+
 }
