@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.pilasvacias.yaba.application.YabaApplication;
+import com.pilasvacias.yaba.util.BusUtils;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class BaseActivity extends ActionBarActivity {
     //@Inject LocationManager locationManager;
     private ObjectGraph activityGraph;
     private List<Object> modules = new ArrayList<Object>();
+    protected boolean isBusRegistered;
 
     YabaApplication getYabaApplication() {
         return (YabaApplication) getApplication();
@@ -35,8 +37,17 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     @Override protected void onDestroy() {
+        BusUtils.unregisterBus(isBusRegistered, this);
         activityGraph = null;
         super.onDestroy();
+    }
+
+    protected void registerBus() {
+        isBusRegistered = BusUtils.checkBusRegistered(isBusRegistered, this);
+    }
+
+    protected void postBus(Object event) {
+        BusUtils.post(isBusRegistered, event);
     }
 
     protected List<Object> getModules() {

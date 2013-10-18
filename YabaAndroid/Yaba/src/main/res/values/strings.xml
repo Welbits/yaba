@@ -7,5 +7,10 @@
     <string name="action_delete">Borrar</string>
     <string name="action_search">Buscar</string>
     <string name="empty_list">La lista está vacía</string>
+    <string name="action_favorite">Favorito</string>
+    <string name="tab_favorites">Favoritos</string>
+    <string name="tab_lines">Líneas</string>
+    <string name="tab_nocturnos">Nocturnos</string>
+    <string name="tab_find">Buscar parada</string>
 
 </resources>

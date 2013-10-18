@@ -6,6 +6,7 @@ import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
 import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
+import com.pilasvacias.yaba.screens.nocturnos.NocturnosFragment;
 
 import javax.inject.Singleton;
 
@@ -22,6 +23,7 @@ import dagger.Provides;
                 MainActivity.DummyFragment.class,
                 FavoritesFragment.class,
                 LinesFragment.class,
+                NocturnosFragment.class,
                 ProbaActivity.class
         },
         includes = VolleyModule.class,

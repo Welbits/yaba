@@ -2,6 +2,7 @@ package com.pilasvacias.yaba.screens;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,9 @@ import com.pilasvacias.yaba.core.BaseFragment;
 import com.pilasvacias.yaba.core.adapter.pager.DepthPageTransformer;
 import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
 import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
+import com.pilasvacias.yaba.core.event.FavoriteCreatedEvent;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
-import com.pilasvacias.yaba.screens.lines.LinesFragment;
+import com.squareup.otto.Subscribe;
 
 import java.util.Random;
 
@@ -40,6 +41,7 @@ public class MainActivity extends NetworkActivity {
         setContentView(R.layout.activity_main);
         Views.inject(this);
         configureViewPager();
+        registerBus();
     }
 
     private void configureViewPager() {
@@ -47,18 +49,17 @@ public class MainActivity extends NetworkActivity {
         viewPager.setOffscreenPageLimit(4);
         WPagerAdapter
                 .with(getSupportFragmentManager())
-                .setFragments(
-                        new FavoritesFragment(),
-                        new LinesFragment(),
-                        DummyFragment.newInstance(titles[2]),
-                        DummyFragment.newInstance(titles[3])
-                )
-                .setTitles(titles)
+                .configureWithTabs(this)
                 .into(viewPager);
         viewPager.setPageTransformer(true, new Random().nextBoolean()
                 ? new DepthPageTransformer()
                 : new ZoomOutPageTransformer());
         tabStrip.setViewPager(viewPager);
+    }
+
+    @Subscribe
+    public void onFavoriteCreated(FavoriteCreatedEvent event) {
+        viewPager.setCurrentItem(WPagerAdapter.Tab.FAVORITES.ordinal(), true);
     }
 
     public static class DummyFragment extends BaseFragment {
@@ -69,6 +70,13 @@ public class MainActivity extends NetworkActivity {
         TextView textView;
         // Fields
         private String title;
+        private int titleResource;
+
+        public static Fragment newInstance(int titleResource) {
+            DummyFragment fragment = new DummyFragment();
+            fragment.titleResource = titleResource;
+            return fragment;
+        }
 
         public static DummyFragment newInstance(String title) {
             DummyFragment fragment = new DummyFragment();
@@ -89,6 +97,9 @@ public class MainActivity extends NetworkActivity {
             View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
             Views.inject(this, rootView);
 
+            if (title == null) {
+                title = getString(titleResource);
+            }
             if (savedInstanceState != null) {
                 title = savedInstanceState.getString(TITLE_KEY);
             }
