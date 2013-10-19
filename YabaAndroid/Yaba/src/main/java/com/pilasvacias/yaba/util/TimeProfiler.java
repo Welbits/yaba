@@ -20,9 +20,9 @@ public interface TimeProfiler {
         private List<Long> timeMarks = new LinkedList<Long>();
         private List<String> stringMarks = new LinkedList<String>();
 
-        @Override public void begin(String tag) {
+        @Override public void begin(String tag, Object... args) {
             reset();
-            this.tag = tag;
+            this.tag = String.format(tag, args);
         }
 
         public void reset() {
@@ -32,15 +32,15 @@ public interface TimeProfiler {
             stringMarks.clear();
         }
 
-        @Override public void addMark(String mark) {
-            stringMarks.add(mark);
+        @Override public void addMark(String mark, Object... args) {
+            stringMarks.add(String.format(mark, args));
             long now = System.currentTimeMillis();
             timeMarks.add(now - last);
             last = now;
         }
 
         @Override public void end() {
-            String separator = String.format(" ------> begin %s", tag);
+            String separator = String.format("·----------> begin %s", tag);
             StringBuilder builder;
             Log.d("TimerProfiler", separator);
             long sum = 0;
@@ -48,14 +48,13 @@ public interface TimeProfiler {
             for (int i = 0; i < timeMarks.size(); i++) {
                 sum += timeMarks.get(i);
                 builder = new StringBuilder();
-                builder.append("+").append(format(timeMarks.get(i))).append(" | ").append(i + 1)
-                        .append(" ≈ ").append(percent(total, timeMarks.get(i))).append(" ")
+                builder.append("| +").append(format(timeMarks.get(i))).append(" | ").append(percent(total, timeMarks.get(i))).append(" \t")
                         .append(stringMarks.get(i));
                 Log.d("TimerProfiler", builder.toString());
             }
 
             builder = new StringBuilder();
-            builder.append("").append(total).append(" ms <---- end ").append(tag);
+            builder.append("···").append(total).append(" ms <==== end ").append(tag);
             Log.d("TimerProfiler", builder.toString());
             //Log.d("TimerProfiler", separator);
             reset();
@@ -71,11 +70,11 @@ public interface TimeProfiler {
 
     };
     public static TimeProfiler PROD = new TimeProfiler() {
-        @Override public void begin(String tag) {
+        @Override public void begin(String tag, Object... args) {
 
         }
 
-        @Override public void addMark(String mark) {
+        @Override public void addMark(String mark, Object... args) {
 
         }
 
@@ -84,9 +83,9 @@ public interface TimeProfiler {
         }
     };
 
-    void begin(String tag);
+    void begin(String tag, Object... args);
 
-    void addMark(String mark);
+    void addMark(String mark, Object... args);
 
     void end();
 }

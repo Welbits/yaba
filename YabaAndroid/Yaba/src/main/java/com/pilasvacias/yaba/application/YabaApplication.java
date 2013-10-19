@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.pilasvacias.yaba.modules.emt.EmtModule;
 import com.pilasvacias.yaba.modules.util.ContextModule;
+import com.squareup.otto.Bus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,7 @@ import dagger.ObjectGraph;
  */
 public class YabaApplication extends Application {
     private ObjectGraph applicationGraph;
+    private static Bus bus;
 
     @Override public void onCreate() {
         super.onCreate();
@@ -39,4 +41,10 @@ public class YabaApplication extends Application {
         return applicationGraph;
     }
 
+    public static Bus getBus() {
+        if (bus == null) {
+            bus = new Bus();
+        }
+        return bus;
+    }
 }

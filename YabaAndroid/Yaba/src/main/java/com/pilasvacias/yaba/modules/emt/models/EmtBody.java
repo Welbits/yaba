@@ -17,8 +17,8 @@ public class EmtBody {
     @XStreamAsAttribute
     String xmlns = "http://tempuri.org/";
 
-    private String idClient = "WEB.PORTALMOVIL.OTROS";
-    private String PassKey = "0810DDE4-02FC-4C0E-A440-1BD171B397C8";
+    private String idClient = "WEB.SERVICIOS.YABA";
+    private String PassKey = "73342A86-EE01-452C-AE73-8CEB16574E36";
 
     public String getPassKey() {
         return PassKey;

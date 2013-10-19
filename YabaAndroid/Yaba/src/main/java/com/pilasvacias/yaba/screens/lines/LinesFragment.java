@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,10 +19,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.BaseFragment;
+import com.pilasvacias.yaba.core.event.FavoriteCreatedEvent;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.util.Date;
 import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.ToastUtils;
@@ -43,13 +46,6 @@ public class LinesFragment extends BaseFragment {
     private LinesAdapter adapter;
     private ActionMode actionMode;
 
-    private static Intent getShareIntent(Line item) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
-        return intent;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +59,7 @@ public class LinesFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_simple_list, container, false);
         Views.inject(this, rootView);
 
-        adapter = new LinesAdapter(getBaseActivity(), R.layout.simple_list_item);
+        adapter = new LinesAdapter(getBaseActivity(), R.layout.list_item_line);
 
         listView.setEmptyView(EmptyView.makeText(listView, R.string.empty_list));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,6 +88,12 @@ public class LinesFragment extends BaseFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        registerBus();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadLines();
@@ -100,7 +102,22 @@ public class LinesFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.favorites, menu);
+        inflater.inflate(R.menu.lines, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
     }
 
     public void loadLines() {
@@ -112,17 +129,21 @@ public class LinesFragment extends BaseFragment {
                     public void onSuccess(final EmtData<Line> result) {
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         L.og.d("result =>\n %s", gson.toJson(result));
-                        adapter.addAll(result.getPayload());
+                        for (Line line : result.getPayload()) {
+                            if (!line.Label.startsWith("N")) {
+                                adapter.add(line);
+                            }
+                        }
                     }
                 })
                 .verbose(true)
-                .cacheTime(Time.minutes(1.5))
+                .cacheTime(Time.days(1D))
                 .execute();
     }
 
     public static class GetListLines extends EmtBody {
-        String SelectDate = "19-8-2013";
-        String Lines = "145|90|1";
+        String SelectDate = Date.getToday();
+        String Lines = ""; //Todas las líneas
     }
 
     private class ItemModeCallback implements ActionMode.Callback {
@@ -137,7 +158,7 @@ public class LinesFragment extends BaseFragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             MenuInflater menuInflater = actionMode.getMenuInflater();
-            int menuResource = R.menu.cab_favorites;
+            int menuResource = R.menu.cab_lines;
             menuInflater.inflate(menuResource, menu);
 
             MenuItem shareItem = menu.findItem(R.id.action_share);
@@ -156,12 +177,6 @@ public class LinesFragment extends BaseFragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.action_delete:
-                    adapter.remove(item);
-                    actionMode.finish();
-                    break;
-            }
             return true;
         }
 
@@ -169,5 +184,12 @@ public class LinesFragment extends BaseFragment {
         public void onDestroyActionMode(ActionMode actionMode) {
             LinesFragment.this.actionMode = null;
         }
+    }
+
+    private static Intent getShareIntent(Line item) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
+        return intent;
     }
 }

@@ -9,15 +9,16 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.core.experimental.InstanceSaver;
-import com.pilasvacias.yaba.core.experimental.SaveCollectionState;
-import com.pilasvacias.yaba.core.experimental.SaveObjectState;
+import com.pilasvacias.yaba.core.experimental.MagicTurn;
+import com.pilasvacias.yaba.core.experimental.Save;
+import com.pilasvacias.yaba.core.experimental.Token;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.util.L;
+import com.pilasvacias.yaba.util.Time;
 
 import java.util.List;
 
@@ -26,31 +27,30 @@ import butterknife.Views;
 
 public class ProbaActivity extends NetworkActivity {
 
-    @InjectView(R.id.listView)
-    ListView listView;
-    @SaveObjectState
-    Line line;
-    @SaveCollectionState(type = Line.class)
-    List<Line> lineTest;
-    @SaveObjectState
-    EmtData<Line> test;
+    @InjectView(R.id.listView) ListView listView;
+    @Save Line line;
 
-    @SaveObjectState
-    boolean firstTime = true;
+    @Save(token = "lineListToken") List<Line> lineTest;
+    @Token TypeToken<List<Line>> lineListToken = new TypeToken<List<Line>>() {};
+
+    @Save(token = "testToken") EmtData<Line> test;
+    @Token TypeToken<EmtData<Line>> testToken = new TypeToken<EmtData<Line>>() {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proba);
-        InstanceSaver.restore(this, savedInstanceState);
+        MagicTurn.restore(this, savedInstanceState);
         Views.inject(this);
-        if (firstTime) {
+        if (test == null) {
             createRequest();
-            firstTime = false;
         } else {
             createAdapter();
         }
     }
+
+    private TypeToken<EmtData<Line>> token = new TypeToken<EmtData<Line>>() {
+    };
 
     private void createAdapter() {
         ArrayAdapter<Line> adapter =
@@ -63,8 +63,7 @@ public class ProbaActivity extends NetworkActivity {
                         return t;
                     }
                 };
-        if (lineTest != null)
-            adapter.addAll(lineTest);
+        adapter.addAll(lineTest);
         adapter.add(line);
         adapter.add(line);
         adapter.add(line);
@@ -81,25 +80,25 @@ public class ProbaActivity extends NetworkActivity {
                 .success(new EmtSuccessHandler<Line>() {
                     @Override public void onSuccess(final EmtData<Line> result) {
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        L.og.d("result =>\n %s", gson.toJson(result));
                         lineTest = result.getPayload();
                         line = result.getPayload().get(0);
                         test = result;
                         createAdapter();
                     }
                 })
+                .fakeTime(Time.seconds(5))
                 .cacheSkip(true)
                 .execute();
     }
 
     public static class GetListLines extends EmtBody {
         String SelectDate = "19-8-2013";
-        String Lines = "143|90|1";
+        String Lines = " ";
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        InstanceSaver.save(this, outState);
+        MagicTurn.save(this, outState);
     }
 
     @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {

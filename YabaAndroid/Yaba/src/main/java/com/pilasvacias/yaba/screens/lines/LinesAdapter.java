@@ -21,7 +21,11 @@ public class LinesAdapter extends WArrayAdapter<Line, LinesAdapter.ViewHolder> {
 
     @Override
     protected void changeView(Line item, ViewHolder viewHolder) {
-        viewHolder.textView.setText(item.toString());
+        viewHolder.label.setText(item.Label.trim());
+        viewHolder.groupNumber.setText("GroupNumber = " + item.GroupNumber.trim());
+        viewHolder.line.setText("LineNumber = " + item.Line.trim());
+        viewHolder.startEnd.setText(item.NameA.trim() + " - " + item.NameB.trim());
+        viewHolder.date.setText(item.DateFirst.trim() + " - " + item.DateEnd.trim());
     }
 
     @Override
@@ -30,8 +34,16 @@ public class LinesAdapter extends WArrayAdapter<Line, LinesAdapter.ViewHolder> {
     }
 
     static class ViewHolder {
-        @InjectView(R.id.simple_list_item_textView)
-        TextView textView;
+        @InjectView(R.id.list_item_line_textViewLine)
+        TextView line;
+        @InjectView(R.id.list_item_line_textViewGroupNumber)
+        TextView groupNumber;
+        @InjectView(R.id.list_item_line_textViewLabel)
+        TextView label;
+        @InjectView(R.id.list_item_line_textViewStartEnd)
+        TextView startEnd;
+        @InjectView(R.id.list_item_line_textViewDate)
+        TextView date;
 
         public ViewHolder(View view) {
             Views.inject(this, view);
