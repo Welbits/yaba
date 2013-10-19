@@ -7,18 +7,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.experimental.InstanceSaver;
-import com.pilasvacias.yaba.core.experimental.SaveState;
+import com.pilasvacias.yaba.core.experimental.SaveCollectionState;
+import com.pilasvacias.yaba.core.experimental.SaveObjectState;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.util.L;
-import com.pilasvacias.yaba.util.Time;
 
 import java.util.List;
 
@@ -29,22 +28,53 @@ public class ProbaActivity extends NetworkActivity {
 
     @InjectView(R.id.listView)
     ListView listView;
-
-    @SaveState
+    @SaveObjectState
+    Line line;
+    @SaveCollectionState(type = Line.class)
     List<Line> lineTest;
+    @SaveObjectState
+    EmtData<Line> test;
+
+    @SaveObjectState
+    boolean firstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proba);
+        InstanceSaver.restore(this, savedInstanceState);
         Views.inject(this);
-        createRequest();
+        if (firstTime) {
+            createRequest();
+            firstTime = false;
+        } else {
+            createAdapter();
+        }
+    }
+
+    private void createAdapter() {
+        ArrayAdapter<Line> adapter =
+                new ArrayAdapter<Line>(ProbaActivity.this, android.R.layout.activity_list_item) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        TextView t = new TextView(getContext());
+                        Line line = getItem(position);
+                        t.setText(line.Line + " " + line.NameA + " " + line.NameB);
+                        return t;
+                    }
+                };
+        if (lineTest != null)
+            adapter.addAll(lineTest);
+        adapter.add(line);
+        adapter.add(line);
+        adapter.add(line);
+        adapter.add(line);
+        adapter.add(line);
+        adapter.add(line);
+        listView.setAdapter(adapter);
     }
 
     private void createRequest() {
-
-        VolleyLog.DEBUG = true;
-
         requestManager
                 .beginRequest(Line.class)
                 .body(new GetListLines())
@@ -53,26 +83,12 @@ public class ProbaActivity extends NetworkActivity {
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         L.og.d("result =>\n %s", gson.toJson(result));
                         lineTest = result.getPayload();
-
-                        ArrayAdapter<Line> adapter =
-                                new ArrayAdapter<Line>(ProbaActivity.this, android.R.layout.activity_list_item) {
-                                    @Override
-                                    public View getView(int position, View convertView, ViewGroup parent) {
-                                        TextView t = new TextView(getContext());
-                                        Line line = getItem(position);
-
-
-                                        t.setText(line.Line + " " + line.NameA + " " + line.NameB);
-                                        return t;
-                                    }
-                                };
-                        adapter.addAll(result.getPayload());
-                        listView.setAdapter(adapter);
-
+                        line = result.getPayload().get(0);
+                        test = result;
+                        createAdapter();
                     }
                 })
-                .verbose(true)
-                .cacheTime(Time.minutes(1.5))
+                .cacheSkip(true)
                 .execute();
     }
 
@@ -88,7 +104,6 @@ public class ProbaActivity extends NetworkActivity {
 
     @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        InstanceSaver.restore(this, savedInstanceState);
     }
 
     public static class Line {
@@ -101,4 +116,7 @@ public class ProbaActivity extends NetworkActivity {
         String NameB;
     }
 
+    @Override protected void onDestroy() {
+        super.onDestroy();
+    }
 }

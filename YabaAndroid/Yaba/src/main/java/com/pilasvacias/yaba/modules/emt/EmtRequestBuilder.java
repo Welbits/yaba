@@ -7,7 +7,6 @@ import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.network.handlers.impl.DialogLoadingHandler;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
@@ -98,7 +97,7 @@ public class EmtRequestBuilder<T> {
     }
 
 
-    public EmtRequestBuilder<T> useCache(boolean use) {
+    public EmtRequestBuilder<T> cacheSkip(boolean use) {
         this.useCache = use;
         return this;
     }
@@ -142,7 +141,6 @@ public class EmtRequestBuilder<T> {
 
         EmtRequest<T> request = new EmtRequest<T>(body, successHandler, errorHandler, responseType);
         request.setTag(tag);
-        request.addMarker(body.getSoapAction());
         request.setVerbose(verbose);
         request.setFakeExecutionTime(fakeTime);
         request.setCacheRefreshTime(refreshTime);
