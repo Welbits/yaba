@@ -1,7 +1,5 @@
 package com.pilasvacias.yaba.screens.lines;
 
-import com.google.gson.Gson;
-
 public class Line {
     public String GroupNumber;
     public String DateFirst;
@@ -13,6 +11,6 @@ public class Line {
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return Label + " " + NameA + " " + NameB;
     }
 }
