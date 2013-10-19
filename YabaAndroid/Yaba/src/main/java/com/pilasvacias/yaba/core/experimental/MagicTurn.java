@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.pilasvacias.yaba.util.L;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 
 /**
  * Created by pablo on 10/17/13.
@@ -75,14 +76,19 @@ public class MagicTurn {
         L.time.end();
     }
 
-
-    private static Object readFromBundle(String key, Field field, Bundle bundle) {
-        String restoring = bundle.getString(key);
-        Object result = gson.fromJson(restoring, field.getType());
-        L.og.d("restoring [ %s -> %s ]", key, restoring);
-        L.time.addMark(key);
-        return result;
+    public static void writeToBundle(Bundle bundle, Object object, String tag){
+        String json = gson.toJson(object);
+        bundle.putString(tag, json);
     }
+
+    public static <T> T readFromBundle(Bundle bundle, Class<T> clazz, String tag){
+        return gson.fromJson(bundle.getString(tag + clazz.getName()), clazz);
+    }
+
+    public static <T> T readFromBundle(Bundle bundle, Type type, String tag){
+        return gson.fromJson(bundle.getString(tag), type);
+    }
+
 
     //===========================
     //         Utility
