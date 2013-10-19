@@ -1,7 +1,8 @@
 package com.pilasvacias.yaba.modules.emt;
 
+import android.content.Context;
+
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.core.network.NetworkActivity;
 
 /**
  * Created by pablo on 10/14/13.
@@ -11,14 +12,14 @@ public class EmtRequestManager {
 
     private RequestQueue requestQueue;
     /**
-     * Every request is associated with the EmtRequestManager that created it by default.
-     * Cancelling all request will the requests done by this manager.
+     * Every request is associated with the EmtRequestManager that created it
+     * so cancelling all request will cancel the requests done by this manager.
      */
     private Object tag = this;
     /**
-     * The container activity.
+     * The container context it should be an activity.
      */
-    private NetworkActivity networkActivity;
+    private Context context;
 
     /**
      * @param requestQueue injected {@link com.pilasvacias.yaba.modules.network.VolleyModule}
@@ -27,12 +28,12 @@ public class EmtRequestManager {
         this.requestQueue = requestQueue;
     }
 
-    public NetworkActivity getNetworkActivity() {
-        return networkActivity;
+    public Context getContext() {
+        return context;
     }
 
-    public void setNetworkActivity(NetworkActivity networkActivity) {
-        this.networkActivity = networkActivity;
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public RequestQueue getRequestQueue() {
@@ -51,11 +52,16 @@ public class EmtRequestManager {
         this.tag = tag;
     }
 
+    /**
+     * Create a new EmtRequestBuilder to use the fluent interface.
+     * @param responseType The POJO class representing the expected response.
+     * @return A new request builder.
+     */
     public <T> EmtRequestBuilder<T> beginRequest(Class<T> responseType) {
         return new EmtRequestBuilder<T>(requestQueue)
                 .responseType(responseType)
                 .tag(tag)
-                .activity(networkActivity);
+                .context(context);
     }
 
     public void cancelAllRequests() {

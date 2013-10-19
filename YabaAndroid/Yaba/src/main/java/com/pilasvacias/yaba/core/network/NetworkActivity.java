@@ -20,7 +20,7 @@ public class NetworkActivity extends BaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestManager.setNetworkActivity(this);
+        requestManager.setContext(this);
     }
 
     public RequestQueue getRequestQueue() {

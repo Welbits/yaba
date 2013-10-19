@@ -1,30 +1,32 @@
 package com.pilasvacias.yaba.modules.emt.handlers;
 
+import android.content.Context;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
-import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.modules.emt.models.EmtStatusCode;
 import com.pilasvacias.yaba.modules.network.ErrorCause;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by pablo on 15/10/13.
  */
 public class EmtErrorHandler extends ErrorHandler {
 
-    private LoadingHandler loadingHandler;
-    private NetworkActivity networkActivity;
+    private WeakReference<LoadingHandler> loadingHandler;
+    private Context context;
 
     public EmtErrorHandler() {
     }
 
-    public void setNetworkActivity(NetworkActivity networkActivity) {
-        this.networkActivity = networkActivity;
+    public void setContext(Context context) {
+        this.context = context;
     }
 
-    public void setLoadingHandler(LoadingHandler loadingHandler) {
+    public void setLoadingHandler(WeakReference<LoadingHandler> loadingHandler) {
         this.loadingHandler = loadingHandler;
     }
 
@@ -46,16 +48,16 @@ public class EmtErrorHandler extends ErrorHandler {
             case EMT_ERROR:
                 break;
         }
-        hideHandler(cause.name());
+        hideLoadingHandler(cause.name());
     }
 
     public boolean responseIsOk(EmtData<?> result, NetworkResponse response) {
         return result != null && result.getEmtInfo().getResultCode() == 0;
     }
 
-    private void hideHandler(String message) {
-        if (loadingHandler != null)
-            loadingHandler.hideLoading(message, false);
+    private void hideLoadingHandler(String message) {
+        if (loadingHandler!= null && loadingHandler.get() != null)
+            loadingHandler.get().hideLoading(message, false);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.pilasvacias.yaba.core.network;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
@@ -18,8 +19,9 @@ public class NetworkFragment extends BaseFragment {
     @Inject protected EmtRequestManager requestManager;
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        requestManager.setNetworkActivity((NetworkActivity) getActivity());
+        super.onCreate(savedInstanceState);
+        getActivityGrapth().inject(this);
+        requestManager.setContext(getActivity());
     }
 
     public RequestQueue getRequestQueue() {
@@ -29,6 +31,8 @@ public class NetworkFragment extends BaseFragment {
     public EmtRequestManager getRequestManager() {
         return requestManager;
     }
+
+
 
     @Override public void onDestroy() {
         requestManager.cancelAllRequests();

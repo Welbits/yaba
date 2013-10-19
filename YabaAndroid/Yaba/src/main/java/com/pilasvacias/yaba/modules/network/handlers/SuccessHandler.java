@@ -2,6 +2,8 @@ package com.pilasvacias.yaba.modules.network.handlers;
 
 import com.android.volley.Response;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by pablo on 15/10/13.
  * <p/>
@@ -9,22 +11,36 @@ import com.android.volley.Response;
  */
 public abstract class SuccessHandler<T> implements Response.Listener<T> {
 
-    private LoadingHandler loadingHandler;
+    private WeakReference<LoadingHandler> loadingHandler;
+    private Vistor<T> vistor;
 
-    public LoadingHandler getLoadingHandler() {
-        return loadingHandler;
+    public Vistor<T> getVistor() {
+        return vistor;
     }
 
-    public void setLoadingHandler(LoadingHandler loadingHandler) {
+    public void setVistor(Vistor<T> vistor) {
+        this.vistor = vistor;
+    }
+
+    public void setLoadingHandler(WeakReference<LoadingHandler> loadingHandler) {
         this.loadingHandler = loadingHandler;
     }
 
     @Override public final void onResponse(T response) {
-        if (loadingHandler != null)
-            loadingHandler.hideLoading(null, true);
+        if (loadingHandler != null && loadingHandler.get() != null)
+            loadingHandler.get().hideLoading(null, true);
+        if(vistor != null)
+            vistor.beforeResponse(response);
         onSuccess(response);
+        if(vistor != null)
+            vistor.afterResponse(response);
     }
 
     public abstract void onSuccess(T result);
+
+    public interface Vistor<K> {
+        void beforeResponse(K response);
+        void afterResponse(K response);
+    }
 
 }
