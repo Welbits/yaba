@@ -19,18 +19,17 @@ public class NetworkFragment extends BaseFragment {
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivityGrapth().inject(this);
+        getActivityGraph().inject(this);
         requestManager.setContext(getActivity());
     }
 
-    public RequestQueue getRequestQueue() {
+    protected RequestQueue getRequestQueue() {
         return requestQueue;
     }
 
-    public EmtRequestManager getRequestManager() {
+    protected EmtRequestManager getRequestManager() {
         return requestManager;
     }
-
 
 
     @Override public void onDestroy() {

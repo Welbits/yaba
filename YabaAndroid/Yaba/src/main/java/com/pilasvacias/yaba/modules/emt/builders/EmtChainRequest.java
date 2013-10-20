@@ -68,14 +68,13 @@ public class EmtChainRequest {
                 @Override public void afterResponse(Object response) {
                     if (finalIndex + 1 < requestBuilders.size() && !errorHappened)
                         requestBuilders.get(finalIndex + 1).execute();
-                    else if(!ignoreLoading)
+                    else if (!ignoreLoading)
                         chainLoadingHandler.hideLoading("", true);
                 }
             });
         }
 
         for (int i = 0; i < requestBuilders.size(); i++) {
-            final int finalIndex = i;
             requestBuilders.get(i).errorHandler.setVisitor(new ErrorHandler.Visitor() {
                 @Override public void beforeError(VolleyError response) {
                 }

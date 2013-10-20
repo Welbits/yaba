@@ -24,7 +24,7 @@ public class BaseFragment extends Fragment {
         return (NetworkActivity) getActivity();
     }
 
-    public ObjectGraph getActivityGrapth(){
+    public ObjectGraph getActivityGraph() {
         return getBaseActivity().getActivityGraph();
     }
 
