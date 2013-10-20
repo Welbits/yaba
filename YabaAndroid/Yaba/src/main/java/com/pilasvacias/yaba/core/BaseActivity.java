@@ -33,7 +33,6 @@ public class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         onCreateExtraModules(modules);
         activityGraph = getYabaApplication().getApplicationGraph().plus(modules.toArray());
-        activityGraph.inject(this);
     }
 
     @Override protected void onDestroy() {
