@@ -7,28 +7,28 @@ import com.android.volley.VolleyError;
  * Created by pablo on 15/10/13.
  */
 public abstract class ErrorHandler implements Response.ErrorListener {
-    public Vistor getVistor() {
-        return vistor;
+    public Visitor getVisitor() {
+        return visitor;
     }
 
-    public void setVistor(Vistor vistor) {
-        this.vistor = vistor;
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
     }
 
-    private Vistor vistor;
+    private Visitor visitor;
 
     @Override
     public final void onErrorResponse(VolleyError error) {
-        if(vistor!= null)
-            vistor.beforeError(error);
+        if(visitor != null)
+            visitor.beforeError(error);
         handleError(error);
-        if(vistor != null)
-            vistor.afterError(error);
+        if(visitor != null)
+            visitor.afterError(error);
     }
 
     public abstract void handleError(VolleyError error);
 
-    public interface Vistor {
+    public interface Visitor {
         void beforeError(VolleyError response);
         void afterError(VolleyError response);
     }

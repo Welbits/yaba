@@ -1,8 +1,11 @@
-package com.pilasvacias.yaba.modules.emt;
+package com.pilasvacias.yaba.modules.emt.builders;
 
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
+import com.pilasvacias.yaba.modules.emt.builders.EmtChainRequest;
+import com.pilasvacias.yaba.modules.emt.builders.EmtRequestBuilder;
+import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
 
 /**
  * Created by pablo on 10/14/13.
@@ -10,12 +13,15 @@ import com.android.volley.RequestQueue;
  */
 public class EmtRequestManager {
 
-    private RequestQueue requestQueue;
     /**
      * Every request is associated with the EmtRequestManager that created it
      * so cancelling all request will cancel the requests done by this manager.
      */
-    private Object tag = this;
+    private final Object DEFAULT_TAG = new Object();
+
+    private RequestQueue requestQueue;
+
+    private Object tag = DEFAULT_TAG;
     /**
      * The container context it should be an activity.
      */
@@ -62,6 +68,10 @@ public class EmtRequestManager {
                 .responseType(responseType)
                 .tag(tag)
                 .context(context);
+    }
+
+    public EmtChainRequest beginChainedRequest(){
+        return new EmtChainRequest(requestQueue, context, tag);
     }
 
     public void cancelAllRequests() {

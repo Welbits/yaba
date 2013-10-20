@@ -17,17 +17,17 @@ import java.lang.ref.WeakReference;
 public class EmtErrorHandler extends ErrorHandler {
 
     private WeakReference<LoadingHandler> loadingHandler;
-    private Context context;
+    private WeakReference<Context> context;
 
     public EmtErrorHandler() {
     }
 
     public void setContext(Context context) {
-        this.context = context;
+        this.context = new WeakReference<Context>(context);
     }
 
-    public void setLoadingHandler(WeakReference<LoadingHandler> loadingHandler) {
-        this.loadingHandler = loadingHandler;
+    public void setLoadingHandler(LoadingHandler loadingHandler) {
+        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
     }
 
     @Override

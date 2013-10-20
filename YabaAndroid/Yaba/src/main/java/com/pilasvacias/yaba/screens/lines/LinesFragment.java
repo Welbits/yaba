@@ -136,37 +136,10 @@ public class LinesFragment extends NetworkFragment {
                         }
                     }
                 })
+                .cacheSkip(true)
                 .cacheTime(Time.days(1D))
-                        //WOOO WOOO CHAINED REQUESTS
-                .chain(Line.class)
-                .body(new GetListLines())
-                .success(new EmtSuccessHandler<Line>() {
-                    @Override
-                    public void onSuccess(final EmtData<Line> result) {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        L.og.d("result => %s", 2);
-                        for (Line line : result.getPayload()) {
-                            if (!line.Label.startsWith("N")) {
-                                adapter.add(line);
-                            }
-                        }
-                    }
-                })
-                        //WOOO WOOO CHAINED REQUESTS
-                .chain(Line.class)
-                .body(new GetListLines())
-                .success(new EmtSuccessHandler<Line>() {
-                    @Override
-                    public void onSuccess(final EmtData<Line> result) {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        L.og.d("result => %s", 3);
-                        for (Line line : result.getPayload()) {
-                            if (!line.Label.startsWith("N")) {
-                                adapter.add(line);
-                            }
-                        }
-                    }
-                });
+                .execute();
+
     }
 
     public static class GetListLines extends EmtBody {

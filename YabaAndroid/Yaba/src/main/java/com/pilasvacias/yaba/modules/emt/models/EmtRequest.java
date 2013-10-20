@@ -84,7 +84,7 @@ public class EmtRequest<T> extends Request<EmtData<T>> {
     }
 
     @Override protected void deliverResponse(EmtData<T> response) {
-        if (listener != null)
+        if (listener != null && !isCanceled())
             listener.onResponse(response);
     }
 

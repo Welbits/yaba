@@ -7,40 +7,40 @@ import java.lang.ref.WeakReference;
 /**
  * Created by pablo on 15/10/13.
  * <p/>
- * Success Handler used in {@link com.pilasvacias.yaba.modules.emt.EmtRequestBuilder}
+ * Success Handler used in {@link com.pilasvacias.yaba.modules.emt.builders.EmtRequestBuilder}
  */
 public abstract class SuccessHandler<T> implements Response.Listener<T> {
 
     private WeakReference<LoadingHandler> loadingHandler;
-    private Vistor<T> vistor;
+    private Visitor visitor;
 
-    public Vistor<T> getVistor() {
-        return vistor;
+    public Visitor getVisitor() {
+        return visitor;
     }
 
-    public void setVistor(Vistor<T> vistor) {
-        this.vistor = vistor;
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
     }
 
-    public void setLoadingHandler(WeakReference<LoadingHandler> loadingHandler) {
-        this.loadingHandler = loadingHandler;
+    public void setLoadingHandler(LoadingHandler loadingHandler) {
+        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
     }
 
     @Override public final void onResponse(T response) {
         if (loadingHandler != null && loadingHandler.get() != null)
             loadingHandler.get().hideLoading(null, true);
-        if(vistor != null)
-            vistor.beforeResponse(response);
+        if(visitor != null)
+            visitor.beforeResponse(response);
         onSuccess(response);
-        if(vistor != null)
-            vistor.afterResponse(response);
+        if(visitor != null)
+            visitor.afterResponse(response);
     }
 
     public abstract void onSuccess(T result);
 
-    public interface Vistor<K> {
-        void beforeResponse(K response);
-        void afterResponse(K response);
+    public interface Visitor {
+        void beforeResponse(Object response);
+        void afterResponse(Object response);
     }
 
 }

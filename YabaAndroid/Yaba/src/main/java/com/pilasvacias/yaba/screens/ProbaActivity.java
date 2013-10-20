@@ -7,6 +7,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -15,9 +18,11 @@ import com.pilasvacias.yaba.core.experimental.MagicTurn;
 import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.experimental.Token;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 
 import java.util.List;
@@ -42,53 +47,52 @@ public class ProbaActivity extends NetworkActivity {
         setContentView(R.layout.activity_proba);
         MagicTurn.restore(this, savedInstanceState);
         Views.inject(this);
-        if (test == null) {
-            createRequest();
-        } else {
-            createAdapter();
-        }
+
+        VolleyLog.DEBUG = true;
     }
 
-    private TypeToken<EmtData<Line>> token = new TypeToken<EmtData<Line>>() {
-    };
-
-    private void createAdapter() {
-        ArrayAdapter<Line> adapter =
-                new ArrayAdapter<Line>(ProbaActivity.this, android.R.layout.activity_list_item) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        TextView t = new TextView(getContext());
-                        Line line = getItem(position);
-                        t.setText(line.Line + " " + line.NameA + " " + line.NameB);
-                        return t;
-                    }
-                };
-        adapter.addAll(lineTest);
-        adapter.add(line);
-        adapter.add(line);
-        adapter.add(line);
-        adapter.add(line);
-        adapter.add(line);
-        adapter.add(line);
-        listView.setAdapter(adapter);
+    @Override protected void onResume() {
+        super.onResume();
+        createRequest();
     }
 
     private void createRequest() {
         requestManager
-                .beginRequest(Line.class)
-                .body(new GetListLines())
-                .success(new EmtSuccessHandler<Line>() {
-                    @Override public void onSuccess(final EmtData<Line> result) {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        lineTest = result.getPayload();
-                        line = result.getPayload().get(0);
-                        test = result;
-                        createAdapter();
+                .beginChainedRequest()
+                    .newLink(Line.class)
+                        .body(new GetListLines())
+                        .success(new EmtSuccessHandler<Line>() {
+                            @Override public void onSuccess(final EmtData<Line> result) {
+                                L.og.d("result 1");
+                            }
+                        })
+                .fakeTime(3000)
+                .endLink()
+                    .newLink(Line.class)
+                        .body(new GetListLines())
+                        .success(new EmtSuccessHandler<Line>() {
+                            @Override public void onSuccess(final EmtData<Line> result) {
+                                L.og.d("result 2");
+                            }
+                        })
+                    .fakeTime(3000)
+                .endLink()
+                    .newLink(Line.class)
+                        .body(new GetListLines())
+                        .success(new EmtSuccessHandler<Line>() {
+                            @Override public void onSuccess(final EmtData<Line> result) {
+                                L.og.d("result 3");
+                            }
+                        })
+                    .fakeTime(3000)
+                .endLink()
+                .error(new EmtErrorHandler() {
+                    @Override public void handleError(VolleyError volleyError) {
+                        super.handleError(volleyError);
                     }
                 })
-                .fakeTime(Time.seconds(5))
-                .cacheSkip(true)
                 .execute();
+
     }
 
     public static class GetListLines extends EmtBody {
@@ -101,10 +105,6 @@ public class ProbaActivity extends NetworkActivity {
         MagicTurn.save(this, outState);
     }
 
-    @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
     public static class Line {
         String GroupNumber;
         String DateFirst;
@@ -115,7 +115,4 @@ public class ProbaActivity extends NetworkActivity {
         String NameB;
     }
 
-    @Override protected void onDestroy() {
-        super.onDestroy();
-    }
 }

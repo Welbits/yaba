@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.emt;
+package com.pilasvacias.yaba.modules.emt.builders;
 
 import android.content.Context;
 
@@ -16,8 +16,6 @@ import com.pilasvacias.yaba.modules.network.handlers.impl.DialogLoadingHandler;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import java.lang.ref.WeakReference;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by pablo on 10/14/13.
@@ -25,28 +23,32 @@ import java.util.List;
  */
 public class EmtRequestBuilder<T> {
 
-    private EmtBody body;
-    private Class<T> responseType;
-    private EmtSuccessHandler<T> successHandler = new FakeSuccessHandler<T>();
-    private EmtErrorHandler errorHandler = new FakeErrorHandler();
-    private RequestQueue requestQueue;
-    private LoadingHandler loadingHandler;
-    private Context context;
-    private Object tag;
-    private boolean verbose = false;
-    private boolean ignoreLoading = false;
-    private boolean ignoreErrors = false;
-    private boolean useCache = true;
-    private long fakeTime = 0L;
-    private long expireTime = 0L;
-    private long refreshTime = 0L;
+    //Visibility is package local to avoid getters
+    EmtBody body;
+    Class<T> responseType;
+    EmtSuccessHandler<T> successHandler;
+    EmtErrorHandler errorHandler;
+    RequestQueue requestQueue;
+    LoadingHandler loadingHandler;
+    Context context;
+    Object tag;
+    boolean verbose = false;
+    boolean ignoreLoading = false;
+    boolean ignoreErrors = false;
+    boolean useCache = true;
+    long fakeTime = 0L;
+    long expireTime = 0L;
+    long refreshTime = 0L;
+    EmtChainRequest chainRequest;
+    String loadingMessage;
+    EmtRequest<T> emtRequest;
 
     /**
-     * Use {@link com.pilasvacias.yaba.modules.emt.EmtRequestManager}
+     * Use {@link EmtRequestManager}
      *
      * @param requestQueue
      */
-    EmtRequestBuilder(RequestQueue requestQueue) {
+    protected EmtRequestBuilder(RequestQueue requestQueue) {
         this.requestQueue = requestQueue;
     }
 
@@ -162,56 +164,37 @@ public class EmtRequestBuilder<T> {
         return this;
     }
 
+    public EmtRequestBuilder<T> chain(EmtChainRequest emtChainRequest) {
+        this.chainRequest = emtChainRequest;
+        return this;
+    }
+
+    public EmtChainRequest endLink() {
+        return chainRequest;
+    }
+
+    public EmtRequest<T> getEmtRequest() {
+        return emtRequest;
+    }
+
     public EmtRequest<T> execute() {
-        return execute(create());
+        if (emtRequest == null)
+            emtRequest = create();
+        return execute(emtRequest);
     }
 
     public EmtRequest<T> execute(EmtRequest<T> emtRequest) {
-        EmtRequest<T> request = create();
-        requestQueue.add(request);
+        requestQueue.add(emtRequest);
 
-        if (loadingHandler != null && !ignoreLoading)
-            loadingHandler.showLoading("");
+        if (!ignoreLoading && loadingHandler != null)
+            loadingHandler.showLoading(loadingMessage);
 
-        return request;
-    }
-
-    public <K> EmtRequestBuilder<K> chain(Class<K> nextResponseType) {
-        final EmtRequestBuilder<K> next = new EmtRequestBuilder<K>(requestQueue)
-                .responseType(nextResponseType)
-                .tag(tag)
-                .context(context)
-                .ignoreLoading(true)
-                .loading(loadingHandler);
-
-        successHandler.setVistor(new SuccessHandler.Vistor<EmtData<T>>() {
-            @Override public void beforeResponse(EmtData<T> response) {
-            }
-
-            @Override public void afterResponse(EmtData<T> response) {
-                next.execute();
-            }
-        });
-
-        errorHandler.setVistor(new ErrorHandler.Vistor() {
-            @Override public void beforeError(VolleyError response) {
-
-            }
-
-            @Override public void afterError(VolleyError response) {
-            }
-        });
-
-        execute();
-
-        return next;
+        return emtRequest;
     }
 
     public EmtRequest<T> create() {
-        if (!ignoreErrors) {
-            if (errorHandler instanceof FakeErrorHandler)
-                errorHandler = new EmtErrorHandler();
-
+        if (!ignoreErrors && errorHandler == null) {
+            errorHandler = new EmtErrorHandler();
             errorHandler.setContext(context);
         }
 
@@ -227,8 +210,13 @@ public class EmtRequestBuilder<T> {
         if (!ignoreLoading && loadingHandler == null)
             loadingHandler = new DialogLoadingHandler(context, request);
 
-        errorHandler.setLoadingHandler(new WeakReference<LoadingHandler>(loadingHandler));
-        successHandler.setLoadingHandler(new WeakReference<LoadingHandler>(loadingHandler));
+        if (!ignoreErrors)
+            errorHandler.setLoadingHandler(loadingHandler);
+
+        //This doesn't make much sense in EMT, perform and request and ignore the result.
+        //but it's useful in POST, PUT or chained requests.
+        if (successHandler != null)
+            successHandler.setLoadingHandler(loadingHandler);
 
 
         return request;
@@ -247,13 +235,16 @@ public class EmtRequestBuilder<T> {
         }
     }
 
-    private static class FakeSuccessHandler<T> extends EmtSuccessHandler<T> {
+    public static class FakeSuccessHandler<T> extends EmtSuccessHandler<T> {
         @Override public void onSuccess(EmtData<T> result) {
         }
     }
 
-    private static class FakeErrorHandler extends EmtErrorHandler {
+    public static class FakeErrorHandler extends EmtErrorHandler {
         @Override public void handleError(VolleyError volleyError) {
+        }
+
+        @Override public void setLoadingHandler(LoadingHandler loadingHandler) {
         }
     }
 }
