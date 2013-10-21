@@ -97,7 +97,7 @@ public class MainActivity extends NetworkActivity {
             View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
             Views.inject(this, rootView);
 
-            if (title == null) {
+            if (title == null && titleResource != 0) {
                 title = getString(titleResource);
             }
             if (savedInstanceState != null) {

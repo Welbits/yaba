@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.BaseFragment;
-import com.pilasvacias.yaba.core.event.FavoriteCreatedEvent;
+import com.pilasvacias.yaba.core.network.NetworkFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
@@ -35,7 +35,7 @@ import butterknife.Views;
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public class LinesFragment extends BaseFragment {
+public class LinesFragment extends NetworkFragment {
 
     // Constants
     private static final String ITEMS_KEY = "items";
@@ -121,14 +121,14 @@ public class LinesFragment extends BaseFragment {
     }
 
     public void loadLines() {
-        getBaseActivity().getRequestManager()
+        getRequestManager()
                 .beginRequest(Line.class)
                 .body(new GetListLines())
                 .success(new EmtSuccessHandler<Line>() {
                     @Override
                     public void onSuccess(final EmtData<Line> result) {
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        L.og.d("result =>\n %s", gson.toJson(result));
+                        L.og.d("result => %s", 1);
                         for (Line line : result.getPayload()) {
                             if (!line.Label.startsWith("N")) {
                                 adapter.add(line);
@@ -136,9 +136,10 @@ public class LinesFragment extends BaseFragment {
                         }
                     }
                 })
-                .verbose(true)
+                .cacheSkip(true)
                 .cacheTime(Time.days(1D))
                 .execute();
+
     }
 
     public static class GetListLines extends EmtBody {

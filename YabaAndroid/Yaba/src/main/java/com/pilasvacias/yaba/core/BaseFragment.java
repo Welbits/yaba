@@ -10,6 +10,8 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
+import dagger.ObjectGraph;
+
 /**
  * Created by pablo on 10/9/13.
  * welvi-android
@@ -18,13 +20,12 @@ public class BaseFragment extends Fragment {
 
     protected boolean isBusRegistered;
 
-    @Override public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getBaseActivity().getActivityGraph().inject(this);
-    }
-
     public NetworkActivity getBaseActivity() {
         return (NetworkActivity) getActivity();
+    }
+
+    public ObjectGraph getActivityGraph() {
+        return getBaseActivity().getActivityGraph();
     }
 
     protected void registerBus() {

@@ -16,31 +16,31 @@ public interface TimeProfiler {
 
         private String tag;
         private long init;
+        private long last;
         private List<Long> timeMarks = new LinkedList<Long>();
         private List<String> stringMarks = new LinkedList<String>();
 
-        @Override public void begin(String tag) {
-            clear();
-            this.tag = tag;
+        @Override public void begin(String tag, Object... args) {
+            reset();
+            this.tag = String.format(tag, args);
         }
 
-        public void clear() {
+        public void reset() {
             tag = null;
-            init = System.currentTimeMillis();
+            last = init = System.currentTimeMillis();
             timeMarks.clear();
             stringMarks.clear();
         }
 
-        @Override public void addMark(String mark) {
-            stringMarks.add(mark);
-            if (timeMarks.isEmpty())
-                timeMarks.add(System.currentTimeMillis() - init);
-            else
-                timeMarks.add(System.currentTimeMillis() - timeMarks.get(timeMarks.size() - 1));
+        @Override public void addMark(String mark, Object... args) {
+            stringMarks.add(String.format(mark, args));
+            long now = System.currentTimeMillis();
+            timeMarks.add(now - last);
+            last = now;
         }
 
         @Override public void end() {
-            String separator = "====================================";
+            String separator = String.format("·----------> begin %s", tag);
             StringBuilder builder;
             Log.d("TimerProfiler", separator);
             long sum = 0;
@@ -48,18 +48,16 @@ public interface TimeProfiler {
             for (int i = 0; i < timeMarks.size(); i++) {
                 sum += timeMarks.get(i);
                 builder = new StringBuilder();
-                builder.append("+").append(format(timeMarks.get(i))).append(" | ").append(i + 1).append(" ")
-                        .append(stringMarks.get(i)).append(" ").append(percent(total, sum));
+                builder.append("| +").append(format(timeMarks.get(i))).append(" | ").append(percent(total, timeMarks.get(i))).append(" \t")
+                        .append(stringMarks.get(i));
                 Log.d("TimerProfiler", builder.toString());
             }
+
             builder = new StringBuilder();
-            if (timeMarks.isEmpty())
-                builder.append(" ");
-            else
-                builder.append("=");
-            builder.append(format(total)).append(" | # ").append(tag);
+            builder.append("···").append(total).append(" ms <==== end ").append(tag);
             Log.d("TimerProfiler", builder.toString());
-            clear();
+            //Log.d("TimerProfiler", separator);
+            reset();
         }
 
         private String format(long time) {
@@ -67,16 +65,16 @@ public interface TimeProfiler {
         }
 
         private String percent(long total, long part) {
-            return new DecimalFormat("#.%").format(((double) (total)) / part);
+            return new DecimalFormat("##%").format(((double) (part)) / total);
         }
 
     };
     public static TimeProfiler PROD = new TimeProfiler() {
-        @Override public void begin(String tag) {
+        @Override public void begin(String tag, Object... args) {
 
         }
 
-        @Override public void addMark(String mark) {
+        @Override public void addMark(String mark, Object... args) {
 
         }
 
@@ -85,9 +83,9 @@ public interface TimeProfiler {
         }
     };
 
-    void begin(String tag);
+    void begin(String tag, Object... args);
 
-    void addMark(String mark);
+    void addMark(String mark, Object... args);
 
     void end();
 }

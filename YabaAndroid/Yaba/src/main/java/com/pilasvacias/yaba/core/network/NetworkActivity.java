@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.core.BaseActivity;
-import com.pilasvacias.yaba.modules.emt.EmtRequestManager;
+import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 
 import javax.inject.Inject;
 
@@ -20,7 +20,7 @@ public class NetworkActivity extends BaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestManager.setNetworkActivity(this);
+        requestManager.setContext(this);
     }
 
     public RequestQueue getRequestQueue() {

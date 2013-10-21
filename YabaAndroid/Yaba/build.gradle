@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 apply plugin: 'android'
@@ -20,19 +20,24 @@ dependencies {
 
     compile project(':Volley')
     compile project(':PagerSlidingTabStrip')
+
+    //Android
     compile 'com.android.support:appcompat-v7:18.0.0'
 
+    //Jake Wharton
     apt 'com.jakewharton:butterknife:3.0.0'
     compile 'com.jakewharton:butterknife:3.0.0'
-
     compile 'com.jakewharton.timber:timber:1.1.0'
 
+    //Square
     apt 'com.squareup.dagger:dagger-compiler:1.1.0'
     compile 'com.squareup.dagger:dagger:1.1.0'
-
     compile 'com.squareup:otto:1.3.4'
+
+    //Parsing
     compile 'com.google.code.gson:gson:2.2.4'
-    compile ('com.thoughtworks.xstream:xstream:1.4.5'){
+    compile('com.thoughtworks.xstream:xstream:1.4.5') {
+        //It's in the android jar
         exclude module: 'xmlpull'
     }
 }
@@ -45,20 +50,38 @@ android {
         minSdkVersion 10
         targetSdkVersion 18
     }
-}
 
-android.applicationVariants.all { variant ->
-    aptOutput = file("${project.buildDir}/source/apt/${variant.dirName}")
+    final Console console = System.console();
+    signingConfigs {
+        if (console != null)
+            release {
+                storeFile file("yabakeystore.jks")
+                storePassword console.readLine("\nEnter keystore password: ")
+                keyAlias 'Yaba'
+                keyPassword console.readLine("Enter key password: ")
+            }
+    }
 
-    variant.javaCompile.doFirst {
-        aptOutput.mkdirs()
-        variant.javaCompile.options.compilerArgs += [
-                '-processorpath', configurations.apt.getAsPath(),
-                '-s', aptOutput
-        ]
+    buildTypes {
+        debug {
+            packageNameSuffix ".debug"
+            versionNameSuffix ".d"
+        }
+        if (console != null)
+            release {
+                signingConfig signingConfigs.release
+            }
     }
 }
 
-tasks.withType(Compile) {
-    options.encoding = "UTF-8"
+android.applicationVariants.all { variant ->
+    android.ext.aptOut = file("${project.buildDir}/source/apt/${variant.dirName}")
+
+    variant.javaCompile.doFirst {
+        android.ext.aptOut.mkdirs()
+        variant.javaCompile.options.compilerArgs += [
+                '-processorpath', configurations.apt.getAsPath(),
+                '-s', android.ext.aptOut
+        ]
+    }
 }

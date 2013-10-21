@@ -11,5 +11,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * welvi-android
  */
 @Retention(RUNTIME) @Target(FIELD)
-public @interface SaveState {
+public @interface Save {
+    String token() default "";
 }
