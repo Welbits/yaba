@@ -16,7 +16,7 @@ import dagger.Provides;
 
 /**
  * Created by pablo on 10/11/13.
- * welvi-android
+ *
  */
 @Module(injects =
         {

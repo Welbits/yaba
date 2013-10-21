@@ -180,10 +180,6 @@ public class EmtRequestBuilder<T> {
     public EmtRequest<T> execute() {
         if (emtRequest == null)
             emtRequest = create();
-        return execute(emtRequest);
-    }
-
-    public EmtRequest<T> execute(EmtRequest<T> emtRequest) {
         requestQueue.add(emtRequest);
 
         if (!ignoreLoading && loadingHandler != null)
@@ -191,6 +187,7 @@ public class EmtRequestBuilder<T> {
 
         return emtRequest;
     }
+
 
     public EmtRequest<T> create() {
         if (!ignoreErrors && errorHandler == null) {
@@ -205,6 +202,7 @@ public class EmtRequestBuilder<T> {
         request.setCacheRefreshTime(refreshTime);
         request.setCacheExpireTime(expireTime);
         request.setShouldCache(useCache);
+        emtRequest = request;
 
 
         if (!ignoreLoading && loadingHandler == null)
