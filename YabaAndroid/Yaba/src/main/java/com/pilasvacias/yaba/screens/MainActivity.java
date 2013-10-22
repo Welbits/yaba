@@ -25,7 +25,7 @@ import butterknife.InjectView;
 import butterknife.Views;
 
 /**
- * Created by IzanRodrigo on 14/10/13.
+ * Created by OgirdorNazi on 14/10/13.
  */
 public class MainActivity extends NetworkActivity {
     // Inject views
