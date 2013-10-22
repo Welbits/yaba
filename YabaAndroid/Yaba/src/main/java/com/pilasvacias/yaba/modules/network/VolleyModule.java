@@ -12,8 +12,11 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by pablo on 10/9/13.
- * welvi-android
+ * Created by Pablo Orgaz - 10/21/13 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * <p/>
+ * A simple module depending on {@link com.pilasvacias.yaba.modules.util.ContextModule}
+ * that is meant to be included in modules that need network.
  */
 @Module(includes = ContextModule.class, library = true)
 public class VolleyModule {

@@ -11,7 +11,7 @@ public class EmtError extends VolleyError {
 
     EmtStatusCode emtStatusCode;
 
-    public EmtError(NetworkResponse response, EmtData<?> emtResult) {
+    public EmtError(EmtData<?> emtResult, NetworkResponse response) {
         super(response);
         emtStatusCode = EmtStatusCode.getFromResponse(emtResult.getEmtInfo());
     }

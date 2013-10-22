@@ -15,8 +15,10 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by pablo on 10/11/13.
- *
+ * Created by Pablo Orgaz - 10/21/13 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * The module for EMT. If you instance a subclass of {@link com.pilasvacias.yaba.core.network.NetworkFragment}
+ * or {@link com.pilasvacias.yaba.core.network.NetworkActivity} declare it here as Injects.
  */
 @Module(injects =
         {

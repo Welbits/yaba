@@ -1,12 +1,13 @@
 package com.pilasvacias.yaba.modules.network.handlers;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 /**
  * Created by pablo on 15/10/13.
  */
-public abstract class ErrorHandler implements Response.ErrorListener {
+public abstract class ErrorHandler<T> implements Response.ErrorListener {
     public Visitor getVisitor() {
         return visitor;
     }
@@ -19,18 +20,24 @@ public abstract class ErrorHandler implements Response.ErrorListener {
 
     @Override
     public final void onErrorResponse(VolleyError error) {
-        if(visitor != null)
+        if (visitor != null)
             visitor.beforeError(error);
         handleError(error);
-        if(visitor != null)
+        if (visitor != null)
             visitor.afterError(error);
     }
 
     public abstract void handleError(VolleyError error);
 
+    public abstract VolleyError generateErrorResponse(T data, NetworkResponse response);
+
+    public abstract boolean responseIsOk(T data, NetworkResponse response);
+
     public interface Visitor {
         void beforeError(VolleyError response);
+
         void afterError(VolleyError response);
     }
+
 
 }

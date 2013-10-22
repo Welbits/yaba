@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
  * Created by pablo on 10/14/13.
  * welvi-android
  */
-public class EmtRequestBuilder<T> {
+public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuilder<T>> {
 
     //Visibility is package local to avoid getters
     EmtBody body;

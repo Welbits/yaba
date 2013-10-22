@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.modules.emt.models.EmtError;
 import com.pilasvacias.yaba.modules.network.ErrorCause;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
@@ -14,7 +15,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by pablo on 15/10/13.
  */
-public class EmtErrorHandler extends ErrorHandler {
+public class EmtErrorHandler extends ErrorHandler<EmtData<?>> {
 
     private WeakReference<LoadingHandler> loadingHandler;
     private WeakReference<Context> context;
@@ -51,12 +52,17 @@ public class EmtErrorHandler extends ErrorHandler {
         hideLoadingHandler(cause.name());
     }
 
-    public boolean responseIsOk(EmtData<?> result, NetworkResponse response) {
+    @Override public VolleyError generateErrorResponse(EmtData<?> data, NetworkResponse response) {
+        return new EmtError(data, response);
+    }
+
+
+    @Override public boolean responseIsOk(EmtData<?> result, NetworkResponse response) {
         return result != null && result.getEmtInfo().getResultCode() == 0;
     }
 
     private void hideLoadingHandler(String message) {
-        if (loadingHandler!= null && loadingHandler.get() != null)
+        if (loadingHandler != null && loadingHandler.get() != null)
             loadingHandler.get().hideLoading(message, false);
     }
 
