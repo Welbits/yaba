@@ -72,6 +72,18 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    productFlavors {
+        api2 {
+            packageName "com.pilasvacias.api2.yaba"
+            minSdkVersion 10
+        }
+
+        api4 {
+            packageName "com.pilasvacias.api4.yaba"
+            minSdkVersion 10
+        }
+    }
 }
 
 android.applicationVariants.all { variant ->
@@ -84,6 +96,7 @@ android.applicationVariants.all { variant ->
         ]
     }
 }
+
 //noinspection GroovyAssignabilityCheck
 task releaseInfo << {
     project.ext.pass = System.console().readLine("\nEnter keystore password: ")
@@ -111,11 +124,10 @@ task buildSigned(dependsOn: assemble) << {
 if (project.hasProperty('signedApk') && System.console() != null) {
     tasks.whenTaskAdded { task ->
         println task.name
-        if (task.name.matches("processReleaseManifest")) {
+        if (task.name.matches('^package.*Release$')) {
             task.dependsOn('releaseInfo')
         }
     }
-
 } else {
     android.buildTypes.release.signingConfig = null
 }
