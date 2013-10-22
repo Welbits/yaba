@@ -1,0 +1,1 @@
+./gradlew clean buildSigned -PsignedApk=1

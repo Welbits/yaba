@@ -8,6 +8,9 @@ buildscript {
 }
 apply plugin: 'android'
 
+project.ext.versionName = "manifest"
+project.ext.versionCode = 0
+
 repositories {
     mavenCentral()
 }
@@ -51,15 +54,13 @@ android {
         targetSdkVersion 18
     }
 
-    final Console console = System.console();
     signingConfigs {
-        if (console != null)
-            release {
-                storeFile file("yabakeystore.jks")
-                storePassword console.readLine("\nEnter keystore password: ")
-                keyAlias 'Yaba'
-                keyPassword console.readLine("Enter key password: ")
-            }
+        release {
+            storeFile file("yabakeystore.jks")
+            keyAlias 'Yaba'
+            storePassword ">implying I will put it here"
+            keyPassword ">implying I will put it here"
+        }
     }
 
     buildTypes {
@@ -67,16 +68,14 @@ android {
             packageNameSuffix ".debug"
             versionNameSuffix ".d"
         }
-        if (console != null)
-            release {
-                signingConfig signingConfigs.release
-            }
+        release {
+            signingConfig signingConfigs.release
+        }
     }
 }
 
 android.applicationVariants.all { variant ->
     android.ext.aptOut = file("${project.buildDir}/source/apt/${variant.dirName}")
-
     variant.javaCompile.doFirst {
         android.ext.aptOut.mkdirs()
         variant.javaCompile.options.compilerArgs += [
@@ -85,3 +84,40 @@ android.applicationVariants.all { variant ->
         ]
     }
 }
+//noinspection GroovyAssignabilityCheck
+task releaseInfo << {
+    project.ext.pass = System.console().readLine("\nEnter keystore password: ")
+    project.ext.versionName = System.console().readLine("Enter version name: ")
+    project.ext.versionCode = System.console().readLine("Enter version code: ")
+    android.signingConfigs.release.storePassword = project.ext.pass
+    android.signingConfigs.release.keyPassword = project.ext.pass
+    android.defaultConfig.versionName = project.ext.versionName
+    android.defaultConfig.versionCode = project.ext.versionCode.toInteger()
+}
+
+//noinspection GroovyAssignabilityCheck
+task buildSigned(dependsOn: assemble) << {
+    copy {
+        ext.vn = project.ext.versionName
+        ext.vc = project.ext.versionCode
+
+        from "${project.buildDir}/apk"
+        into "${project.rootDir}/apks/${vn}"
+        include "*-release.apk"
+        rename '(.*)-release(\\.apk)', '$1' + "-${vn}-${vc}" + '$2'
+    }
+}
+
+if (project.hasProperty('signedApk') && System.console() != null) {
+    tasks.whenTaskAdded { task ->
+        println task.name
+        if (task.name.matches("processReleaseManifest")) {
+            task.dependsOn('releaseInfo')
+        }
+    }
+
+} else {
+    android.buildTypes.release.signingConfig = null
+}
+
+
