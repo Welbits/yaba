@@ -15,9 +15,8 @@ import com.pilasvacias.yaba.core.BaseFragment;
 import com.pilasvacias.yaba.core.adapter.pager.DepthPageTransformer;
 import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
 import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
-import com.pilasvacias.yaba.core.event.FavoriteCreatedEvent;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.squareup.otto.Subscribe;
+import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
 import java.util.Random;
 
@@ -45,22 +44,25 @@ public class MainActivity extends NetworkActivity {
     }
 
     private void configureViewPager() {
-        String[] titles = getResources().getStringArray(R.array.tab_titles);
-        viewPager.setOffscreenPageLimit(4);
         WPagerAdapter
                 .with(getSupportFragmentManager())
-                .configureWithTabs(this)
+                .setFragments(
+                        new LinesFragment(),
+                        DummyFragment.newInstance(R.string.tab_find)
+                )
+                .setPageTransformer(true, new Random().nextBoolean()
+                        ? new DepthPageTransformer()
+                        : new ZoomOutPageTransformer())
+                .setOffscreenLimit(2)
+                .setTitles(getResources().getStringArray(R.array.tab_titles))
                 .into(viewPager);
-        viewPager.setPageTransformer(true, new Random().nextBoolean()
-                ? new DepthPageTransformer()
-                : new ZoomOutPageTransformer());
         tabStrip.setViewPager(viewPager);
     }
 
-    @Subscribe
-    public void onFavoriteCreated(FavoriteCreatedEvent event) {
-        viewPager.setCurrentItem(WPagerAdapter.Tab.FAVORITES.ordinal(), true);
-    }
+//    @Subscribe
+//    public void onFavoriteCreated(FavoriteCreatedEvent event) {
+//        viewPager.setCurrentItem(TAB_FAVORITES, true);
+//    }
 
     public static class DummyFragment extends BaseFragment {
         // Constants

@@ -1,8 +1,11 @@
 package com.pilasvacias.yaba.screens.lines;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
@@ -13,12 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.core.BaseFragment;
+import com.pilasvacias.yaba.core.adapter.WArrayAdapter;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
@@ -46,6 +50,13 @@ public class LinesFragment extends NetworkFragment {
     private LinesAdapter adapter;
     private ActionMode actionMode;
 
+    private static Intent getShareIntent(Line item) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
+        return intent;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +69,31 @@ public class LinesFragment extends NetworkFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_simple_list, container, false);
         Views.inject(this, rootView);
+        configureListView();
+        configureDropdown();
+        return rootView;
+    }
 
+    private void configureDropdown() {
+        ActionBar actionBar = getBaseActivity().getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        final DropdownAdapter dropdownAdapter = new DropdownAdapter(getBaseActivity(),
+                android.R.layout.simple_spinner_dropdown_item);
+        for (int i = 0; i < 5; i++) {
+            dropdownAdapter.add("Dummy " + i);
+        }
+        actionBar.setListNavigationCallbacks(dropdownAdapter, new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int i, long l) {
+                String item = dropdownAdapter.getItem(i);
+                ToastUtils.showShort(getBaseActivity(), item);
+                return false;
+            }
+        });
+    }
+
+    private void configureListView() {
         adapter = new LinesAdapter(getBaseActivity(), R.layout.list_item_line);
 
         listView.setEmptyView(EmptyView.makeText(listView, R.string.empty_list));
@@ -83,8 +118,6 @@ public class LinesFragment extends NetworkFragment {
             }
         });
         listView.setAdapter(adapter);
-
-        return rootView;
     }
 
     @Override
@@ -127,7 +160,6 @@ public class LinesFragment extends NetworkFragment {
                 .success(new EmtSuccessHandler<Line>() {
                     @Override
                     public void onSuccess(final EmtData<Line> result) {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         L.og.d("result => %s", 1);
                         for (Line line : result.getPayload()) {
                             if (!line.Label.startsWith("N")) {
@@ -139,7 +171,6 @@ public class LinesFragment extends NetworkFragment {
                 .cacheSkip(true)
                 .cacheTime(Time.days(1D))
                 .execute();
-
     }
 
     public static class GetListLines extends EmtBody {
@@ -187,10 +218,30 @@ public class LinesFragment extends NetworkFragment {
         }
     }
 
-    private static Intent getShareIntent(Line item) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
-        return intent;
+    public class DropdownAdapter extends WArrayAdapter<String, DropdownAdapter.ViewHolder> {
+
+        public DropdownAdapter(Context context, int layoutResource) {
+            super(context, layoutResource);
+        }
+
+        @Override
+        protected void changeView(String item, ViewHolder viewHolder) {
+            viewHolder.textView.setText(item);
+        }
+
+        @Override
+        protected ViewHolder createViewHolder(View view) {
+            return new ViewHolder(view);
+        }
+
+        public class ViewHolder {
+            // Inject views
+            @InjectView(android.R.id.text1)
+            public TextView textView;
+
+            ViewHolder(View view) {
+                Views.inject(this, view);
+            }
+        }
     }
 }
