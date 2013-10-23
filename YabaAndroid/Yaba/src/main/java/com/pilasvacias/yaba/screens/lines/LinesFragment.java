@@ -2,7 +2,6 @@ package com.pilasvacias.yaba.screens.lines;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -16,11 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.android.volley.VolleyLog;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.WArrayAdapter;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
@@ -62,6 +60,7 @@ public class LinesFragment extends NetworkFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+        VolleyLog.DEBUG = true;
     }
 
     @Override

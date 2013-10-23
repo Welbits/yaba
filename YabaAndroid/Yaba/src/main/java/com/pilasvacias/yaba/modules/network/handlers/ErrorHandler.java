@@ -1,22 +1,37 @@
 package com.pilasvacias.yaba.modules.network.handlers;
 
-import com.android.volley.NetworkResponse;
+import android.content.Context;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by pablo on 15/10/13.
  */
-public abstract class ErrorHandler<T> implements Response.ErrorListener {
+public abstract class ErrorHandler implements Response.ErrorListener {
+
+    private WeakReference<LoadingHandler> loadingHandler = new WeakReference<LoadingHandler>(null);
+    private WeakReference<Context> context = new WeakReference<Context>(null);
+    private Visitor visitor;
+
     public Visitor getVisitor() {
         return visitor;
     }
 
-    public void setVisitor(Visitor visitor) {
-        this.visitor = visitor;
+    public LoadingHandler getLoadingHandler() {
+        return loadingHandler.get();
     }
 
-    private Visitor visitor;
+    public Context getContext() {
+        return context.get();
+    }
+
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
+
+    }
 
     @Override
     public final void onErrorResponse(VolleyError error) {
@@ -29,9 +44,13 @@ public abstract class ErrorHandler<T> implements Response.ErrorListener {
 
     public abstract void handleError(VolleyError error);
 
-    public abstract VolleyError generateErrorResponse(T data, NetworkResponse response);
+    public void setContext(Context context) {
+        this.context = new WeakReference<Context>(context);
+    }
 
-    public abstract boolean responseIsOk(T data, NetworkResponse response);
+    public void setLoadingHandler(LoadingHandler loadingHandler) {
+        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
+    }
 
     public interface Visitor {
         void beforeError(VolleyError response);

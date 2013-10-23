@@ -2,14 +2,10 @@ package com.pilasvacias.yaba.modules.emt.models;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.google.gson.Gson;
-import com.pilasvacias.yaba.BuildConfig;
+import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
-import com.pilasvacias.yaba.modules.network.CacheMaker;
+import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.models.AbstractRequest;
 import com.pilasvacias.yaba.util.L;
 
@@ -26,9 +22,8 @@ public class EmtRequest<T> extends AbstractRequest<EmtData<T>> {
     private final EmtBody body;
     private final Class<T> responseType;
 
-
-    public EmtRequest(EmtBody body, EmtSuccessHandler<T> listener, EmtErrorHandler emtErrorHandler, Class<T> responseType) {
-        super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", emtErrorHandler);
+    public EmtRequest(ErrorHandler errorHandler, EmtSuccessHandler<T> successHandler, EmtBody body, Class<T> responseType) {
+        super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", successHandler, errorHandler);
         this.body = body;
         this.responseType = responseType;
     }
@@ -55,12 +50,18 @@ public class EmtRequest<T> extends AbstractRequest<EmtData<T>> {
         return headers;
     }
 
-    @Override public String getCacheKey() {
-        return body.getCacheKey();
-    }
-
     @Override public EmtData<T> getParsedData(NetworkResponse response) {
         String xml = new String(response.data);
         return EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType, body);
+    }
+
+    @Override public VolleyError generateErrorResponse(NetworkResponse response, EmtData<T> data) {
+        return new EmtError(data, response);
+
+    }
+
+    @Override public boolean responseIsOk(NetworkResponse response, EmtData<T> data) {
+        return data != null && data.getEmtInfo().getResultCode() == 0;
+
     }
 }

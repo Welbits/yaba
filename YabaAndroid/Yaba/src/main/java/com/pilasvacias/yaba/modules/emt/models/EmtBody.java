@@ -17,11 +17,11 @@ public class EmtBody {
     @XStreamAsAttribute
     String xmlns = "http://tempuri.org/";
 
-    private String idClient = "WEB.SERVICIOS.YABA";
-    private String PassKey = "73342A86-EE01-452C-AE73-8CEB16574E36";
+    //private String idClient = "WEB.SERVICIOS.YABA";
+    //private String PassKey = "73342A86-EE01-452C-AE73-8CEB16574E36";
 
-    //private String idClient = "WEB.PORTALMOVIL.OTROS";
-    //private String PassKey = "0810DDE4-02FC-4C0E-A440-1BD171B397C8";
+    private String idClient = "WEB.PORTALMOVIL.OTROS";
+    private String PassKey = "0810DDE4-02FC-4C0E-A440-1BD171B397C8";
 
 
     public String getPassKey() {
@@ -48,7 +48,7 @@ public class EmtBody {
         return action;
     }
 
-    public String getCacheKey(){
+    public String getCacheKey() {
         return getSoapAction() + gson.toJson(this);
     }
 

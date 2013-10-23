@@ -43,7 +43,7 @@ public class DialogLoadingHandler implements LoadingHandler {
 
     @Override public void showLoading(String message) {
         L.og.d("dialog show");
-        if(dialog != null && dialog.isShowing())
+        if (dialog != null && dialog.isShowing())
             return;
         dialog = ProgressDialog.show(context, null, message != null && !message.isEmpty() ? message : null);
         dialog.setIndeterminate(true);

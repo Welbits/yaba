@@ -1,11 +1,11 @@
 package com.pilasvacias.yaba.modules.network.models;
 
+import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.BuildConfig;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
-import com.pilasvacias.yaba.modules.emt.models.EmtError;
 import com.pilasvacias.yaba.modules.network.CacheMaker;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
@@ -19,6 +19,21 @@ public abstract class AbstractRequest<T> extends Request<T> {
     private long fakeExecutionTime = 0;
     private long cacheRefreshTime = 0;
     private long cacheExpireTime = 0;
+    private boolean cacheSkip = false;
+    private SuccessHandler<T> successHandler;
+    private ErrorHandler emtErrorHandler;
+    private boolean verbose = false;
+    private Object body;
+
+    public AbstractRequest(
+            int method,
+            String url,
+            SuccessHandler<T> successHandler,
+            ErrorHandler errorHandler) {
+        super(method, url, errorHandler);
+        this.emtErrorHandler = errorHandler;
+        this.successHandler = successHandler;
+    }
 
     public ErrorHandler getEmtErrorHandler() {
         return emtErrorHandler;
@@ -36,17 +51,10 @@ public abstract class AbstractRequest<T> extends Request<T> {
         this.successHandler = successHandler;
     }
 
-    public long getFakeExecutionTime() {
-        return fakeExecutionTime;
-    }
 
-    public void setCacheKey(String cacheKey) {
-        this.cacheKey = cacheKey;
+    public void setFakeExecutionTime(long fakeTime) {
+        this.fakeExecutionTime = fakeTime;
     }
-
-    private SuccessHandler<T> successHandler;
-    private ErrorHandler emtErrorHandler;
-    private boolean verbose = false;
 
     public boolean isVerbose() {
         return verbose;
@@ -56,43 +64,30 @@ public abstract class AbstractRequest<T> extends Request<T> {
         this.verbose = verbose;
     }
 
-    public AbstractRequest(int method, String url, Response.ErrorListener listener) {
-        super(method, url, listener);
-    }
-
-    public long getCacheRefreshTime() {
-        return cacheRefreshTime;
+    public void setCacheRefreshTime(long cacheRefreshTime) {
+        this.cacheRefreshTime = cacheRefreshTime;
     }
 
     public long getCacheExpireTime() {
         return cacheExpireTime;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
-        fakeLongRequest();
-
-        T data = getParsedData(response);
-        if (emtErrorHandler.responseIsOk(data, response))
-            return Response.success(data, CacheMaker.generateCache(response, getCacheRefreshTime(), getCacheExpireTime()));
-        else
-            return Response.error(emtErrorHandler.generateErrorResponse(data, response));
-    }
-
-    @Override public String getCacheKey() {
-        return getUrl() + cacheKey;
-    }
-
     public void setCacheExpireTime(long cacheExpireTime) {
         this.cacheExpireTime = cacheExpireTime;
     }
 
-    public void setCacheRefreshTime(long cacheRefreshTime) {
-        this.cacheRefreshTime = cacheRefreshTime;
+    @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        fakeLongRequest();
+
+        T data = getParsedData(response);
+        if (responseIsOk(response, data))
+            return Response.success(data, CacheMaker.generateCache(response, cacheRefreshTime, cacheExpireTime));
+        else
+            return Response.error(generateErrorResponse(response, data));
     }
 
-    public void setFakeExecutionTime(long fakeTime) {
-        this.fakeExecutionTime = fakeTime;
+    public void setCacheKey(String cacheKey) {
+        this.cacheKey = cacheKey;
     }
 
     private void fakeLongRequest() {
@@ -112,4 +107,26 @@ public abstract class AbstractRequest<T> extends Request<T> {
     }
 
     public abstract T getParsedData(NetworkResponse response);
+
+    public abstract VolleyError generateErrorResponse(NetworkResponse response, T data);
+
+    public abstract boolean responseIsOk(NetworkResponse response, T data);
+
+    public boolean skippingCache() {
+        return cacheSkip;
+    }
+
+    public void setCacheSkip(boolean cacheSkip) {
+        this.cacheSkip = cacheSkip;
+    }
+
+    @Override public Cache.Entry getCacheEntry() {
+        Cache.Entry entry = super.getCacheEntry();
+        //If we are skipping cache manually invalidate the cache times.
+        if (cacheSkip && entry != null) {
+            entry.ttl = 0;
+            entry.softTtl = 0;
+        }
+        return entry;
+    }
 }

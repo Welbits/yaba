@@ -3,9 +3,6 @@ package com.pilasvacias.yaba.modules.emt.builders;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.modules.emt.builders.EmtChainRequest;
-import com.pilasvacias.yaba.modules.emt.builders.EmtRequestBuilder;
-import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
 
 /**
  * Created by pablo on 10/14/13.
@@ -60,6 +57,7 @@ public class EmtRequestManager {
 
     /**
      * Create a new EmtRequestBuilder to use the fluent interface.
+     *
      * @param responseType The POJO class representing the expected response.
      * @return A new request builder.
      */
@@ -68,10 +66,6 @@ public class EmtRequestManager {
                 .responseType(responseType)
                 .tag(tag)
                 .context(context);
-    }
-
-    public EmtChainRequest beginChainedRequest(){
-        return new EmtChainRequest(requestQueue, context, tag);
     }
 
     public void cancelAllRequests() {
