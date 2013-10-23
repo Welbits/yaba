@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
  * Created by pablo on 10/14/13.
  * welvi-android
  */
-public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuilder<T>, T> {
+public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuilder<T>, EmtRequest<T>, T> {
 
     //Visibility is package local to avoid getters
     EmtBody body;
@@ -38,8 +38,7 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
      * Every EMT request has a body.
      * see: {@link com.pilasvacias.yaba.modules.emt.models.EmtBody}
      *
-     * @param body The POJO that represents the body. It will be serialized as XML
-     * @return
+     * @param body The pojo that represents the body. It will be serialized as XML
      */
     public EmtRequestBuilder<T> body(EmtBody body) {
         this.body = body;
@@ -51,7 +50,6 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
      * still have an action like GetGroups.
      *
      * @param bodyAsAction
-     * @return
      */
     public EmtRequestBuilder<T> body(final String bodyAsAction) {
         this.body = new FakeEmtBody(bodyAsAction);
@@ -68,8 +66,12 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
         return this;
     }
 
-    @Override public EmtRequestBuilder<T> success(SuccessHandler<T> successHandler) {
-        throw new UnsupportedOperationException("Use the other method");
+    /**
+     * WARNING USE: {@link #success(com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler)}
+     */
+    @Override
+    public EmtRequestBuilder<T> success(SuccessHandler<T> successHandler) {
+        throw new UnsupportedOperationException("You must use the the other method!!");
     }
 
     public EmtRequest<T> getEmtRequest() {
@@ -85,6 +87,7 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
             loadingHandler.showLoading(loadingMessage);
     }
 
+    @Override
     public EmtRequest<T> create() {
         if (!ignoreErrors && errorHandler == null) {
             errorHandler = new EmtErrorHandler();
