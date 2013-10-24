@@ -23,7 +23,6 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.InjectView;
 import butterknife.Views;
-import flavor.test.ExplodeAction;
 
 /**
  * Created by IzanRodrigo on 16/10/13.
@@ -51,8 +50,6 @@ public class FavoritesFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-
-        ExplodeAction.explode();
     }
 
     @Override

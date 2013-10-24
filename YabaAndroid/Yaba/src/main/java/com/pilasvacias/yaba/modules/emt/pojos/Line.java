@@ -1,7 +1,6 @@
 package com.pilasvacias.yaba.modules.emt.pojos;
 
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 public class Line {
 
@@ -15,6 +14,7 @@ public class Line {
 
     public static class GetListLines extends EmtBody {
         /**
+         * c
          * Format {@code dd-mm-yyyy}
          */
         public String SelectDate = "19-8-2013";

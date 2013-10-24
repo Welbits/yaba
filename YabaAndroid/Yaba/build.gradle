@@ -74,14 +74,14 @@ android {
     }
 
     productFlavors {
-        api2 {
-            packageName "com.pilasvacias.api2.yaba"
-            minSdkVersion 10
+        free {
+            packageName "com.pilasvacias.yaba.free"
+            minSdkVersion 14
         }
 
-        api4 {
-            packageName "com.pilasvacias.api4.yaba"
-            minSdkVersion 10
+        pro {
+            packageName "com.pilasvacias.yaba.pro"
+            minSdkVersion 14
         }
     }
 }
