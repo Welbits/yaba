@@ -109,7 +109,7 @@ task releaseInfo << {
 }
 
 //noinspection GroovyAssignabilityCheck
-task buildSigned(dependsOn: assemble) << {
+task buildSigned(dependsOn: build) << {
     copy {
         ext.vn = project.ext.versionName
         ext.vc = project.ext.versionCode
