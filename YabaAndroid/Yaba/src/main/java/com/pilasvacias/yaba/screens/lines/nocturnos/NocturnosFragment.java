@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.screens.nocturnos;
+package com.pilasvacias.yaba.screens.lines.nocturnos;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

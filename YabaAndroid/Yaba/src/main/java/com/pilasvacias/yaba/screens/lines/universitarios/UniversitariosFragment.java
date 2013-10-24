@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.screens.nocturnos;
+package com.pilasvacias.yaba.screens.lines.universitarios;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,7 +27,7 @@ import butterknife.Views;
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public class NocturnosFragment extends NetworkFragment {
+public class UniversitariosFragment extends NetworkFragment {
 
     // Inject views
     @InjectView(R.id.simple_list_listView)
@@ -85,7 +85,7 @@ public class NocturnosFragment extends NetworkFragment {
                     @Override
                     public void onSuccess(final EmtData<Line> result) {
                         for (Line line : result.getPayload()) {
-                            if (line.Label.matches(LinesRegex.NOCTURNOS)) {
+                            if (line.Label.matches(LinesRegex.UNIVERSITARIOS)) {
                                 adapter.add(line);
                             }
                         }

@@ -5,9 +5,10 @@ import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
-import com.pilasvacias.yaba.screens.favorites.FavoritesFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
-import com.pilasvacias.yaba.screens.nocturnos.NocturnosFragment;
+import com.pilasvacias.yaba.screens.lines.commonlines.CommonLinesFragment;
+import com.pilasvacias.yaba.screens.lines.nocturnos.NocturnosFragment;
+import com.pilasvacias.yaba.screens.lines.universitarios.UniversitariosFragment;
 
 import javax.inject.Singleton;
 
@@ -23,21 +24,24 @@ import dagger.Provides;
 @Module(injects =
         {
                 MainActivity.class,
-                MainActivity.DummyFragment.class,
-                FavoritesFragment.class,
                 LinesFragment.class,
+                CommonLinesFragment.class,
                 NocturnosFragment.class,
+                UniversitariosFragment.class,
                 ProbaActivity.class
         },
         includes = VolleyModule.class,
         library = true)
 public class EmtModule {
 
-    @Provides @Singleton EmtEnvelopeSerializer provideEnvelopeSerializer() {
+    @Provides
+    @Singleton
+    EmtEnvelopeSerializer provideEnvelopeSerializer() {
         return new EmtEnvelopeSerializer();
     }
 
-    @Provides EmtRequestManager provideEmtRequestManager(RequestQueue requestQueue) {
+    @Provides
+    EmtRequestManager provideEmtRequestManager(RequestQueue requestQueue) {
         return new EmtRequestManager(requestQueue);
     }
 

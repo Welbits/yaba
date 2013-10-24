@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 /**
  * Created by Izan Rodrigo on 22/09/13.
  */
-public class ToastUtils {
+public class WToast {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

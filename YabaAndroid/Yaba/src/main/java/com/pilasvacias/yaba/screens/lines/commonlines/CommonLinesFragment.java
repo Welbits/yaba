@@ -1,13 +1,14 @@
-package com.pilasvacias.yaba.screens.nocturnos;
+package com.pilasvacias.yaba.screens.lines.commonlines;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.volley.VolleyLog;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
@@ -18,6 +19,7 @@ import com.pilasvacias.yaba.screens.lines.Line;
 import com.pilasvacias.yaba.screens.lines.LinesAdapter;
 import com.pilasvacias.yaba.screens.lines.LinesRegex;
 import com.pilasvacias.yaba.util.Date;
+import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
 
@@ -25,22 +27,15 @@ import butterknife.InjectView;
 import butterknife.Views;
 
 /**
- * Created by IzanRodrigo on 16/10/13.
+ * Created by Izan Rodrigo on 24/10/13.
  */
-public class NocturnosFragment extends NetworkFragment {
+public class CommonLinesFragment extends NetworkFragment {
 
     // Inject views
     @InjectView(R.id.simple_list_listView)
     ListView listView;
     // Fields
     private LinesAdapter adapter;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        VolleyLog.DEBUG = true;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +72,12 @@ public class NocturnosFragment extends NetworkFragment {
         loadLines();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.lines, menu);
+    }
+
     public void loadLines() {
         getRequestManager()
                 .beginRequest(Line.class)
@@ -84,13 +85,15 @@ public class NocturnosFragment extends NetworkFragment {
                 .success(new EmtSuccessHandler<Line>() {
                     @Override
                     public void onSuccess(final EmtData<Line> result) {
+                        L.og.d("result => %s", 1);
                         for (Line line : result.getPayload()) {
-                            if (line.Label.matches(LinesRegex.NOCTURNOS)) {
+                            if (!line.Label.matches(LinesRegex.NOCTURNOS) && !line.Label.matches(LinesRegex.UNIVERSITARIOS)) {
                                 adapter.add(line);
                             }
                         }
                     }
                 })
+                .cacheSkip(true)
                 .cacheTime(Time.days(1D))
                 .execute();
     }
