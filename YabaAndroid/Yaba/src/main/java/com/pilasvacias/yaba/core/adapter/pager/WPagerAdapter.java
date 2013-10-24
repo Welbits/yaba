@@ -1,13 +1,12 @@
 package com.pilasvacias.yaba.core.adapter.pager;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBarActivity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +41,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
     }
 
     public static ViewPager.OnPageChangeListener getSimplePageChangeListener(
-            final ActionBarActivity activity, final boolean changeTitle) {
+            final Activity activity, final boolean changeTitle) {
         return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
@@ -51,7 +50,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
 
             @Override
             public void onPageSelected(int i) {
-                ActionBar actionBar = activity.getSupportActionBar();
+                ActionBar actionBar = activity.getActionBar();
                 actionBar.setSelectedNavigationItem(i);
                 if (changeTitle) {
                     actionBar.setTitle(actionBar.getTabAt(i).getText());
@@ -69,17 +68,17 @@ public class WPagerAdapter extends FragmentPagerAdapter {
             final ViewPager viewPager) {
         return new ActionBar.TabListener() {
             @Override
-            public void onTabReselected(Tab tab, FragmentTransaction ft) {
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
                 // Do nothing
             }
 
             @Override
-            public void onTabSelected(Tab tab, FragmentTransaction ft) {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 viewPager.setCurrentItem(tab.getPosition(), true);
             }
 
             @Override
-            public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
                 // Do nothing
             }
         };

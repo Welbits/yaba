@@ -1,15 +1,15 @@
 package com.pilasvacias.yaba.screens;
 
+import android.app.ActionBar;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +23,6 @@ import android.widget.TextView;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.WBaseAdapter;
 import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
-import com.pilasvacias.yaba.core.experimental.MagicTurn;
-import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
@@ -67,7 +65,7 @@ public class MainActivity extends NetworkActivity {
     }
 
     private void configureViewPager() {
-        WPagerAdapter.with(getSupportFragmentManager())
+        WPagerAdapter.with(getFragmentManager())
                 .setFragments(
                         DummyFragment.newInstance(titles[0]),
                         new LinesFragment(),
@@ -80,7 +78,7 @@ public class MainActivity extends NetworkActivity {
     }
 
     private void configureDrawerLayout() {
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -98,27 +96,28 @@ public class MainActivity extends NetworkActivity {
         drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
         drawerToggle = new
+
                 ActionBarDrawerToggle(this,
                         drawerLayout,
                         R.drawable.ic_drawer,
                         R.string.navigation_drawer_open,
                         R.string.navigation_drawer_close) {
                     public void onDrawerClosed(View view) {
-                        supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                        ActionBar actionBar = getSupportActionBar();
+                        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                        ActionBar actionBar = getActionBar();
                         actionBar.setTitle(title);
                     }
 
                     public void onDrawerOpened(View drawerView) {
-                        supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                        getSupportActionBar().setTitle(R.string.app_name);
+                        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                        getActionBar().setTitle(R.string.app_name);
                     }
                 };
         drawerLayout.setDrawerListener(drawerToggle);
     }
 
     public void selectItem(int position) {
-        supportInvalidateOptionsMenu();
+        invalidateOptionsMenu();
         viewPager.setCurrentItem(position, false);
         drawerList.setItemChecked(position, true);
         setTitle(titles[position]);
@@ -157,7 +156,7 @@ public class MainActivity extends NetworkActivity {
     @Override
     public void setTitle(CharSequence title) {
         this.title = title.toString();
-        getSupportActionBar().setTitle(title);
+        getActionBar().setTitle(title);
     }
 
     @Override

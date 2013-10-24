@@ -50,7 +50,7 @@ public class LineInfoActivity extends NetworkActivity {
 
     private void configureViewPager() {
         WPagerAdapter
-                .with(getSupportFragmentManager())
+                .with(getFragmentManager())
                 .setFragments(
                         new LineDestinationFragment(line.NameA),
                         new LineDestinationFragment(line.NameB)

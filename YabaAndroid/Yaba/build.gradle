@@ -23,6 +23,7 @@ dependencies {
 
     compile project(':Volley')
     compile project(':PagerSlidingTabStrip')
+    compile 'com.android.support:support-v13:18.0.0'
 
     //Jake Wharton
     apt 'com.jakewharton:butterknife:3.0.0'

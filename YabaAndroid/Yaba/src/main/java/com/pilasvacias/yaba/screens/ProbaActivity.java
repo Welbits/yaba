@@ -12,7 +12,7 @@ import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.util.Time;
-import com.pilasvacias.yaba.util.ToastUtils;
+import com.pilasvacias.yaba.util.WToast;
 
 public class ProbaActivity extends NetworkActivity {
 
@@ -39,7 +39,7 @@ public class ProbaActivity extends NetworkActivity {
                 .body(new Line.GetListLines())
                 .success(new EmtSuccessHandler<Line>() {
                     @Override public void onSuccess(EmtData<Line> result) {
-                        ToastUtils.showShort(ProbaActivity.this, result.getPayload().get(0));
+                        WToast.showShort(ProbaActivity.this, result.getPayload().get(0));
                     }
                 })
                 .fakeTime(Time.seconds(10))
