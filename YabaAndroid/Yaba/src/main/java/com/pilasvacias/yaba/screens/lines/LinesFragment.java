@@ -5,12 +5,14 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.android.volley.VolleyLog;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
+import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.screens.lines.commonlines.CommonLinesFragment;
 import com.pilasvacias.yaba.screens.lines.nocturnos.NocturnosFragment;
 import com.pilasvacias.yaba.screens.lines.universitarios.UniversitariosFragment;

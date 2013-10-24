@@ -14,5 +14,6 @@
     <string name="tab_find">Buscar parada</string>
     <string name="navigation_drawer_open">Abrir navigation drawer</string>
     <string name="navigation_drawer_close">Cerrar navigation drawer</string>
+    <string name="line">Línea %1$s</string>
 
 </resources>
