@@ -12,5 +12,7 @@
     <string name="tab_lines">Líneas</string>
     <string name="tab_nocturnos">Nocturnos</string>
     <string name="tab_find">Buscar parada</string>
+    <string name="navigation_drawer_open">Abrir navigation drawer</string>
+    <string name="navigation_drawer_close">Cerrar navigation drawer</string>
 
 </resources>
