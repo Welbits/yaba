@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
  */
 public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuilder<T>, EmtRequest<T>, T> {
 
+
     //Visibility is package local to avoid getters
     EmtBody body;
     Class<T> responseType;

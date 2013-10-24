@@ -25,7 +25,6 @@ public abstract class AbstractRequestBuilder
         <BUILDER_TYPE extends AbstractRequestBuilder<BUILDER_TYPE, REQUEST_TYPE, SUCCESS_TYPE>, REQUEST_TYPE, SUCCESS_TYPE> {
 
     //Cache
-
     protected boolean cacheSkip = false;
     protected boolean cacheResult = true;
     protected long fakeTime = 0L;
