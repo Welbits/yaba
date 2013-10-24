@@ -1,20 +1,16 @@
 package com.pilasvacias.yaba.screens;
 
 import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -23,11 +19,13 @@ import android.widget.TextView;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.WBaseAdapter;
 import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
+import com.pilasvacias.yaba.core.debug.DummyFragment;
+import com.pilasvacias.yaba.core.experimental.MagicTurn;
+import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -44,7 +42,9 @@ public class MainActivity extends NetworkActivity {
     @InjectView(R.id.drawer_listView)
     ListView drawerList;
     // Fields
+    @Save
     private String[] titles;
+    @Save
     private String title;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayoutAdapter drawerLayoutAdapter;
@@ -55,13 +55,24 @@ public class MainActivity extends NetworkActivity {
         setContentView(R.layout.main_activity);
         Views.inject(this);
         registerBus();
-        titles = getResources().getStringArray(R.array.drawer_sections);
+        MagicTurn.restore(this, savedInstanceState);
+
+        if (savedInstanceState == null) {
+            titles = getResources().getStringArray(R.array.drawer_sections);
+        }
+
         configureViewPager();
         configureDrawerLayout();
 
         if (savedInstanceState == null) {
             selectItem(0);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        MagicTurn.save(this, outState);
     }
 
     private void configureViewPager() {
@@ -96,7 +107,6 @@ public class MainActivity extends NetworkActivity {
         drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
         drawerToggle = new
-
                 ActionBarDrawerToggle(this,
                         drawerLayout,
                         R.drawable.ic_drawer,
@@ -195,47 +205,6 @@ public class MainActivity extends NetworkActivity {
             public ViewHolder(View view) {
                 Views.inject(this, view);
             }
-        }
-    }
-
-    public static class DummyFragment extends Fragment {
-        // Constants
-        private static final String TITLE_KEY = "title";
-        // Inject views
-        @InjectView(R.id.dummy_textView)
-        TextView textView;
-        // Fields
-        private String title;
-
-        public DummyFragment() {
-            super();
-        }
-
-        public static DummyFragment newInstance(String title) {
-            DummyFragment dummyFragment = new DummyFragment();
-            Bundle args = new Bundle();
-            args.putString(TITLE_KEY, title);
-            dummyFragment.setArguments(args);
-            return dummyFragment;
-        }
-
-        private static int randomColor() {
-            Random random = new Random();
-            int r = random.nextInt(256);
-            int g = random.nextInt(256);
-            int b = random.nextInt(256);
-            return Color.argb(255, r, g, b);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            super.onCreateView(inflater, container, savedInstanceState);
-            View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
-            Views.inject(this, rootView);
-            title = getArguments().getString(TITLE_KEY);
-            textView.setText(title);
-            textView.setBackgroundColor(randomColor());
-            return rootView;
         }
     }
 }

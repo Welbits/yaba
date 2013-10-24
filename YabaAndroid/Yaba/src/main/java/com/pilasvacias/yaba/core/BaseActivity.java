@@ -39,7 +39,7 @@ public class BaseActivity extends Activity {
     }
 
     protected void registerBus() {
-        isBusRegistered = BusUtils.checkBusRegistered(isBusRegistered, this);
+        isBusRegistered = BusUtils.registerBus(isBusRegistered, this);
     }
 
     protected void postBus(Object event) {

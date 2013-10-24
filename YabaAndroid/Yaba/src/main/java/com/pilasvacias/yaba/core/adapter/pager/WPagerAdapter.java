@@ -35,86 +35,82 @@ public class WPagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    /**
+     * Creates an empty pager adapter.
+     * @param fragmentManager
+     * @return
+     */
     public static WPagerAdapter with(FragmentManager fragmentManager) {
         WPagerAdapter viewPagerAdapter = new WPagerAdapter(fragmentManager);
         return viewPagerAdapter;
     }
 
-    public static ViewPager.OnPageChangeListener getSimplePageChangeListener(
-            final Activity activity, final boolean changeTitle) {
-        return new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i2) {
-                // Do nothing
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                ActionBar actionBar = activity.getActionBar();
-                actionBar.setSelectedNavigationItem(i);
-                if (changeTitle) {
-                    actionBar.setTitle(actionBar.getTabAt(i).getText());
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-                // Do nothing
-            }
-        };
-    }
-
-    public static ActionBar.TabListener getSimpleTabListener(
-            final ViewPager viewPager) {
-        return new ActionBar.TabListener() {
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // Do nothing
-            }
-
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                viewPager.setCurrentItem(tab.getPosition(), true);
-            }
-
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // Do nothing
-            }
-        };
-    }
-
+    /**
+     * Set fragments to the adapter.
+     * @param fragments
+     * @return
+     */
     public WPagerAdapter setFragments(List<? extends Fragment> fragments) {
         this.fragments = fragments;
         return this;
     }
 
+    /**
+     * Set fragments to the adapter.
+     * @param fragments
+     * @return
+     */
     public WPagerAdapter setFragments(Fragment... fragments) {
         this.fragments = Arrays.asList(fragments);
         return this;
     }
 
+    /**
+     * Set titles to the adapter.
+     * @param titles
+     * @return
+     */
     public WPagerAdapter setTitles(List<? extends CharSequence> titles) {
         this.titles = titles;
         return this;
     }
 
+    /**
+     * Set titles to the adapter.
+     * @param titles
+     * @return
+     */
     public WPagerAdapter setTitles(CharSequence... titles) {
         this.titles = Arrays.asList(titles);
         return this;
     }
 
+    /**
+     * Set offscreen limit (disabled by default).
+     * @param offscreenLimit
+     * @return
+     */
     public WPagerAdapter setOffscreenLimit(int offscreenLimit) {
         this.offscreenLimit = offscreenLimit;
         return this;
     }
 
+    /**
+     * Set a page transformer to the adapter.
+     * @param reverseDrawingOrder
+     * @param pageTransformer
+     * @return
+     */
     public WPagerAdapter setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer pageTransformer) {
         this.reverseDrawingOrder = reverseDrawingOrder;
         this.pageTransformer = pageTransformer;
         return this;
     }
 
+    /**
+     * Set adapter to the view pager.
+     * @param viewPager
+     */
     public void into(ViewPager viewPager) {
         viewPager.setAdapter(this);
         if (offscreenLimit != NO_OFFSCREEN_LIMIT) {
@@ -144,5 +140,62 @@ public class WPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return fragments.size();
+    }
+
+    /**
+     * Returns a simple page change listener that
+     * change tab selected when change the page.
+     * Optionally change ActionBar title.
+     * @param activity
+     * @param changeTitle
+     * @return
+     */
+    public static ViewPager.OnPageChangeListener getSimplePageChangeListener(
+            final Activity activity, final boolean changeTitle) {
+        return new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+                // Do nothing
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                ActionBar actionBar = activity.getActionBar();
+                actionBar.setSelectedNavigationItem(i);
+                if (changeTitle) {
+                    actionBar.setTitle(actionBar.getTabAt(i).getText());
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                // Do nothing
+            }
+        };
+    }
+
+    /**
+     * Returns a simple tab listener that changes
+     * selected page when click in a tab.
+     * @param viewPager
+     * @return
+     */
+    public static ActionBar.TabListener getSimpleTabListener(final ViewPager viewPager) {
+        return new ActionBar.TabListener() {
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                viewPager.setCurrentItem(tab.getPosition(), true);
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // Do nothing
+            }
+        };
     }
 }

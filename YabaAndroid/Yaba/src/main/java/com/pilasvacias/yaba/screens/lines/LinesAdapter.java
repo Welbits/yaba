@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.WBaseAdapter;
+import com.pilasvacias.yaba.modules.emt.pojos.Line;
+
+import java.util.Comparator;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -28,6 +31,10 @@ public class LinesAdapter extends WBaseAdapter<Line, LinesAdapter.ViewHolder> {
     @Override
     protected ViewHolder createViewHolder(View view) {
         return new ViewHolder(view);
+    }
+
+    public void sort() {
+        sort(Line.getLabelComparator());
     }
 
     static class ViewHolder {

@@ -6,25 +6,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.Views;
-
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public abstract class WBaseAdapter<T, U> extends BaseAdapter {
+public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
-    private ArrayList<T> items;
+    private ArrayList<Item> items;
     private int layoutResource;
     private Context context;
 
+    /**
+     * Returns a simple BaseAdapter wrapper that uses
+     * ViewHolder pattern to improve list performance.
+     * @param context Context needed by adapter.
+     * @param layoutResource List item layout resource.
+     */
     public WBaseAdapter(Context context, int layoutResource) {
         this.context = context;
         this.layoutResource = layoutResource;
-        this.items = new ArrayList<T>();
+        this.items = new ArrayList<Item>();
     }
 
     @Override
@@ -33,7 +39,7 @@ public abstract class WBaseAdapter<T, U> extends BaseAdapter {
     }
 
     @Override
-    public synchronized T getItem(int position) {
+    public synchronized Item getItem(int position) {
         return items.get(position);
     }
 
@@ -42,42 +48,90 @@ public abstract class WBaseAdapter<T, U> extends BaseAdapter {
         return 0;
     }
 
-    public synchronized void add(T item) {
+    /**
+     * Add item at the end of the adapter.
+     * @param item
+     */
+    public synchronized void add(Item item) {
         items.add(item);
         notifyDataSetChanged();
     }
 
-    public synchronized void add(T item, int location) {
+    /**
+     * Inserts item at location.
+     * @param item
+     * @param location
+     */
+    public synchronized void add(Item item, int location) {
         items.add(location, item);
         notifyDataSetChanged();
     }
 
-    public synchronized void addAll(List<? extends T> item) {
-        items.addAll(item);
+    /**
+     * Add collection at the end of the adapter.
+     * @param items
+     */
+    public synchronized void addAll(Collection<? extends Item> items) {
+        this.items.addAll(items);
         notifyDataSetChanged();
     }
 
-    public synchronized void addAll(List<? extends T> item, int location) {
-        items.addAll(location, item);
+    /**
+     * Add array at the end of the adapter.
+     * @param items
+     */
+    public synchronized void addAll(Item... items) {
+        addAll(Arrays.asList(items));
+    }
+
+    /**
+     * Insert collection at location.
+     * @param items
+     */
+    public synchronized void addAll(int location, List<? extends Item> items) {
+        this.items.addAll(location, items);
         notifyDataSetChanged();
     }
 
-    public synchronized void remove(T item) {
+    /**
+     * Insert array at location.
+     * @param items
+     */
+    public synchronized void addAll(int location, Item... items) {
+        addAll(location, Arrays.asList(items));
+    }
+
+    /**
+     * Remove item from the adapter.
+     * @param item
+     */
+    public synchronized void remove(Item item) {
         items.remove(item);
         notifyDataSetChanged();
     }
 
+    /**
+     * Remove item at location.
+     * @param location
+     */
     public synchronized void remove(int location) {
         items.remove(location);
         notifyDataSetChanged();
     }
 
+    /**
+     * Remove all items.
+     */
     public synchronized void clear() {
         items.clear();
         notifyDataSetChanged();
     }
 
-    public synchronized void sort(Comparator<T> comparator) {
+    /**
+     * Sort items using Comparator.
+     * @param comparator
+     */
+    public synchronized void sort(Comparator<Item> comparator) {
         Collections.sort(items, comparator);
         notifyDataSetChanged();
     }
@@ -85,10 +139,10 @@ public abstract class WBaseAdapter<T, U> extends BaseAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        T item = getItem(position);
-        U viewHolder;
+        Item item = getItem(position);
+        ViewHolder viewHolder;
         if (convertView != null) {
-            viewHolder = (U) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         } else {
             convertView = View.inflate(context, layoutResource, null);
             viewHolder = createViewHolder(convertView);
@@ -98,7 +152,18 @@ public abstract class WBaseAdapter<T, U> extends BaseAdapter {
         return convertView;
     }
 
-    protected abstract void changeView(T item, U viewHolder);
+    /**
+     * Modify ViewHolder views as needed, using item.
+     * @param item
+     * @param viewHolder
+     */
+    protected abstract void changeView(Item item, ViewHolder viewHolder);
 
-    protected abstract U createViewHolder(View view);
+    /**
+     * Method needed due to generic types limitation.
+     * Simply return new ViewHolder(view).
+     * @param view
+     * @return
+     */
+    protected abstract ViewHolder createViewHolder(View view);
 }

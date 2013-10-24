@@ -19,7 +19,8 @@ import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.util.Date;
+import com.pilasvacias.yaba.modules.emt.pojos.Line;
+import com.pilasvacias.yaba.util.DateUtils;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
 
@@ -97,12 +98,17 @@ public class LineListFragment extends NetworkFragment {
         if (lineEmtData == null) {
             loadLines();
         } else {
-            for (Line line : lineEmtData.getPayload()) {
-                if (listType.check(line)) {
-                    adapter.add(line);
-                }
+            addLines();
+        }
+    }
+
+    private void addLines() {
+        for (Line line : lineEmtData.getPayload()) {
+            if (listType.check(line)) {
+                adapter.add(line);
             }
         }
+        adapter.sort();
     }
 
     public void loadLines() {
@@ -113,11 +119,7 @@ public class LineListFragment extends NetworkFragment {
                     @Override
                     public void onSuccess(final EmtData<Line> result) {
                         lineEmtData = result;
-                        for (Line line : result.getPayload()) {
-                            if (listType.check(line)) {
-                                adapter.add(line);
-                            }
-                        }
+                        addLines();
                     }
                 })
                 .cacheTime(Time.days(1D))
@@ -131,7 +133,7 @@ public class LineListFragment extends NetworkFragment {
     }
 
     public enum LineListType {
-        DAILY(LinesRegex.DAILY), NIGHTLY(LinesRegex.NIGHTLY), UNVERSITY(LinesRegex.UNIVERSITY);
+        DAILY(LinesRegex.DAILY), NIGHTLY(LinesRegex.NIGHTLY), UNIVERSITY(LinesRegex.UNIVERSITY);
         private final String regex;
 
         LineListType(String regex) {
@@ -139,12 +141,15 @@ public class LineListFragment extends NetworkFragment {
         }
 
         public boolean check(Line line) {
-            return regex.equals(LinesRegex.DAILY) || line.Label.matches(regex);
+            if (regex.equals(LinesRegex.DAILY)) {
+                return !line.Label.matches(LinesRegex.NIGHTLY) && !line.Label.matches(LinesRegex.UNIVERSITY);
+            }
+            return line.Label.matches(regex);
         }
     }
 
     public static class GetListLines extends EmtBody {
-        String SelectDate = Date.getToday();
+        String SelectDate = DateUtils.getToday();
         String Lines = ""; //Todas las líneas
     }
 }

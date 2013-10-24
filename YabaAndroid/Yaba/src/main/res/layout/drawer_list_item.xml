@@ -2,12 +2,12 @@
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_listItem_textView"
-    style="@style/activated"
-    android:layout_width="fill_parent"
+    style="@style/DrawerItemChecked"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="@dimen/navigation_drawer_item_min_height"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:textAppearance="?android:attr/textAppearanceLarge"
-    android:textColor="#000" />
+    android:textColor="@color/textcolor_selector_white" />
