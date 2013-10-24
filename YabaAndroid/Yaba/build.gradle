@@ -23,9 +23,7 @@ dependencies {
 
     compile project(':Volley')
     compile project(':PagerSlidingTabStrip')
-
-    //Android
-    compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.android.support:support-v13:18.0.0'
 
     //Jake Wharton
     apt 'com.jakewharton:butterknife:3.0.0'
@@ -74,14 +72,14 @@ android {
     }
 
     productFlavors {
-        api2 {
-            packageName "com.pilasvacias.api2.yaba"
-            minSdkVersion 10
+        free {
+            packageName "com.pilasvacias.yaba.free"
+            minSdkVersion 14
         }
 
-        api4 {
-            packageName "com.pilasvacias.api4.yaba"
-            minSdkVersion 10
+        pro {
+            packageName "com.pilasvacias.yaba.pro"
+            minSdkVersion 14
         }
     }
 }
@@ -109,7 +107,7 @@ task releaseInfo << {
 }
 
 //noinspection GroovyAssignabilityCheck
-task buildSigned(dependsOn: assemble) << {
+task buildSigned(dependsOn: build) << {
     copy {
         ext.vn = project.ext.versionName
         ext.vc = project.ext.versionCode

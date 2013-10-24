@@ -76,16 +76,16 @@ public class MagicTurn {
         L.time.end();
     }
 
-    public static void writeToBundle(Bundle bundle, Object object, String tag) {
+    public static void writeToBundle(Bundle bundle, String tag, Object object) {
         String json = gson.toJson(object);
         bundle.putString(tag, json);
     }
 
-    public static <T> T readFromBundle(Bundle bundle, Class<T> clazz, String tag) {
+    public static <T> T readFromBundle(Bundle bundle, String tag, Class<T> clazz) {
         return gson.fromJson(bundle.getString(tag + clazz.getName()), clazz);
     }
 
-    public static <T> T readFromBundle(Bundle bundle, Type type, String tag) {
+    public static <T> T readFromBundle(Bundle bundle, String tag, Type type) {
         return gson.fromJson(bundle.getString(tag), type);
     }
 

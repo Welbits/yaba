@@ -71,7 +71,7 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
      * WARNING USE: {@link #success(com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler)}
      */
     @Override
-    public EmtRequestBuilder<T> success(SuccessHandler<T> successHandler) {
+    public final EmtRequestBuilder<T> success(SuccessHandler<T> successHandler) {
         throw new UnsupportedOperationException("You must use the the other method!!");
     }
 

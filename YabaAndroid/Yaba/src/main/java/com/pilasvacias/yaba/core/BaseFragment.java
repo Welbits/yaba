@@ -1,14 +1,8 @@
 package com.pilasvacias.yaba.core;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.View;
+import android.app.Fragment;
 
-import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.util.BusUtils;
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
@@ -20,8 +14,8 @@ public class BaseFragment extends Fragment {
 
     protected boolean isBusRegistered;
 
-    public NetworkActivity getBaseActivity() {
-        return (NetworkActivity) getActivity();
+    public BaseActivity getBaseActivity() {
+        return (BaseActivity) getActivity();
     }
 
     public ObjectGraph getActivityGraph() {
