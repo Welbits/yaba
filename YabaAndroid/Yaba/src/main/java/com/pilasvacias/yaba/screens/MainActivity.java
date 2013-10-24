@@ -12,11 +12,7 @@ import android.widget.TextView;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.BaseFragment;
-import com.pilasvacias.yaba.core.adapter.pager.DepthPageTransformer;
-import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
-import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.pilasvacias.yaba.screens.lines.LinesFragment;
 
 import java.util.Random;
 
@@ -44,19 +40,19 @@ public class MainActivity extends NetworkActivity {
     }
 
     private void configureViewPager() {
-        WPagerAdapter
-                .with(getSupportFragmentManager())
-                .setFragments(
-                        new LinesFragment(),
-                        DummyFragment.newInstance(R.string.tab_find)
-                )
-                .setPageTransformer(true, new Random().nextBoolean()
-                        ? new DepthPageTransformer()
-                        : new ZoomOutPageTransformer())
-                .setOffscreenLimit(2)
-                .setTitles(getResources().getStringArray(R.array.tab_titles))
-                .into(viewPager);
-        tabStrip.setViewPager(viewPager);
+//        WPagerAdapter
+//                .with(getFragmentManager())
+//                .setFragments(
+//                        new LinesFragment(),
+//                        DummyFragment.newInstance(R.string.tab_find)
+//                )
+//                .setPageTransformer(true, new Random().nextBoolean()
+//                        ? new DepthPageTransformer()
+//                        : new ZoomOutPageTransformer())
+//                .setOffscreenLimit(2)
+//                .setTitles(getResources().getStringArray(R.array.tab_titles))
+//                .into(viewPager);
+//        tabStrip.setViewPager(viewPager);
     }
 
 //    @Subscribe
@@ -75,9 +71,10 @@ public class MainActivity extends NetworkActivity {
         private int titleResource;
 
         public static Fragment newInstance(int titleResource) {
-            DummyFragment fragment = new DummyFragment();
-            fragment.titleResource = titleResource;
-            return fragment;
+//            DummyFragment fragment = new DummyFragment();
+//            fragment.titleResource = titleResource;
+//            return fragment;
+            return null;
         }
 
         public static DummyFragment newInstance(String title) {

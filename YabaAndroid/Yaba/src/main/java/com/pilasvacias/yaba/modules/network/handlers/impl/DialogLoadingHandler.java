@@ -1,5 +1,6 @@
 package com.pilasvacias.yaba.modules.network.handlers.impl;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.util.L;
+import com.pilasvacias.yaba.util.ScreenUtils;
 
 /**
  * Created by pablo on 10/15/13.
@@ -43,8 +45,9 @@ public class DialogLoadingHandler implements LoadingHandler {
 
     @Override public void showLoading(String message) {
         L.og.d("dialog show");
-        if (dialog != null && dialog.isShowing())
+        if (dialog != null && dialog.isShowing()) {
             return;
+        }
         dialog = ProgressDialog.show(context, null, message != null && !message.isEmpty() ? message : null);
         dialog.setIndeterminate(true);
         dialog.setCancelable(true);
@@ -58,6 +61,8 @@ public class DialogLoadingHandler implements LoadingHandler {
                 }
             }
         });
+
+        ScreenUtils.lockScreenOrientation((Activity) context);
     }
 
     @Override public void hideLoading(String message, boolean success) {
@@ -67,5 +72,6 @@ public class DialogLoadingHandler implements LoadingHandler {
         if (message != null && !message.isEmpty())
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 
+        ScreenUtils.unlockScreenOrientation((Activity) context);
     }
 }

@@ -24,9 +24,6 @@ dependencies {
     compile project(':Volley')
     compile project(':PagerSlidingTabStrip')
 
-    //Android
-    compile 'com.android.support:appcompat-v7:18.0.0'
-
     //Jake Wharton
     apt 'com.jakewharton:butterknife:3.0.0'
     compile 'com.jakewharton:butterknife:3.0.0'

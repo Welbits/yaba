@@ -18,7 +18,11 @@ public class JsonPreferences {
     private Gson gson;
     private Context context;
 
-    public JsonPreferences(Context context, Gson gson) {
+    //========================
+    // Constructors
+    //========================
+
+    private JsonPreferences(Context context, Gson gson) {
         this.gson = gson;
         this.context = context;
     }
@@ -31,9 +35,10 @@ public class JsonPreferences {
         return new JsonPreferences(context, gson);
     }
 
-    private String getPreferenceString(String preference) {
-        return getPreferenceString(preference, "");
-    }
+
+    //========================
+    // Util
+    //========================
 
     private String getPreferenceString(String preference, String defValue) {
         SharedPreferences sharedPrefs = context.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
@@ -47,9 +52,27 @@ public class JsonPreferences {
         editor.commit();
     }
 
+    //========================
+    // Setters
+    //========================
+
     public void setPreferenceObject(String preference, Object object) {
-        Gson gson = new Gson();
         setPreferenceString(preference, gson.toJson(object));
+    }
+
+    public void setPreferenceObject(PreferenceItemDescriptor pref, Object object) {
+        setPreferenceString(pref.getName(), gson.toJson(object));
+    }
+
+    //========================
+    // Getters
+    //========================
+
+    @SuppressWarnings("unchecked")
+    public <T> T getPreferenceObject(PreferenceItemDescriptor pref) {
+        if (pref.readAsGeneric())
+            return getPreferenceObject(pref.getName(), pref.getTypeToken().getType());
+        return (T) getPreferenceObject(pref.getName(), pref.getTypeClass());
     }
 
     public <T> T getPreferenceObject(String preference, Class<T> clazz) {

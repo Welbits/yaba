@@ -2,9 +2,7 @@ package com.pilasvacias.yaba.screens.favorites;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.ShareActionProvider;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.BaseFragment;
@@ -76,7 +75,7 @@ public class FavoritesFragment extends BaseFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (actionMode == null) {
-                    getBaseActivity().startSupportActionMode(new ItemModeCallback(adapter.getItem(position)));
+                    getBaseActivity().startActionMode(new ItemModeCallback(adapter.getItem(position)));
                 }
                 return true;
             }
@@ -123,10 +122,10 @@ public class FavoritesFragment extends BaseFragment {
             int menuResource = R.menu.cab_favorites;
             menuInflater.inflate(menuResource, menu);
 
-            MenuItem shareItem = menu.findItem(R.id.action_share);
-            mShareActionProvider = (ShareActionProvider)
-                    MenuItemCompat.getActionProvider(shareItem);
-            mShareActionProvider.setShareIntent(getShareIntent(item));
+//            MenuItem shareItem = menu.findItem(R.id.action_share);
+//            mShareActionProvider = (ShareActionProvider)
+//                    MenuItemCompat.getActionProvider(shareItem);
+//            mShareActionProvider.setShareIntent(getShareIntent(item));
 
             return true;
         }

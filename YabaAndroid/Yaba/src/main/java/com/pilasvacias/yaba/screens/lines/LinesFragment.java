@@ -1,13 +1,10 @@
 package com.pilasvacias.yaba.screens.lines;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.ShareActionProvider;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.android.volley.VolleyLog;
@@ -74,7 +73,7 @@ public class LinesFragment extends NetworkFragment {
     }
 
     private void configureDropdown() {
-        ActionBar actionBar = getBaseActivity().getSupportActionBar();
+        ActionBar actionBar = getBaseActivity().getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         final DropdownAdapter dropdownAdapter = new DropdownAdapter(getBaseActivity(),
@@ -111,7 +110,7 @@ public class LinesFragment extends NetworkFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (actionMode == null) {
-                    getBaseActivity().startSupportActionMode(new ItemModeCallback(adapter.getItem(position)));
+                    getBaseActivity().startActionMode(new ItemModeCallback(adapter.getItem(position)));
                 }
                 return true;
             }
@@ -137,7 +136,7 @@ public class LinesFragment extends NetworkFragment {
         inflater.inflate(R.menu.lines, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -194,7 +193,7 @@ public class LinesFragment extends NetworkFragment {
 
             MenuItem shareItem = menu.findItem(R.id.action_share);
             mShareActionProvider = (ShareActionProvider)
-                    MenuItemCompat.getActionProvider(shareItem);
+                    shareItem.getActionProvider();
             mShareActionProvider.setShareIntent(getShareIntent(item));
 
             return true;

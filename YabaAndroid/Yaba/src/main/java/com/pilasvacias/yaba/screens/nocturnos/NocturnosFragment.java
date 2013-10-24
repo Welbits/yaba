@@ -3,9 +3,7 @@ package com.pilasvacias.yaba.screens.nocturnos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.ShareActionProvider;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.ShareActionProvider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.core.BaseFragment;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
@@ -27,7 +26,6 @@ import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.screens.lines.Line;
 import com.pilasvacias.yaba.screens.lines.LinesAdapter;
 import com.pilasvacias.yaba.util.Date;
-import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.ToastUtils;
 
@@ -47,6 +45,13 @@ public class NocturnosFragment extends NetworkFragment {
     // Fields
     private LinesAdapter adapter;
     private ActionMode actionMode;
+
+    private static Intent getShareIntent(Line item) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +84,7 @@ public class NocturnosFragment extends NetworkFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (actionMode == null) {
-                    getBaseActivity().startSupportActionMode(new ItemModeCallback(adapter.getItem(position)));
+                    //getBaseActivity().startSupportActionMode(new ItemModeCallback(adapter.getItem(position)));
                 }
                 return true;
             }
@@ -162,8 +167,8 @@ public class NocturnosFragment extends NetworkFragment {
             menuInflater.inflate(menuResource, menu);
 
             MenuItem shareItem = menu.findItem(R.id.action_share);
-            mShareActionProvider = (ShareActionProvider)
-                    MenuItemCompat.getActionProvider(shareItem);
+            mShareActionProvider =
+                    (ShareActionProvider) shareItem.getActionProvider();
             mShareActionProvider.setShareIntent(getShareIntent(item));
 
             return true;
@@ -184,12 +189,5 @@ public class NocturnosFragment extends NetworkFragment {
         public void onDestroyActionMode(ActionMode actionMode) {
             NocturnosFragment.this.actionMode = null;
         }
-    }
-
-    private static Intent getShareIntent(Line item) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, item.toString());
-        return intent;
     }
 }

@@ -1,16 +1,13 @@
 package com.pilasvacias.yaba.core;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 
 import com.pilasvacias.yaba.application.YabaApplication;
 import com.pilasvacias.yaba.util.BusUtils;
-import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
@@ -18,7 +15,7 @@ import dagger.ObjectGraph;
  * Created by pablo on 10/9/13.
  * yaba-android
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends Activity {
 
     //@Inject LocationManager locationManager;
     private ObjectGraph activityGraph;
