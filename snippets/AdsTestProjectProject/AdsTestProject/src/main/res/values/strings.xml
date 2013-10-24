@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AdsTestProject</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    //CHANGE TO REAL ID!!
+    <string name="testDevice">580E219CE5DF3BCA11CA7283DA73EE06</string>
+    <string name="adMobId">ca-app-pub-2882270206435242/3411773013</string>
+
+</resources>
