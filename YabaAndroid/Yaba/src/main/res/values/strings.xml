@@ -12,5 +12,6 @@
     <string name="tab_lines">Líneas</string>
     <string name="tab_nocturnos">Nocturnos</string>
     <string name="tab_find">Buscar parada</string>
+    <string name="line">Línea %1$s</string>
 
 </resources>

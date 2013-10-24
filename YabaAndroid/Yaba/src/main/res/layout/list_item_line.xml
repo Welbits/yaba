@@ -14,22 +14,6 @@
         android:textAppearance="?android:attr/textAppearanceMediumInverse"/>
 
     <TextView
-        android:id="@+id/list_item_line_textViewGroupNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/textcolor_selector_black"
-        android:textAppearance="?android:attr/textAppearanceSmallInverse" />
-
-    <TextView
-        android:id="@+id/list_item_line_textViewLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/textcolor_selector_black"
-        android:textAppearance="?android:attr/textAppearanceSmallInverse" />
-
-    <TextView
         android:id="@+id/list_item_line_textViewStartEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,11 +21,4 @@
         android:textColor="@color/textcolor_selector_black"
         android:textAppearance="?android:attr/textAppearanceSmallInverse" />
 
-    <TextView
-        android:id="@+id/list_item_line_textViewDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/textcolor_selector_black"
-        android:textAppearance="?android:attr/textAppearanceSmallInverse" />
 </LinearLayout>
