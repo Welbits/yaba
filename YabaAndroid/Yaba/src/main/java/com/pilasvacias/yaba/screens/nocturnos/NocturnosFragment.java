@@ -85,7 +85,7 @@ public class NocturnosFragment extends NetworkFragment {
                     @Override
                     public void onSuccess(final EmtData<Line> result) {
                         for (Line line : result.getPayload()) {
-                            if (line.Label.matches(LinesRegex.NOCTURNOS)) {
+                            if (line.Label.matches(LinesRegex.NIGHTLY)) {
                                 adapter.add(line);
                             }
                         }

@@ -5,17 +5,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.android.volley.VolleyLog;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
-import com.pilasvacias.yaba.core.widget.EmptyView;
-import com.pilasvacias.yaba.screens.lines.commonlines.CommonLinesFragment;
-import com.pilasvacias.yaba.screens.lines.nocturnos.NocturnosFragment;
-import com.pilasvacias.yaba.screens.lines.universitarios.UniversitariosFragment;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -50,9 +45,9 @@ public class LinesFragment extends NetworkFragment {
     private void configureViewPager() {
         WPagerAdapter.with(getFragmentManager())
                 .setFragments(
-                        new CommonLinesFragment(),
-                        new NocturnosFragment(),
-                        new UniversitariosFragment()
+                        LineListFragment.newInstance(LineListFragment.LineListType.DAILY),
+                        LineListFragment.newInstance(LineListFragment.LineListType.NIGHTLY),
+                        LineListFragment.newInstance(LineListFragment.LineListType.UNVERSITY)
                 )
                 .setTitles(getResources().getStringArray(R.array.lines_tab_titles))
                 .setOffscreenLimit(WPagerAdapter.ALL_FRAGMENTS)

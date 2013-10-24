@@ -5,10 +5,8 @@ import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
+import com.pilasvacias.yaba.screens.lines.LineListFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
-import com.pilasvacias.yaba.screens.lines.commonlines.CommonLinesFragment;
-import com.pilasvacias.yaba.screens.lines.nocturnos.NocturnosFragment;
-import com.pilasvacias.yaba.screens.lines.universitarios.UniversitariosFragment;
 
 import javax.inject.Singleton;
 
@@ -25,9 +23,7 @@ import dagger.Provides;
         {
                 MainActivity.class,
                 LinesFragment.class,
-                CommonLinesFragment.class,
-                NocturnosFragment.class,
-                UniversitariosFragment.class,
+                LineListFragment.class,
                 ProbaActivity.class
         },
         includes = VolleyModule.class,
