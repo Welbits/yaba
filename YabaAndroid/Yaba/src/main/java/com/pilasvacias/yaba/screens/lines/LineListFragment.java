@@ -74,7 +74,7 @@ public class LineListFragment extends NetworkFragment {
     private void configureListView() {
         adapter = new LinesAdapter(getBaseActivity(), R.layout.list_item_line);
 
-        listView.setEmptyView(EmptyView.makeText(listView, R.string.empty_list));
+        EmptyView.makeText(R.string.empty_list).into(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

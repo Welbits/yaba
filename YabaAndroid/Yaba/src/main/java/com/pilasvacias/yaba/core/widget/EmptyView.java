@@ -12,24 +12,10 @@ import android.widget.TextView;
  * Created by Izan Rodrigo on 3/10/13.
  */
 public class EmptyView {
-    public static TextView makeText(ListView listView, int textResource) {
-        return makeText(listView, listView.getContext().getString(textResource));
-    }
+    private final int textResource;
 
-    public static TextView makeText(ListView listView, String text) {
-        TextView textView = makeText(listView.getContext(), text);
-        int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(matchParent, matchParent);
-        ViewGroup parent = (ViewGroup) listView.getParent();
-        textView.setLayoutParams(layoutParams);
-        if (parent != null) {
-            View emptyView = listView.getEmptyView();
-            if (emptyView != null) {
-                parent.removeView(listView.getEmptyView());
-            }
-            parent.addView(textView);
-        }
-        return textView;
+    public EmptyView(int textResource) {
+        this.textResource = textResource;
     }
 
     public static TextView makeText(Context context, int textResource) {
@@ -45,4 +31,23 @@ public class EmptyView {
         return textView;
     }
 
+    public static EmptyView makeText(int textResource) {
+        return new EmptyView(textResource);
+    }
+
+    public void into(ListView listView) {
+        TextView textView = makeText(listView.getContext(), textResource);
+        int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(matchParent, matchParent);
+        ViewGroup parent = (ViewGroup) listView.getParent();
+        textView.setLayoutParams(layoutParams);
+        if (parent != null) {
+            View emptyView = listView.getEmptyView();
+            if (emptyView != null) {
+                parent.removeView(listView.getEmptyView());
+            }
+            parent.addView(textView);
+        }
+        listView.setEmptyView(textView);
+    }
 }

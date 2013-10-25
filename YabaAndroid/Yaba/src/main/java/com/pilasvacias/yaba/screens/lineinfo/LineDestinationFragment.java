@@ -36,7 +36,7 @@ public class LineDestinationFragment extends NetworkFragment {
 
         adapter = new BusStopAdapter(getBaseActivity(), R.layout.list_item_bus_stop);
 
-        listView.setEmptyView(EmptyView.makeText(listView, R.string.empty_list));
+        EmptyView.makeText(R.string.empty_list).into(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

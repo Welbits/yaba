@@ -46,6 +46,10 @@ public class BaseActivity extends Activity {
         BusUtils.post(isBusRegistered, event);
     }
 
+    protected BaseActivity getActivity() {
+        return this;
+    }
+
     protected List<Object> getModules() {
         return modules;
     }

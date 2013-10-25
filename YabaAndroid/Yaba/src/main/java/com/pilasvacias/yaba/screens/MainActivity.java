@@ -27,6 +27,7 @@ import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.screens.alerts.AlertsFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 import com.pilasvacias.yaba.screens.search.NfcScanActivity;
+import com.pilasvacias.yaba.screens.search.SearchActivity;
 import com.pilasvacias.yaba.screens.settings.SettingsActivity;
 
 import java.util.Arrays;
@@ -51,7 +52,6 @@ public class MainActivity extends NetworkActivity {
     @Save
     private String title;
     private ActionBarDrawerToggle drawerToggle;
-    private DrawerLayoutAdapter drawerLayoutAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class MainActivity extends NetworkActivity {
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        drawerLayoutAdapter = new DrawerLayoutAdapter(this, R.layout.drawer_list_item);
+        DrawerLayoutAdapter drawerLayoutAdapter = new DrawerLayoutAdapter(this, R.layout.drawer_list_item);
         drawerLayoutAdapter.addAll(Arrays.asList(titles));
 
         drawerList.setAdapter(drawerLayoutAdapter);
@@ -167,6 +167,9 @@ public class MainActivity extends NetworkActivity {
         }
 
         switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(this, SearchActivity.class));
+                break;
             case R.id.action_nfc_scan:
                 startActivity(new Intent(this, NfcScanActivity.class));
                 break;
