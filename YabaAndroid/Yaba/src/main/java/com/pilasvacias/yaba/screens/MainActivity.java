@@ -2,6 +2,7 @@ package com.pilasvacias.yaba.screens;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -24,6 +25,7 @@ import com.pilasvacias.yaba.core.experimental.MagicTurn;
 import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
+import com.pilasvacias.yaba.screens.search.NfcScanActivity;
 
 import java.util.Arrays;
 
@@ -65,7 +67,7 @@ public class MainActivity extends NetworkActivity {
         configureDrawerLayout();
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            selectItem(Tab.FAVORITES.ordinal());
         }
     }
 
@@ -158,7 +160,17 @@ public class MainActivity extends NetworkActivity {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
+
+        switch (item.getItemId()) {
+            case R.id.action_nfc_scan:
+                startActivity(new Intent(this, NfcScanActivity.class));
+                break;
+//            case R.id.action_settings:
+//                startActivity(new Intent(this, SettingsActivity.class));
+//                break;
+            default:
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -206,5 +218,9 @@ public class MainActivity extends NetworkActivity {
                 Views.inject(this, view);
             }
         }
+    }
+
+    private enum Tab {
+        FAVORITES, LINES, MAP, TICKET
     }
 }
