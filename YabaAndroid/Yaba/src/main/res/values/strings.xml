@@ -18,5 +18,7 @@
     <string name="action_nfc_scan">Escanear con NFC</string>
     <string name="activity_nfc_scan">Escanear con NFC</string>
     <string name="nfc_mime_type">application/com.pilasvacias.yaba.beam</string>
+    <string name="nfc_unavailable">Tu dispositivo no tiene NFC</string>
+    <string name="activity_settings">Configuración</string>
 
 </resources>

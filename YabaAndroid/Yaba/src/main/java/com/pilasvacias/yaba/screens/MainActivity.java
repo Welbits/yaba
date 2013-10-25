@@ -24,8 +24,10 @@ import com.pilasvacias.yaba.core.debug.DummyFragment;
 import com.pilasvacias.yaba.core.experimental.MagicTurn;
 import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
+import com.pilasvacias.yaba.screens.alerts.AlertsFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 import com.pilasvacias.yaba.screens.search.NfcScanActivity;
+import com.pilasvacias.yaba.screens.settings.SettingsActivity;
 
 import java.util.Arrays;
 
@@ -69,6 +71,7 @@ public class MainActivity extends NetworkActivity {
         if (savedInstanceState == null) {
             selectItem(Tab.FAVORITES.ordinal());
         }
+        setTitle(title);
     }
 
     @Override
@@ -82,8 +85,9 @@ public class MainActivity extends NetworkActivity {
                 .setFragments(
                         DummyFragment.newInstance(titles[0]),
                         new LinesFragment(),
-                        DummyFragment.newInstance(titles[2]),
-                        DummyFragment.newInstance(titles[3])
+                        new AlertsFragment(),
+                        DummyFragment.newInstance(titles[3]),
+                        DummyFragment.newInstance(titles[4])
                 )
                 .setTitles(getResources().getStringArray(R.array.lines_tab_titles))
                 .setOffscreenLimit(WPagerAdapter.ALL_FRAGMENTS)
@@ -109,6 +113,7 @@ public class MainActivity extends NetworkActivity {
         drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
         drawerToggle = new
+
                 ActionBarDrawerToggle(this,
                         drawerLayout,
                         R.drawable.ic_drawer,
@@ -116,13 +121,12 @@ public class MainActivity extends NetworkActivity {
                         R.string.navigation_drawer_close) {
                     public void onDrawerClosed(View view) {
                         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                        ActionBar actionBar = getActionBar();
-                        actionBar.setTitle(title);
+                        setTitle(title);
                     }
 
                     public void onDrawerOpened(View drawerView) {
                         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                        getActionBar().setTitle(R.string.app_name);
+                        getActionBar().setTitle(getString(R.string.app_name));
                     }
                 };
         drawerLayout.setDrawerListener(drawerToggle);
@@ -136,12 +140,13 @@ public class MainActivity extends NetworkActivity {
         drawerLayout.closeDrawer(drawerList);
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
+    // Called whenever we call invalidateOptionsMenu()
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
         if (drawerOpen) {
+            getActionBar().setTitle(getString(R.string.app_name));
             menu.clear();
         }
         return super.onCreateOptionsMenu(menu);
@@ -165,9 +170,9 @@ public class MainActivity extends NetworkActivity {
             case R.id.action_nfc_scan:
                 startActivity(new Intent(this, NfcScanActivity.class));
                 break;
-//            case R.id.action_settings:
-//                startActivity(new Intent(this, SettingsActivity.class));
-//                break;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
             default:
                 break;
         }
@@ -191,8 +196,12 @@ public class MainActivity extends NetworkActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggle
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private enum Tab {
+        FAVORITES, LINES, MAP, TICKET
     }
 
     static final class DrawerLayoutAdapter extends WBaseAdapter<String, DrawerLayoutAdapter.ViewHolder> {
@@ -218,9 +227,5 @@ public class MainActivity extends NetworkActivity {
                 Views.inject(this, view);
             }
         }
-    }
-
-    private enum Tab {
-        FAVORITES, LINES, MAP, TICKET
     }
 }

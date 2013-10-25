@@ -8,6 +8,7 @@
     <string-array name="drawer_sections">
         <item>Favoritos</item>
         <item>Líneas</item>
+        <item>Alertas</item>
         <item>Mapa</item>
         <item>Abono</item>
     </string-array>

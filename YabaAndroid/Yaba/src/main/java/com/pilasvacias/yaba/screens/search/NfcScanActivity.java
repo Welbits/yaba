@@ -10,17 +10,19 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pilasvacias.yaba.R;
+import com.pilasvacias.yaba.util.WToast;
 
 import butterknife.InjectView;
 import butterknife.Views;
 
+import static android.nfc.NfcAdapter.CreateNdefMessageCallback;
+
 /**
  * Created by IzanRodrigo on 25/10/13.
  */
-public class NfcScanActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
+public class NfcScanActivity extends Activity implements CreateNdefMessageCallback {
 
     // Inject views
     @InjectView(R.id.nfcScan_editText)
@@ -39,7 +41,7 @@ public class NfcScanActivity extends Activity implements NfcAdapter.CreateNdefMe
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
-            Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
+            WToast.showLong(this, R.string.nfc_unavailable);
             finish();
             return;
         }
