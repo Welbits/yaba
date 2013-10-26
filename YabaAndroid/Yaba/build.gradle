@@ -24,6 +24,7 @@ dependencies {
     compile project(':Volley')
     compile project(':PagerSlidingTabStrip')
     compile 'com.android.support:support-v13:18.0.0'
+    compile 'com.android.support:support-v4:18.0.0'
 
     //Jake Wharton
     apt 'com.jakewharton:butterknife:3.0.0'
@@ -45,7 +46,7 @@ dependencies {
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "18.1.0"
+    buildToolsVersion "18.1.1"
 
     defaultConfig {
         minSdkVersion 10
