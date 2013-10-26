@@ -48,7 +48,8 @@
         <activity
             android:name=".screens.search.SearchActivity"
             android:launchMode="singleTop"
-            android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity">
+            android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>

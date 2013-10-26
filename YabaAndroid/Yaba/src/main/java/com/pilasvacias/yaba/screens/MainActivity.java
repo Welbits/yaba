@@ -89,7 +89,7 @@ public class MainActivity extends NetworkActivity {
                         DummyFragment.newInstance(titles[3]),
                         DummyFragment.newInstance(titles[4])
                 )
-                .setTitles(getResources().getStringArray(R.array.lines_tab_titles))
+                .setTitles(titles)
                 .setOffscreenLimit(WPagerAdapter.ALL_FRAGMENTS)
                 .into(viewPager);
     }

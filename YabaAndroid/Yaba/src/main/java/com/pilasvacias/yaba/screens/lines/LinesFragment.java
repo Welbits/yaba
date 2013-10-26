@@ -50,7 +50,7 @@ public class LinesFragment extends NetworkFragment {
                         LineListFragment.newInstance(LineListFragment.LineListType.NIGHTLY),
                         LineListFragment.newInstance(LineListFragment.LineListType.UNIVERSITY)
                 )
-                .setTitles(getResources().getStringArray(R.array.lines_tab_titles))
+                .setTitles(R.array.lines_tab_titles)
                 .setOffscreenLimit(WPagerAdapter.ALL_FRAGMENTS)
                 .setPageTransformer(true, new ZoomOutPageTransformer())
                 .into(viewPager);

@@ -120,6 +120,14 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
     }
 
     /**
+     * Returns all items in the adapter, but not removes them.
+     * @return all items in the adapter
+     */
+    public ArrayList<Item> getAllItems() {
+        return items;
+    }
+
+    /**
      * Remove all items.
      */
     public synchronized void clear() {
