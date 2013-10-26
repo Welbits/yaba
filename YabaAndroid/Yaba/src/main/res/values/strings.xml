@@ -20,7 +20,7 @@
     <string name="nfc_mime_type">application/com.pilasvacias.yaba.beam</string>
     <string name="nfc_unavailable">Tu dispositivo no tiene NFC</string>
     <string name="activity_settings">Configuración</string>
-    <string name="search_hint">Introduce línea o parada</string>
+    <string name="search_hint">Introduce línea, parada o calle</string>
     <string name="empty_search">No se han encontrado resultados para esa búsqueda.</string>
 
 </resources>

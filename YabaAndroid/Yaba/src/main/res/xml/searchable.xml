@@ -4,5 +4,4 @@
     android:label="@string/app_name"
     android:hint="@string/search_hint"
     android:searchMode="showSearchLabelAsBadge"
-    android:inputType="number"
     android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"/>
