@@ -6,16 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.core.BaseActivity;
+import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.core.widget.EmptyView;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
+import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.modules.emt.pojos.Node;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
 
@@ -25,7 +28,7 @@ import butterknife.Views;
 /**
  * Created by IzanRodrigo on 25/10/13.
  */
-public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+public class SearchActivity extends NetworkActivity implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     // Constants
     private static final long SEARCH_DELAY = Time.millis(2000);
@@ -43,6 +46,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             search(query);
         }
     };
+    private ArrayAdapter<Node> arrayAdapter;
+    private EmtData<Node> nodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     private void configureListView() {
         EmptyView.makeText(R.string.empty_search).into(listView);
+        arrayAdapter = new ArrayAdapter<Node>(this, android.R.layout.simple_list_item_1);
+        listView.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -127,8 +134,28 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        //TODO: Handle search while user enters text.
-        return false;
+        if (newText.isEmpty())
+            return false;
+
+        Node.GetNodesLines body = new Node.GetNodesLines();
+        body.Nodes = newText.trim().replace(" ", "|");
+
+        getRequestManager().beginRequest(Node.class)
+                .body(body)
+                .success(new EmtSuccessHandler<Node>() {
+                    @Override public void onSuccess(EmtData<Node> result) {
+                        nodes = result;
+                        arrayAdapter.clear();
+                        arrayAdapter.addAll(result.getPayload());
+                    }
+                })
+                .ignoreErrors(true)
+                .ignoreLoading(true)
+                .cacheResult(false)
+                .cacheSkip(true)
+                .execute();
+
+        return true;
     }
 
     @Override
@@ -138,6 +165,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     /**
      * Finish SearchActivity when close SearchView
+     *
      * @param item
      * @return
      */

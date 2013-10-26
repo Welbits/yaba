@@ -5,7 +5,7 @@ package com.pilasvacias.yaba.modules.emt.pojos;
  */
 
 
-public class BusStop {
+public class BusStop extends Pojo {
 
     //TODO make class
 

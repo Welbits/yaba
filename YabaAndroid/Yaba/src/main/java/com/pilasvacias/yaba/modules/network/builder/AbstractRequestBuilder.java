@@ -30,6 +30,7 @@ public abstract class AbstractRequestBuilder
     protected long fakeTime = 0L;
     protected long expireTime = 0L;
     protected long refreshTime = 0L;
+    protected String cacheKey;
 
     //Handlers
     protected ErrorHandler errorHandler;
@@ -105,6 +106,11 @@ public abstract class AbstractRequestBuilder
     public BUILDER_TYPE cacheTime(long refreshTime, long expireTime) {
         this.refreshTime = refreshTime;
         this.expireTime = expireTime;
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE cacheKey(String cacheKey) {
+        this.cacheKey = cacheKey;
         return (BUILDER_TYPE) this;
     }
 

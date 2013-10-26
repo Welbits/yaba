@@ -62,6 +62,9 @@ public class EmtRequest<T> extends AbstractRequest<EmtData<T>> {
 
     @Override public boolean responseIsOk(NetworkResponse response, EmtData<T> data) {
         return data != null && data.getEmtInfo().getResultCode() == 0;
+    }
 
+    @Override public String getCacheKey() {
+        return body.getSoapAction() + "." + super.getCacheKey();
     }
 }

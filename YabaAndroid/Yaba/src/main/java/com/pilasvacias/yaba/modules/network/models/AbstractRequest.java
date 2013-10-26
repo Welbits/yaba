@@ -51,7 +51,6 @@ public abstract class AbstractRequest<T> extends Request<T> {
         this.successHandler = successHandler;
     }
 
-
     public void setFakeExecutionTime(long fakeTime) {
         this.fakeExecutionTime = fakeTime;
     }
@@ -84,10 +83,6 @@ public abstract class AbstractRequest<T> extends Request<T> {
             return Response.success(data, CacheMaker.generateCache(response, cacheRefreshTime, cacheExpireTime));
         else
             return Response.error(generateErrorResponse(response, data));
-    }
-
-    public void setCacheKey(String cacheKey) {
-        this.cacheKey = cacheKey;
     }
 
     private void fakeLongRequest() {
@@ -128,5 +123,16 @@ public abstract class AbstractRequest<T> extends Request<T> {
             entry.softTtl = 0;
         }
         return entry;
+    }
+
+    @Override public String getCacheKey() {
+        if (cacheKey != null)
+            return cacheKey;
+        else
+            return super.getCacheKey();
+    }
+
+    public void setCacheKey(String cacheKey) {
+        this.cacheKey = cacheKey;
     }
 }
