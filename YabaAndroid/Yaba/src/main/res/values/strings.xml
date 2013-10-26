@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Yaba</string>
-    <string name="action_settings">Configuración</string>
+    <string name="action_settings">Ajustes</string>
     <string name="action_share">Compartir</string>
     <string name="action_delete">Borrar</string>
     <string name="action_search">Buscar</string>
@@ -22,5 +22,8 @@
     <string name="activity_settings">Configuración</string>
     <string name="search_hint">Introduce línea, parada o calle</string>
     <string name="empty_search">No se han encontrado resultados para esa búsqueda.</string>
+    <string name="developer">Desarrollador</string>
+    <string name="open_source_licenses">Licencias de código abierto</string>
+    <string name="yaba_version">Versión de Yaba</string>
 
 </resources>
