@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pilasvacias.yaba"
-    android:installLocation="auto"
-    android:sharedUserId="com.pilasvacias.yaba"
-    android:versionCode="1"
-    android:versionName="1.0">
+          package="com.pilasvacias.yaba"
+          android:installLocation="auto"
+          android:sharedUserId="com.pilasvacias.yaba"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="18"/>
 
     <!--Internet-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!--Location-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--Write cache-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--NFC-->
-    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.NFC"/>
 
     <uses-feature
         android:name="android.hardware.nfc"
-        android:required="false" />
+        android:required="false"/>
 
     <application
         android:name=".application.YabaApplication"
@@ -34,15 +34,15 @@
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".screens.search.SearchActivity" />
+            android:value=".screens.search.SearchActivity"/>
 
         <activity
             android:name=".screens.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -50,15 +50,15 @@
             android:launchMode="singleTop"
             android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
         </activity>
         <activity
             android:name=".screens.search.NfcScanActivity"
@@ -66,23 +66,23 @@
             android:launchMode="singleTop"
             android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity">
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="@string/nfc_mime_type" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="@string/nfc_mime_type"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".screens.settings.SettingsActivity"
             android:label="@string/activity_settings"
             android:launchMode="singleTop"
-            android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity" />
+            android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity"/>
         <activity
             android:name=".screens.ProbaActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
