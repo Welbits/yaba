@@ -107,8 +107,26 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
 
     private void search(String query) {
         searchView.setQuery(query, false);
-        WToast.showShort(this, query);
-        //TODO: Implement method
+
+        Node.GetNodesLines body = new Node.GetNodesLines();
+        body.setNodes(query.split("\\s+"), false);
+        L.og.d(body.getNodesAsString());
+
+        getRequestManager().cancelAllRequests();
+        getRequestManager().beginRequest(Node.class)
+                .body(body)
+                .success(new EmtSuccessHandler<Node>() {
+                    @Override public void onSuccess(EmtData<Node> result) {
+                        nodes = result;
+                        arrayAdapter.clear();
+                        arrayAdapter.addAll(result.getPayload());
+                    }
+                })
+                .ignoreErrors(true)
+                .ignoreLoading(true)
+                .cacheResult(false)
+                .cacheSkip(true)
+                .execute();
     }
 
     /**
@@ -144,27 +162,6 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
             arrayAdapter.clear();
             return false;
         }
-
-        Node.GetNodesLines body = new Node.GetNodesLines();
-        body.setNodes(newText.split("\\s+"), false);
-        L.og.d(body.getNodesAsString());
-
-        getRequestManager().cancelAllRequests();
-        getRequestManager().beginRequest(Node.class)
-                .body(body)
-                .success(new EmtSuccessHandler<Node>() {
-                    @Override public void onSuccess(EmtData<Node> result) {
-                        nodes = result;
-                        arrayAdapter.clear();
-                        arrayAdapter.addAll(result.getPayload());
-                    }
-                })
-                .ignoreErrors(true)
-                .ignoreLoading(true)
-                .cacheResult(false)
-                .cacheSkip(true)
-                .execute();
-
         return true;
     }
 
