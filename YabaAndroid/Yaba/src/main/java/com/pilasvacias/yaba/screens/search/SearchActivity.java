@@ -19,6 +19,7 @@ import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Node;
+import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
 
@@ -123,6 +124,11 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
         return true;
     }
 
+    public static long getSearchDelay() {
+        //TODO: Tweak this value to avoid wasting bandwidth
+        return SEARCH_DELAY;
+    }
+
     /**
      * Handle search while user enters text.
      * Delay search {@code SEARCH_DELAY} millis.
@@ -134,12 +140,16 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (newText.isEmpty())
+        if (newText.isEmpty()) {
+            arrayAdapter.clear();
             return false;
+        }
 
         Node.GetNodesLines body = new Node.GetNodesLines();
-        body.Nodes = newText.trim().replace(" ", "|");
+        body.setNodes(newText.split("\\s+"), false);
+        L.og.d(body.getNodesAsString());
 
+        getRequestManager().cancelAllRequests();
         getRequestManager().beginRequest(Node.class)
                 .body(body)
                 .success(new EmtSuccessHandler<Node>() {
