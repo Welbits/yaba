@@ -47,9 +47,4 @@ public class EmtBody {
                     "with the same name as the request or override this method");
         return action;
     }
-
-    public String getCacheKey() {
-        return getSoapAction() + gson.toJson(this);
-    }
-
 }

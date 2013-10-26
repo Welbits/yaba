@@ -7,6 +7,7 @@ import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
 import com.pilasvacias.yaba.screens.lines.LineListFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
+import com.pilasvacias.yaba.screens.search.SearchActivity;
 
 import javax.inject.Singleton;
 
@@ -24,20 +25,19 @@ import dagger.Provides;
                 MainActivity.class,
                 LinesFragment.class,
                 LineListFragment.class,
-                ProbaActivity.class
+                ProbaActivity.class,
+                SearchActivity.class
         },
         includes = VolleyModule.class,
         library = true)
 public class EmtModule {
 
     @Provides
-    @Singleton
-    EmtEnvelopeSerializer provideEnvelopeSerializer() {
+    @Singleton EmtEnvelopeSerializer provideEnvelopeSerializer() {
         return new EmtEnvelopeSerializer();
     }
 
-    @Provides
-    EmtRequestManager provideEmtRequestManager(RequestQueue requestQueue) {
+    @Provides EmtRequestManager provideEmtRequestManager(RequestQueue requestQueue) {
         return new EmtRequestManager(requestQueue);
     }
 
