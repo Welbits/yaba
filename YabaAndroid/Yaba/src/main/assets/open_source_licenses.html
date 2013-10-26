@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<h2>Version 1.6.0</h2>
+
+<p>Release Date: 26/10/2010</p>
+
+<ul>
+    <li>Comes with documentation, which is what you are looking at, so you probably know that.</li>
+    <li>Added the $this->template->set(); method for
+        assigning data with two arguments or a object/array.
+    </li>
+    <li>Fixed some random bugs with locating layouts, theme partials, etc.</li>
+</ul>
+
+<h2>Version 1.5.0</h2>
+
+<p>Release Date: 28/09/2010</p>
+
+<ul>
+    <li>Added magical methods __get() and __set() to allow Kohana-style $this->template->foo =
+        'bar'; for assigning data.
+    </li>
+    <li>Added mobile support.</li>
+    <li>Third parameter for $this->template->set_partial(); is now an
+        optional array/object for data specific to that partial only.
+    </li>
+</ul>
+
+<h2>Version 1.4.0</h2>
+
+<p>Release Date: 23/07/2010</p>
+
+<ul>
+    <li>Removed possibility of duplicate SEO entries, call $this->template->set_metadata('keywords',
+        'foo'); twice and it will use the 2nd.
+    </li>
+    <li>Re-did inject logic, now its just for shoving a hunk of HTML into a partial.</li>
+    <li>Fixed $this->template->theme_exists(), it
+        was not using slug name so falsely returned true.
+    </li>
+</ul>
+
+<h2>Version 1.3.0</h2>
+
+<p>Release Date: 24/03/2010</p>
+
+<ul>
+    <li>You can now use any extension for your files, not just whatever EXT is set to.</li>
+    <li>Updated Template library to add support for getting theme layout lists and checking they
+        exist.
+    </li>
+    <li>Added more options to the default config file.</li>
+    <li>Now supports a config file that allows a default theme to be
+        set and "Theme locations" to be used. That means you could have application/themes
+        as one and third_party/themes as another.
+    </li>
+</ul>
+</body>
+</html>
