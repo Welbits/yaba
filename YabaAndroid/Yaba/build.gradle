@@ -5,12 +5,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.6.+'
-        //classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.+'
     }
 }
 apply plugin: 'android'
-//apply plugin: 'android-test'
-
 
 repositories {
     mavenCentral()
@@ -20,37 +17,12 @@ configurations {
     apt
 }
 
-dependencies {
-
-    compile project(':Volley')
-    compile project(':PagerSlidingTabStrip')
-    compile 'com.android.support:support-v13:18.0.0'
-    compile 'com.android.support:support-v4:18.0.0'
-
-    //Jake Wharton
-    apt 'com.jakewharton:butterknife:3.0.0'
-    compile 'com.jakewharton:butterknife:3.0.0'
-    compile 'com.jakewharton.timber:timber:1.1.0'
-
-    //Square
-    apt 'com.squareup.dagger:dagger-compiler:1.1.0'
-    compile 'com.squareup.dagger:dagger:1.1.0'
-    compile 'com.squareup:otto:1.3.4'
-
-    //Parsing
-    compile 'com.google.code.gson:gson:2.2.4'
-    compile('com.thoughtworks.xstream:xstream:1.4.5') {
-        //It's in the android jar
-        exclude module: 'xmlpull'
-    }
-}
-
 android {
     compileSdkVersion 18
     buildToolsVersion "18.1.1"
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 18
     }
 
@@ -76,14 +48,42 @@ android {
     productFlavors {
         free {
             packageName "com.pilasvacias.yaba.free"
-            minSdkVersion 14
         }
 
         pro {
             packageName "com.pilasvacias.yaba.pro"
-            minSdkVersion 14
         }
     }
+}
+
+dependencies {
+
+    compile project(':Volley')
+    compile project(':PagerSlidingTabStrip')
+    compile 'com.android.support:support-v13:18.0.0'
+    compile 'com.android.support:support-v4:18.0.0'
+
+    //Jake Wharton
+    apt 'com.jakewharton:butterknife:3.0.0'
+    compile 'com.jakewharton:butterknife:3.0.0'
+    compile 'com.jakewharton.timber:timber:1.1.0'
+
+    //Square
+    apt 'com.squareup.dagger:dagger-compiler:1.1.0'
+    compile 'com.squareup.dagger:dagger:1.1.0'
+    compile 'com.squareup:otto:1.3.4'
+
+    //Parsing
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile('com.thoughtworks.xstream:xstream:1.4.5') {
+        //It's in the android jar
+        exclude module: 'xmlpull'
+    }
+
+    instrumentTestCompile 'junit:junit:3.8'
+
+    //instrumentTestCompile 'junit:junit:4.10'
+    //instrumentTestCompile 'org.robolectric:robolectric:2.2'
 }
 
 android.applicationVariants.all { variant ->
