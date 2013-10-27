@@ -6,6 +6,7 @@ import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.network.models.AbstractRequest;
 
 /**
  * Created by Pablo Orgaz - 10/22/13 - pabloogc@gmail.com - https://github.com/pabloogc
@@ -14,7 +15,7 @@ import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
  * <p/>
  * {@code
  * <p/>
- * public class MyBuilder<SUCCESS_TYPE> extends AbstractRequestBuilder<MyBuilder<SUCCESS_TYPE>, SUCCESS_TYPE>{
+ * public class MyBuilder<SUCCESS_HANDLER_TYPE> extends AbstractRequestBuilder<MyBuilder<SUCCESS_HANDLER_TYPE>, SUCCESS_HANDLER_TYPE>{
  * <p/>
  * ...
  * <p/>
@@ -22,7 +23,11 @@ import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractRequestBuilder
-        <BUILDER_TYPE extends AbstractRequestBuilder<BUILDER_TYPE, REQUEST_TYPE, SUCCESS_TYPE>, REQUEST_TYPE, SUCCESS_TYPE> {
+        <
+                BUILDER_TYPE extends AbstractRequestBuilder,
+                REQUEST_TYPE extends AbstractRequest,
+                SUCCESS_HANDLER_TYPE extends SuccessHandler
+                > {
 
     //Cache
     protected boolean cacheSkip = false;
@@ -31,17 +36,14 @@ public abstract class AbstractRequestBuilder
     protected long expireTime = 0L;
     protected long refreshTime = 0L;
     protected String cacheKey;
-
     //Handlers
     protected ErrorHandler errorHandler;
     protected LoadingHandler loadingHandler;
-    protected SuccessHandler<SUCCESS_TYPE> successHandler;
-
+    protected SUCCESS_HANDLER_TYPE successHandler;
     //Meta
     protected RequestQueue requestQueue;
     protected Context context;
     protected Object tag;
-
     //User part
     protected boolean verbose = false;
     protected boolean ignoreLoading = false;
@@ -52,12 +54,10 @@ public abstract class AbstractRequestBuilder
         this.requestQueue = requestQueue;
     }
 
-
     public BUILDER_TYPE cacheSkip(boolean use) {
         this.cacheSkip = use;
         return (BUILDER_TYPE) this;
     }
-
 
     /**
      * @param cacheResult whether this request should be cached or not.
@@ -70,7 +70,7 @@ public abstract class AbstractRequestBuilder
     /**
      * @param successHandler the listener of the request
      */
-    public BUILDER_TYPE success(SuccessHandler<SUCCESS_TYPE> successHandler) {
+    public BUILDER_TYPE success(SUCCESS_HANDLER_TYPE successHandler) {
         this.successHandler = successHandler;
         return (BUILDER_TYPE) this;
     }
@@ -145,7 +145,6 @@ public abstract class AbstractRequestBuilder
         this.tag = tag;
         return (BUILDER_TYPE) this;
     }
-
 
     public BUILDER_TYPE verbose(boolean verbose) {
         this.verbose = verbose;
