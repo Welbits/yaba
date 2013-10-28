@@ -21,7 +21,6 @@ import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Node;
 import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
-import com.pilasvacias.yaba.util.WToast;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -49,6 +48,11 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     };
     private ArrayAdapter<Node> arrayAdapter;
     private EmtData<Node> nodes;
+
+    public static long getSearchDelay() {
+        //TODO: Tweak this value to avoid wasting bandwidth
+        return SEARCH_DELAY;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,11 +144,6 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
         this.query = query;
         runnable.run();
         return true;
-    }
-
-    public static long getSearchDelay() {
-        //TODO: Tweak this value to avoid wasting bandwidth
-        return SEARCH_DELAY;
     }
 
     /**

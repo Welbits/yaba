@@ -22,6 +22,8 @@ import dagger.Provides;
 public class VolleyModule {
 
     @Provides @Singleton RequestQueue providesRequestQueue(Context context) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+
         return Volley.newRequestQueue(context);
     }
 

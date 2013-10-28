@@ -26,13 +26,13 @@ public abstract class SuccessHandler<T> implements Response.Listener<T> {
         this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
     }
 
-    @Override public final void onResponse(T response) {
+    @Override public void onResponse(T response) {
         if (loadingHandler != null && loadingHandler.get() != null)
             loadingHandler.get().hideLoading(null, true);
-        if(visitor != null)
+        if (visitor != null)
             visitor.beforeResponse(response);
         onSuccess(response);
-        if(visitor != null)
+        if (visitor != null)
             visitor.afterResponse(response);
     }
 
@@ -40,6 +40,7 @@ public abstract class SuccessHandler<T> implements Response.Listener<T> {
 
     public interface Visitor {
         void beforeResponse(Object response);
+
         void afterResponse(Object response);
     }
 

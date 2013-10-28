@@ -20,7 +20,7 @@ public abstract class AbstractRequest<T> extends Request<T> {
     private long cacheRefreshTime = 0;
     private long cacheExpireTime = 0;
     private boolean cacheSkip = false;
-    private SuccessHandler<T> successHandler;
+    private SuccessHandler<T> responseListener;
     private ErrorHandler emtErrorHandler;
     private boolean verbose = false;
     private Object body;
@@ -32,7 +32,7 @@ public abstract class AbstractRequest<T> extends Request<T> {
             ErrorHandler errorHandler) {
         super(method, url, errorHandler);
         this.emtErrorHandler = errorHandler;
-        this.successHandler = successHandler;
+        this.responseListener = successHandler;
     }
 
     public ErrorHandler getEmtErrorHandler() {
@@ -43,12 +43,12 @@ public abstract class AbstractRequest<T> extends Request<T> {
         this.emtErrorHandler = emtErrorHandler;
     }
 
-    public SuccessHandler<T> getSuccessHandler() {
-        return successHandler;
+    public SuccessHandler<T> getResponseListener() {
+        return responseListener;
     }
 
-    public void setSuccessHandler(SuccessHandler<T> successHandler) {
-        this.successHandler = successHandler;
+    public void setResponseListener(SuccessHandler<T> responseListener) {
+        this.responseListener = responseListener;
     }
 
     public void setFakeExecutionTime(long fakeTime) {
@@ -97,8 +97,8 @@ public abstract class AbstractRequest<T> extends Request<T> {
     }
 
     @Override protected void deliverResponse(T response) {
-        if (successHandler != null && !isCanceled())
-            successHandler.onResponse(response);
+        if (responseListener != null && !isCanceled())
+            responseListener.onResponse(response);
     }
 
     public abstract T getParsedData(NetworkResponse response);

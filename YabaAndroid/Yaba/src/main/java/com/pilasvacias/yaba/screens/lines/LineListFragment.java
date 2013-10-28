@@ -122,6 +122,9 @@ public class LineListFragment extends NetworkFragment {
                         addLines();
                     }
                 })
+                .ignoreLoading(true)
+                .cacheKey("lines")
+                .verbose(true)
                 .cacheTime(Time.days(1D))
                 .execute();
     }

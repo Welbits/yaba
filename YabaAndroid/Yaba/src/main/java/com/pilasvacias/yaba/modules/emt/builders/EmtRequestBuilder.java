@@ -1,28 +1,32 @@
 package com.pilasvacias.yaba.modules.emt.builders;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
 import com.pilasvacias.yaba.modules.network.builder.AbstractRequestBuilder;
-import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.modules.network.handlers.impl.DialogLoadingHandler;
+import com.pilasvacias.yaba.modules.network.handlers.impl.FakeErrorHandler;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
  * Created by pablo on 10/14/13.
  * welvi-android
  */
-public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuilder<T>, EmtRequest<T>, EmtSuccessHandler<T>> {
+public class EmtRequestBuilder<T> extends AbstractRequestBuilder
+        <
+                EmtRequestBuilder<T>, //Type used to allow cast in abstract builder
+                EmtRequest<T>, //Type of the request
+                EmtSuccessHandler<T>, //Type of the handler
+                EmtData<T> //Type of the data obtained
+                > {
 
 
     //Visibility is package local to avoid getters
     EmtBody body;
     Class<T> responseType;
-    EmtRequest<T> emtRequest;
 
     /**
      * Use {@link EmtRequestManager}
@@ -60,19 +64,6 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
         return this;
     }
 
-    public EmtRequest<T> getEmtRequest() {
-        return emtRequest;
-    }
-
-    public void execute() {
-        if (emtRequest == null)
-            emtRequest = create();
-        requestQueue.add(emtRequest);
-
-        if (!ignoreLoading && loadingHandler != null)
-            loadingHandler.showLoading(loadingMessage);
-    }
-
     @Override
     public EmtRequest<T> create() {
         if (!ignoreErrors && errorHandler == null) {
@@ -90,8 +81,6 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
         request.setCacheExpireTime(expireTime);
         request.setCacheSkip(cacheSkip);
         request.setShouldCache(cacheResult);
-        emtRequest = request;
-
 
         if (!ignoreLoading && loadingHandler == null)
             loadingHandler = new DialogLoadingHandler(context, request);
@@ -108,7 +97,6 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
         return request;
     }
 
-    //Some fake handlers
     public static class FakeEmtBody extends EmtBody {
         @XStreamOmitField
         String action;
@@ -122,16 +110,5 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder<EmtRequestBuild
         }
     }
 
-    public static class FakeSuccessHandler<T> extends EmtSuccessHandler<T> {
-        @Override public void onSuccess(EmtData<T> result) {
-        }
-    }
 
-    public static class FakeErrorHandler extends EmtErrorHandler {
-        @Override public void handleError(VolleyError volleyError) {
-        }
-
-        @Override public void setLoadingHandler(LoadingHandler loadingHandler) {
-        }
-    }
 }

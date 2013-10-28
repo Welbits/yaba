@@ -52,7 +52,12 @@ public class EmtRequest<T> extends AbstractRequest<EmtData<T>> {
 
     @Override public EmtData<T> getParsedData(NetworkResponse response) {
         String xml = new String(response.data);
-        return EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType, body);
+        try {
+            return EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType, body);
+        } catch (Exception e) {
+            //Parse exception
+            return null;
+        }
     }
 
     @Override public VolleyError generateErrorResponse(NetworkResponse response, EmtData<T> data) {

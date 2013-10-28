@@ -2,11 +2,18 @@ package com.pilasvacias.yaba.modules.network.builder;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.HttpClientStack;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.network.models.AbstractRequest;
+
+import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  * Created by Pablo Orgaz - 10/22/13 - pabloogc@gmail.com - https://github.com/pabloogc
@@ -26,7 +33,8 @@ public abstract class AbstractRequestBuilder
         <
                 BUILDER_TYPE extends AbstractRequestBuilder,
                 REQUEST_TYPE extends AbstractRequest,
-                SUCCESS_HANDLER_TYPE extends SuccessHandler
+                SUCCESS_HANDLER_TYPE extends SuccessHandler,
+                SUCCESS_DATA_TYPE
                 > {
 
     //Cache
@@ -176,10 +184,39 @@ public abstract class AbstractRequestBuilder
     }
 
     /**
-     * Execute the request. Subclasses of the builder are responsible for creating
-     * and executing the request object.
+     * Execute the request
      */
-    public abstract void execute();
+    public void execute() {
+        REQUEST_TYPE emtRequest = create();
+        requestQueue.add(emtRequest);
+
+        if (!ignoreLoading && loadingHandler != null)
+            loadingHandler.showLoading(loadingMessage);
+    }
+
+    /**
+     * Do not execute this in the UI thread, it will crash.
+     * Also normal handlers won't be notified.
+     *
+     * @return the data, or null if it went wrong.
+     */
+    public SUCCESS_DATA_TYPE executeSync() {
+        REQUEST_TYPE request = create();
+        HttpClientStack httpClientStack = new HttpClientStack(new DefaultHttpClient());
+        BasicNetwork basicNetwork = new BasicNetwork(httpClientStack);
+        try {
+            NetworkResponse response = basicNetwork.performRequest(request);
+            SUCCESS_DATA_TYPE data = (SUCCESS_DATA_TYPE) request.getParsedData(response);
+            if (request.responseIsOk(response, data))
+                return data;
+        } catch (AuthFailureError authFailureError) {
+            authFailureError.printStackTrace();
+        } catch (VolleyError volleyError) {
+            volleyError.printStackTrace();
+        }
+
+        return null;
+    }
 
     /**
      * Execute the request. Subclasses of the builder are responsible for creating

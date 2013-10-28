@@ -1,6 +1,7 @@
 package com.pilasvacias.yaba.util;
 
 import com.pilasvacias.yaba.application.YabaApplication;
+import com.squareup.otto.Bus;
 
 /**
  * Created by Izan Rodrigo on 26/09/13.
@@ -9,6 +10,7 @@ public class BusUtils {
 
     /**
      * Register bus if not registered yet.
+     *
      * @param isBusRegistered
      * @param object
      * @return
@@ -27,6 +29,7 @@ public class BusUtils {
 
     /**
      * Unregister bus if is registered.
+     *
      * @param isBusRegistered
      * @param object
      */
@@ -38,6 +41,7 @@ public class BusUtils {
 
     /**
      * Post bus event, notifying subscribed classes.
+     *
      * @param isBusRegistered
      * @param event
      */
@@ -45,5 +49,9 @@ public class BusUtils {
         if (isBusRegistered) {
             YabaApplication.getBus().post(event);
         }
+    }
+
+    public static Bus getBus() {
+        return YabaApplication.getBus();
     }
 }

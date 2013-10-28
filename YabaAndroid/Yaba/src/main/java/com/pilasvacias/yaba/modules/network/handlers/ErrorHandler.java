@@ -34,7 +34,7 @@ public abstract class ErrorHandler implements Response.ErrorListener {
     }
 
     @Override
-    public final void onErrorResponse(VolleyError error) {
+    public void onErrorResponse(VolleyError error) {
         if (visitor != null)
             visitor.beforeError(error);
         handleError(error);

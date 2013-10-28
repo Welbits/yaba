@@ -74,12 +74,17 @@ dependencies {
     compile 'com.squareup:otto:1.3.4'
 
     //Parsing
+    compile 'org.apache.commons:commons-io:1.3.2'
     compile 'com.google.code.gson:gson:2.2.4'
     compile('com.thoughtworks.xstream:xstream:1.4.5') {
         //It's in the android jar
         exclude module: 'xmlpull'
     }
 
+    //Persistence
+    compile 'com.j256.ormlite:ormlite-android:4.47'
+
+    //Testing
     instrumentTestCompile 'junit:junit:3.8'
 
     //instrumentTestCompile 'junit:junit:4.10'

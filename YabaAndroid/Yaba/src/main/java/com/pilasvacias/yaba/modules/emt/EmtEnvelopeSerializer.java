@@ -4,12 +4,6 @@ import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.util.L;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -94,8 +88,8 @@ public class EmtEnvelopeSerializer {
     public String toXML(EmtBody body) {
         try {
             XStream xStream = new XStream();
+            xStream.processAnnotations(body.getClass());
             xStream.alias(body.getSoapAction(), body.getClass());
-            xStream.autodetectAnnotations(true);
             String xml;
             xml = xStream.toXML(body);
             return String.format(ENVELOPE_TEMPLATE, xml);
@@ -128,6 +122,8 @@ public class EmtEnvelopeSerializer {
         xStream.alias("DESCRIPCION", String.class);
         xStream.alias("RESULTADO", Integer.class);
         xStream.alias("REG", responseType);
+        xStream.processAnnotations(responseType);
+
         String tag = body.getSoapAction() + "Result";
         xml = extractXmlElement(xml, tag, tag);
         EmtData<T> result = new EmtData<T>();
@@ -135,7 +131,6 @@ public class EmtEnvelopeSerializer {
         ObjectInputStream stream = null;
         try {
             stream = xStream.createObjectInputStream(new ByteArrayInputStream(xml.getBytes()));
-
             Object object = null;
             do {
                 object = stream.readObject();
