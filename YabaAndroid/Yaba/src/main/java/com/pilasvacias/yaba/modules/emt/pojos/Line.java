@@ -1,40 +1,90 @@
 package com.pilasvacias.yaba.modules.emt.pojos;
 
+import com.j256.ormlite.table.DatabaseTable;
 import com.pilasvacias.yaba.core.model.Model;
-import com.pilasvacias.yaba.modules.emt.models.EmtBody;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.util.Comparator;
 
+@DatabaseTable
 public class Line extends Model implements Comparable<Line> {
 
     private static final Comparator<Line> labelComparator = new AlphanumericSorting();
-    public String GroupNumber;
-    public String DateFirst;
-    public String DateEnd;
-    public String Line;
-    public String Label;
-    public String NameA;
-    public String NameB;
+    @XStreamAlias("GroupNumber") private String groupNumber;
+    @XStreamAlias("DateFirst") private String dateFirst;
+    @XStreamAlias("DateEnd") private String dateEnd;
+    @XStreamAlias("Line") private String line;
+    @XStreamAlias("Label") private String label;
+    @XStreamAlias("NameA") private String nameA;
+    @XStreamAlias("NameB") private String nameB;
+
+    public Line() {
+
+    }
 
     public static Comparator<Line> getLabelComparator() {
         return labelComparator;
     }
 
-    @Override
-    public int compareTo(Line another) {
-        return Label.compareTo(another.Label);
+    public String getGroupNumber() {
+        return groupNumber;
     }
 
-    public static class GetListLines extends EmtBody {
-        /**
-         * c
-         * Format {@code dd-mm-yyyy}
-         */
-        public String SelectDate = "19-8-2013";
-        /**
-         * Format {@code 134|90|... or empty for all}
-         */
-        public String Lines = " ";
+    public void setGroupNumber(String groupNumber) {
+        this.groupNumber = groupNumber;
+    }
+
+    public String getDateFirst() {
+        return dateFirst;
+    }
+
+    public void setDateFirst(String dateFirst) {
+        this.dateFirst = dateFirst;
+    }
+
+    public String getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(String dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getNameA() {
+        return nameA;
+    }
+
+    public void setNameA(String nameA) {
+        this.nameA = nameA;
+    }
+
+    public String getNameB() {
+        return nameB;
+    }
+
+    public void setNameB(String nameB) {
+        this.nameB = nameB;
+    }
+
+    @Override
+    public int compareTo(Line another) {
+        return label.compareTo(another.label);
     }
 
     /**
@@ -52,8 +102,8 @@ public class Line extends Model implements Comparable<Line> {
          * The compare method that compares the alphanumeric strings
          */
         public int compare(Line firstObjToCompare, Line secondObjToCompare) {
-            String firstString = firstObjToCompare.Label;
-            String secondString = secondObjToCompare.Label;
+            String firstString = firstObjToCompare.label;
+            String secondString = secondObjToCompare.label;
 
             if (secondString == null || firstString == null) {
                 return 0;

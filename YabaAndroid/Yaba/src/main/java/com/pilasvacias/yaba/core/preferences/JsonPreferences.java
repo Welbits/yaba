@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.pilasvacias.yaba.util.L;
-
-import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Created by creania on 10/09/13.
@@ -14,39 +12,37 @@ import java.lang.reflect.Type;
 public class JsonPreferences {
 
     public static final String PREFERENCES_FILE = "yabaprefs";
-    private static final Gson DEFAULT_GSON = new Gson();
+    public static final Gson DEFAULT_GSON = new Gson();
     private Gson gson;
     private Context context;
+    private String prefsFile;
+
 
     //========================
     // Constructors
     //========================
 
-    private JsonPreferences(Context context, Gson gson) {
+    public JsonPreferences(Context context, String prefsFile, Gson gson) {
         this.gson = gson;
         this.context = context;
+        this.prefsFile = prefsFile;
     }
 
     public static JsonPreferences get(Context context) {
-        return get(context, DEFAULT_GSON);
+        return new JsonPreferences(context, PREFERENCES_FILE, DEFAULT_GSON);
     }
-
-    public static JsonPreferences get(Context context, Gson gson) {
-        return new JsonPreferences(context, gson);
-    }
-
 
     //========================
     // Util
     //========================
 
     private String getPreferenceString(String preference, String defValue) {
-        SharedPreferences sharedPrefs = context.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPrefs = context.getSharedPreferences(prefsFile, Context.MODE_PRIVATE);
         return sharedPrefs.getString(preference, defValue);
     }
 
     private void setPreferenceString(String preference, String string) {
-        SharedPreferences settings = context.getSharedPreferences(PREFERENCES_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(prefsFile, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(preference, string);
         editor.commit();
@@ -71,16 +67,16 @@ public class JsonPreferences {
     @SuppressWarnings("unchecked")
     public <T> T getPreferenceObject(PreferenceItemDescriptor pref) {
         if (pref.readAsGeneric())
-            return getPreferenceObject(pref.getName(), pref.getTypeToken().getType());
+            return (T) getPreferenceObject(pref.getName(), pref.getTypeToken());
         return (T) getPreferenceObject(pref.getName(), pref.getTypeClass());
     }
 
+    //===============================
+    //Using a Class
+    //===============================
+
     public <T> T getPreferenceObject(String preference, Class<T> clazz) {
         return getPreferenceObject(preference, clazz, null);
-    }
-
-    public <T> T getPreferenceObject(String preference, Type type) {
-        return getPreferenceObject(preference, type, null);
     }
 
     public <T> T getPreferenceObject(String preference, Class<T> clazz, T defaultValue) {
@@ -88,29 +84,27 @@ public class JsonPreferences {
         if (json == null) {
             return defaultValue;
         }
-        try {
-        } catch (ClassCastException ex) {
-            L.og.e("Tried to read as %s from preferences but class does not match. Returning default", clazz.getSimpleName());
-            return defaultValue;
-        }
         return gson.fromJson(json, clazz);
     }
 
-    public <T> T getPreferenceObject(String preference, Type type, T defaultValue) {
+    //===============================
+    //Using a TypeToken for generics
+    //===============================
+
+    public <T> T getPreferenceObject(String preference, TypeToken<T> typeToken) {
+        return getPreferenceObject(preference, typeToken, null);
+    }
+
+    public <T> T getPreferenceObject(String preference, TypeToken<T> typeToken, T defaultValue) {
         String json = getPreferenceString(preference, null);
         if (json == null) {
             return defaultValue;
         }
-        try {
-        } catch (ClassCastException ex) {
-            L.og.e("Tried to read as parametrized type from preferences but class does not match. Returning default");
-            return defaultValue;
-        }
-        return gson.fromJson(json, type);
+        return gson.fromJson(json, typeToken.getType());
     }
 
     public void clearPreferences() {
-        context.getSharedPreferences(PREFERENCES_FILE, 0).edit().clear().commit();
+        context.getSharedPreferences(prefsFile, 0).edit().clear().commit();
     }
 
 }

@@ -19,6 +19,7 @@ import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Node;
+import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
 import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 
@@ -112,7 +113,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     private void search(String query) {
         searchView.setQuery(query, false);
 
-        Node.GetNodesLines body = new Node.GetNodesLines();
+        GetNodesLines body = new GetNodesLines();
         body.setNodes(query.split("\\s+"), false);
         L.og.d(body.getNodesAsString());
 

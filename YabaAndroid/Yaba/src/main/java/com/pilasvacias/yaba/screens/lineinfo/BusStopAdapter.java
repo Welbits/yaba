@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.adapter.WBaseAdapter;
-import com.pilasvacias.yaba.modules.emt.pojos.BusStop;
+import com.pilasvacias.yaba.modules.emt.pojos.Node;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -14,16 +14,16 @@ import butterknife.Views;
 /**
  * Created by creania on 24/10/13.
  */
-public class BusStopAdapter extends WBaseAdapter<BusStop, BusStopAdapter.ViewHolder> {
+public class BusStopAdapter extends WBaseAdapter<Node, BusStopAdapter.ViewHolder> {
 
     public BusStopAdapter(Context context, int layoutResource) {
         super(context, layoutResource);
     }
 
     @Override
-    protected void changeView(BusStop item, ViewHolder viewHolder) {
-        viewHolder.name.setText(item.Name);
-        viewHolder.number.setText(item.Node);
+    protected void changeView(Node item, ViewHolder viewHolder) {
+        viewHolder.name.setText(item.getName());
+        viewHolder.number.setText(item.getNode());
         // TODO lines and street
 
     }

@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
  */
 public enum YabaPreferences implements PreferenceItemDescriptor {
 
-    stringPreference(String.class);
+    STRING_PREFERENCE(String.class);
     private TypeToken<?> typeToken;
     private Class<?> clazz;
     private String name;

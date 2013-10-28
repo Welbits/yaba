@@ -2,9 +2,10 @@ package com.pilasvacias.yaba.screens.stopinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.gson.Gson;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.emt.pojos.BusStop;
+import com.pilasvacias.yaba.modules.emt.pojos.Node;
 
 /**
  * Created by Fede on 24/10/13.
@@ -14,8 +15,7 @@ public class StopInfoActivity extends NetworkActivity {
 
 
     //
-    private BusStop busStop;
-
+    private Node busStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class StopInfoActivity extends NetworkActivity {
         if (intent.hasExtra("busStop")) {
             busStopClass = getIntent().getStringExtra("busStop");
             Gson gson = new Gson();
-            busStop = gson.fromJson(busStopClass, BusStop.class);
+            busStop = gson.fromJson(busStopClass, Node.class);
         }
 
 //        setTitle();
@@ -34,7 +34,7 @@ public class StopInfoActivity extends NetworkActivity {
 
     }
 
-    public BusStop getBusStop() {
+    public Node getBusStop() {
         return busStop;
     }
 

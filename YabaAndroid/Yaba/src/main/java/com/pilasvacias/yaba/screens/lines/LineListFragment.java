@@ -145,9 +145,9 @@ public class LineListFragment extends NetworkFragment {
 
         public boolean check(Line line) {
             if (regex.equals(LinesRegex.DAILY)) {
-                return !line.Label.matches(LinesRegex.NIGHTLY) && !line.Label.matches(LinesRegex.UNIVERSITY);
+                return !line.getLabel().matches(LinesRegex.NIGHTLY) && !line.getLabel().matches(LinesRegex.UNIVERSITY);
             }
-            return line.Label.matches(regex);
+            return line.getLabel().matches(regex);
         }
     }
 

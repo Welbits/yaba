@@ -9,6 +9,8 @@ import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.modules.emt.pojos.Node;
+import com.pilasvacias.yaba.modules.emt.requests.GetListLines;
+import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
 import com.pilasvacias.yaba.util.L;
 
 /**
@@ -47,7 +49,7 @@ public class EmtUpdateService extends IntentService {
     }
 
     private EmtData<Node> getNodes() {
-        Node.GetNodesLines body = new Node.GetNodesLines();
+        GetNodesLines body = new GetNodesLines();
         body.setNodes(new String[]{}, true);
         return requestManager.beginRequest(Node.class)
                 .body(body)
@@ -58,7 +60,7 @@ public class EmtUpdateService extends IntentService {
     }
 
     private EmtData<Line> getLines() {
-        Line.GetListLines body = new Line.GetListLines();
+        GetListLines body = new GetListLines();
         return requestManager.beginRequest(Line.class)
                 .body(body)
                 .ignoreLoading(true)

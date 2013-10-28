@@ -1,69 +1,66 @@
 package com.pilasvacias.yaba.modules.emt.pojos;
 
-import com.pilasvacias.yaba.modules.emt.models.EmtBody;
+import com.j256.ormlite.table.DatabaseTable;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
-import java.util.TreeSet;
 
 /**
  * Created by Pablo Orgaz - 10/26/13 - pabloogc@gmail.com - https://github.com/pabloogc
  */
+@DatabaseTable
 public class Node extends Pojo {
 
-    public String Node;
-    String PosxNode;
-    String PosyNode;
-    String Name;
-    String Lines;
+    @XStreamAlias("Node") private String node;
+    @XStreamAlias("PosxNode") private String posX;
+    @XStreamAlias("PosyNode") private String posY;
+    @XStreamAlias("Name") private String name;
+    @XStreamAlias("Lines") private String lines;
 
-    public static class GetNodesLines extends EmtBody {
+    public Node() {
+    }
 
-        /**
-         * Format {@code 134|90|... or empty for all}
-         */
-        @XStreamAlias("Nodes")
-        private String nodes = "";
+    public String getNode() {
+        return node;
+    }
 
-        @XStreamOmitField
-        private TreeSet<String> nodeSet;
+    public void setNode(String node) {
+        this.node = node;
+    }
 
-        public void setNodes(TreeSet<String> nodes, boolean allIfEmpty) {
-            StringBuilder builder = new StringBuilder();
-            for (String node : nodes) {
-                builder.append(node.trim()).append("|");
-            }
-            this.nodeSet = nodes;
+    public String getPosX() {
+        return posX;
+    }
 
-            //Append -1 at the end so
-            //no nodes will be returned instead of all
-            if (!allIfEmpty)
-                builder.append("-1");
+    public void setPosX(String posX) {
+        this.posX = posX;
+    }
 
-            this.nodes = builder.toString();
-        }
+    public String getPosY() {
+        return posY;
+    }
 
-        public void setNodes(String[] nodes, boolean allIfEmpty) {
-            TreeSet<String> nodeSet = new TreeSet<String>();
-            for (String node : nodes) {
-                nodeSet.add(node);
-            }
-            setNodes(nodeSet, allIfEmpty);
-        }
+    public void setPosY(String posY) {
+        this.posY = posY;
+    }
 
-        public String getNodesAsString() {
-            return nodes;
-        }
+    public String getName() {
+        return name;
+    }
 
-        /**
-         * NOTE: Modifying this set WON'T CHANGE THE NODES SENT.
-         * {@link #setNodes(java.util.TreeSet, boolean)} afterwards.
-         *
-         * @return
-         */
-        public TreeSet<String> getNodes() {
-            return nodeSet;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Relación de las líneas que, en algún momento del día o tipo de día tienen parada allí. Se compone
+     * de grupos de valores separados por un slash (/). La primera parte es el número de línea EMT. La
+     * segunda parte es el sentido de viaje (1.- Ida 2.- Vuelta)
+     */
+    public String getLines() {
+        return lines;
+    }
+
+    public void setLines(String lines) {
+        this.lines = lines;
     }
 
 

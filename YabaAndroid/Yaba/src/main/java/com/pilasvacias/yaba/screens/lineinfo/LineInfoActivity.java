@@ -42,7 +42,7 @@ public class LineInfoActivity extends NetworkActivity {
             line = gson.fromJson(lineClass, Line.class);
         }
 
-        setTitle(getString(R.string.line,  line.Label));
+        setTitle(getString(R.string.line, line.getLabel()));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         configureViewPager();
@@ -52,11 +52,11 @@ public class LineInfoActivity extends NetworkActivity {
         WPagerAdapter
                 .with(getFragmentManager())
                 .setFragments(
-                        new LineDestinationFragment(line.NameA),
-                        new LineDestinationFragment(line.NameB)
+                        new LineDestinationFragment(line.getNameA()),
+                        new LineDestinationFragment(line.getNameB())
                 )
                 .setOffscreenLimit(2)
-                .setTitles(line.NameA, line.NameB)
+                .setTitles(line.getNameA(), line.getNameB())
                 .into(viewPager);
         tabStrip.setViewPager(viewPager);
     }

@@ -9,8 +9,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
  */
 public class Pojo {
 
-    @XStreamOmitField
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    @XStreamOmitField private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @Override public String toString() {
         return gson.toJson(this);

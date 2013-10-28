@@ -11,6 +11,7 @@ import com.pilasvacias.yaba.core.preferences.YabaPreferences;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
+import com.pilasvacias.yaba.modules.emt.requests.GetListLines;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
 
@@ -22,8 +23,8 @@ public class ProbaActivity extends NetworkActivity {
         setContentView(R.layout.activity_proba);
         MagicTurn.restore(this, savedInstanceState);
 
-        JsonPreferences.get(this).setPreferenceObject(YabaPreferences.stringPreference, "HOLA");
-        String pref = JsonPreferences.get(this).getPreferenceObject(YabaPreferences.stringPreference);
+        JsonPreferences.get(this).setPreferenceObject(YabaPreferences.STRING_PREFERENCE, "HOLA");
+        String pref = JsonPreferences.get(this).getPreferenceObject(YabaPreferences.STRING_PREFERENCE);
 
         VolleyLog.DEBUG = true;
     }
@@ -36,7 +37,7 @@ public class ProbaActivity extends NetworkActivity {
     private void createRequest() {
 
         getRequestManager().beginRequest(Line.class)
-                .body(new Line.GetListLines())
+                .body(new GetListLines())
                 .success(new EmtSuccessHandler<Line>() {
                     @Override public void onSuccess(EmtData<Line> result) {
                         WToast.showShort(ProbaActivity.this, result.getPayload().get(0));
