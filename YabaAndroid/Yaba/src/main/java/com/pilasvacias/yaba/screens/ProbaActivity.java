@@ -35,7 +35,6 @@ public class ProbaActivity extends NetworkActivity {
     }
 
     private void createRequest() {
-
         getRequestManager().beginRequest(Line.class)
                 .body(new GetListLines())
                 .success(new EmtSuccessHandler<Line>() {

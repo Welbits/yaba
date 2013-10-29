@@ -1,7 +1,10 @@
 package com.pilasvacias.yaba.modules.emt;
 
+import android.content.Context;
+
 import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
+import com.pilasvacias.yaba.modules.emt.persistence.EmtDBHelper;
 import com.pilasvacias.yaba.modules.emt.persistence.EmtUpdateService;
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
@@ -34,8 +37,7 @@ import dagger.Provides;
         library = true)
 public class EmtModule {
 
-    @Provides
-    @Singleton EmtEnvelopeSerializer provideEnvelopeSerializer() {
+    @Provides EmtEnvelopeSerializer provideEnvelopeSerializer() {
         return new EmtEnvelopeSerializer();
     }
 
@@ -43,4 +45,7 @@ public class EmtModule {
         return new EmtRequestManager(requestQueue);
     }
 
+    @Provides @Singleton EmtDBHelper provideEmtDBHelper(Context context) {
+        return new EmtDBHelper(context);
+    }
 }

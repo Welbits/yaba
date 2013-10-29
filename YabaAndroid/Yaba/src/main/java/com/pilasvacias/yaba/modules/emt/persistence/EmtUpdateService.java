@@ -4,14 +4,18 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+import com.pilasvacias.yaba.application.YabaApplication;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
-import com.pilasvacias.yaba.modules.emt.pojos.Node;
+import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.modules.emt.requests.GetListLines;
 import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
 import com.pilasvacias.yaba.util.L;
+
+import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 /**
  * Created by Pablo Orgaz - 10/28/13 - pabloogc@gmail.com - https://github.com/pabloogc
@@ -20,8 +24,9 @@ public class EmtUpdateService extends IntentService {
 
     public static final String SERVICE_NAME = "EmtUpdateService";
     public static final String ACTION_UPDATE = "ActionUpdateDB";
-    protected EmtRequestManager requestManager;
-    protected RequestQueue requestQueue;
+    @Inject protected EmtRequestManager requestManager;
+    @Inject protected RequestQueue requestQueue;
+    @Inject protected EmtDBHelper dbHelper;
 
     public EmtUpdateService() {
         super(SERVICE_NAME);
@@ -33,25 +38,33 @@ public class EmtUpdateService extends IntentService {
             updateDB();
     }
 
-
     @Override public void onCreate() {
         super.onCreate();
-        requestQueue = Volley.newRequestQueue(this);
-        requestManager = new EmtRequestManager(requestQueue);
-        requestManager.setContext(this);
+        YabaApplication application = (YabaApplication) getApplication();
+        application.getApplicationGraph().inject(this);
     }
 
     private void updateDB() {
-        EmtData<Node> nodes = getNodes();
+        EmtData<Stop> nodes = getNodes();
         EmtData<Line> lines = getLines();
-        L.og.d("got %d nodes", nodes.getPayload().size());
-        L.og.d("got %d lines", lines.getPayload().size());
+        if (nodes != null) {
+            L.og.d("got %d nodes", nodes.getPayload().size());
+        }
+        if (lines != null) {
+            L.og.d("got %d lines", lines.getPayload().size());
+        }
+
+        dbHelper.getRuntimeExceptionDao(Line.class).callBatchTasks(new Callable<Object>() {
+            @Override public Object call() throws Exception {
+                return null;
+            }
+        });
     }
 
-    private EmtData<Node> getNodes() {
+    private EmtData<Stop> getNodes() {
         GetNodesLines body = new GetNodesLines();
         body.setNodes(new String[]{}, true);
-        return requestManager.beginRequest(Node.class)
+        return requestManager.beginRequest(Stop.class)
                 .body(body)
                 .ignoreLoading(true)
                 .cacheSkip(true)

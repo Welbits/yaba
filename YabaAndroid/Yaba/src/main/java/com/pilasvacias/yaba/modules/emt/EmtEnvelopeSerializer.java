@@ -134,7 +134,6 @@ public class EmtEnvelopeSerializer {
             Object object = null;
             do {
                 object = stream.readObject();
-
                 if (object instanceof String) {
                     result.getEmtInfo().setDescription((String) object);
                 } else if (object instanceof Integer) {

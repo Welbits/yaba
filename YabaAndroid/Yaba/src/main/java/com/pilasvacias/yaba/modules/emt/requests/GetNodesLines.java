@@ -9,7 +9,7 @@ import java.util.TreeSet;
 /**
  * Created by Pablo Orgaz - 10/28/13 - pabloogc@gmail.com - https://github.com/pabloogc
  * <p/>
- * Returns {@link com.pilasvacias.yaba.modules.emt.pojos.Node}
+ * Returns {@link com.pilasvacias.yaba.modules.emt.pojos.Stop}
  */
 public class GetNodesLines extends EmtBody {
 

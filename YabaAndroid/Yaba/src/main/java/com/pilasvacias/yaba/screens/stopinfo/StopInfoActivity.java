@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.emt.pojos.Node;
+import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 
 /**
  * Created by Fede on 24/10/13.
@@ -15,7 +15,7 @@ public class StopInfoActivity extends NetworkActivity {
 
 
     //
-    private Node busStop;
+    private Stop busStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class StopInfoActivity extends NetworkActivity {
         if (intent.hasExtra("busStop")) {
             busStopClass = getIntent().getStringExtra("busStop");
             Gson gson = new Gson();
-            busStop = gson.fromJson(busStopClass, Node.class);
+            busStop = gson.fromJson(busStopClass, Stop.class);
         }
 
 //        setTitle();
@@ -34,7 +34,7 @@ public class StopInfoActivity extends NetworkActivity {
 
     }
 
-    public Node getBusStop() {
+    public Stop getBusStop() {
         return busStop;
     }
 

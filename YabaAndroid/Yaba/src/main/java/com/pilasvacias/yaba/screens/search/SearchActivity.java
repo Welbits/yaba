@@ -18,7 +18,7 @@ import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
-import com.pilasvacias.yaba.modules.emt.pojos.Node;
+import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
 import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
@@ -47,8 +47,8 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
             search(query);
         }
     };
-    private ArrayAdapter<Node> arrayAdapter;
-    private EmtData<Node> nodes;
+    private ArrayAdapter<Stop> arrayAdapter;
+    private EmtData<Stop> nodes;
 
     public static long getSearchDelay() {
         //TODO: Tweak this value to avoid wasting bandwidth
@@ -70,7 +70,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
 
     private void configureListView() {
         EmptyView.makeText(R.string.empty_search).into(listView);
-        arrayAdapter = new ArrayAdapter<Node>(this, android.R.layout.simple_list_item_1);
+        arrayAdapter = new ArrayAdapter<Stop>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(arrayAdapter);
     }
 
@@ -118,10 +118,10 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
         L.og.d(body.getNodesAsString());
 
         getRequestManager().cancelAllRequests();
-        getRequestManager().beginRequest(Node.class)
+        getRequestManager().beginRequest(Stop.class)
                 .body(body)
-                .success(new EmtSuccessHandler<Node>() {
-                    @Override public void onSuccess(EmtData<Node> result) {
+                .success(new EmtSuccessHandler<Stop>() {
+                    @Override public void onSuccess(EmtData<Stop> result) {
                         nodes = result;
                         arrayAdapter.clear();
                         arrayAdapter.addAll(result.getPayload());
@@ -130,6 +130,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
                 .ignoreErrors(true)
                 .ignoreLoading(true)
                 .cacheResult(false)
+                .verbose(true)
                 .cacheSkip(true)
                 .execute();
     }
