@@ -13,7 +13,6 @@ import java.util.List;
 public interface TimeProfiler {
 
     public static TimeProfiler DEBUG = new TimeProfiler() {
-
         private boolean error = false;
         private String tag;
         private long init;
@@ -26,7 +25,7 @@ public interface TimeProfiler {
             this.tag = String.format(tag, args);
         }
 
-        public void reset() {
+        private void reset() {
             error = false;
             tag = null;
             last = init = System.currentTimeMillis();
@@ -42,7 +41,7 @@ public interface TimeProfiler {
         }
 
         @Override public void end() {
-            String separator = String.format("·----------> begin %s", tag);
+            String separator = String.format("·----------> %s", tag);
             StringBuilder builder;
             if (!error)
                 Log.d("TimerProfiler", separator);
@@ -62,7 +61,7 @@ public interface TimeProfiler {
             }
 
             builder = new StringBuilder();
-            builder.append("···").append(total).append(" ms <==== end ").append(tag);
+            builder.append("···").append(total).append(" ms <==== ").append(tag);
             if (!error)
                 Log.d("TimerProfiler", builder.toString());
             else
@@ -81,10 +80,13 @@ public interface TimeProfiler {
         }
 
         private String percent(long total, long part) {
-            return new DecimalFormat("##%").format(((double) (part)) / total);
+            //String regex = "\\G0";
+            String regex = "^0(\\d)";
+            return new DecimalFormat("00%").format(((double) (part)) / total).replaceAll(regex, " $1");
         }
 
     };
+    //I am special!
     public static TimeProfiler PROD = new TimeProfiler() {
         @Override public void begin(String tag, Object... args) {
 
