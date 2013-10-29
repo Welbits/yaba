@@ -64,8 +64,12 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder
         return this;
     }
 
+    @Override public EmtRequest<T> create() {
+        return new EmtRequest<T>(errorHandler, successHandler, body, responseType);
+    }
+
     @Override
-    public EmtRequest<T> create() {
+    public void configure(EmtRequest<T> request) {
         if (!ignoreErrors && errorHandler == null) {
             errorHandler = new EmtErrorHandler();
             errorHandler.setContext(context);
@@ -73,7 +77,7 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder
             errorHandler = new FakeErrorHandler();
         }
 
-        EmtRequest<T> request = new EmtRequest<T>(errorHandler, successHandler, body, responseType);
+
         request.setTag(tag);
         request.setVerbose(verbose);
         request.setFakeExecutionTime(fakeTime);
@@ -92,9 +96,6 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder
         //but it's useful in POST, PUT or chained requests.
         if (successHandler != null)
             successHandler.setLoadingHandler(loadingHandler);
-
-
-        return request;
     }
 
     public static class FakeEmtBody extends EmtBody {

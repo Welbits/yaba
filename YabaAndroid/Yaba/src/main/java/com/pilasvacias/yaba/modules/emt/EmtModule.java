@@ -3,6 +3,7 @@ package com.pilasvacias.yaba.modules.emt;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.emt.persistence.EmtDBHelper;
 import com.pilasvacias.yaba.modules.emt.persistence.EmtUpdateService;
@@ -46,6 +47,7 @@ public class EmtModule {
     }
 
     @Provides @Singleton EmtDBHelper provideEmtDBHelper(Context context) {
-        return new EmtDBHelper(context);
+        return OpenHelperManager.getHelper(context, EmtDBHelper.class);
+
     }
 }

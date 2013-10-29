@@ -1,22 +1,49 @@
 package com.pilasvacias.yaba.modules.emt.pojos;
 
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.pilasvacias.yaba.core.model.Model;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.converters.basic.IntConverter;
 
 import java.util.Comparator;
 
 @DatabaseTable
 public class Line extends Model implements Comparable<Line> {
 
+    @XStreamOmitField
     private static final Comparator<Line> labelComparator = new AlphanumericSorting();
-    @XStreamAlias("GroupNumber") private String groupNumber;
-    @XStreamAlias("DateFirst") private String dateFirst;
-    @XStreamAlias("DateEnd") private String dateEnd;
-    @XStreamAlias("Line") private String line;
-    @XStreamAlias("Label") private String label;
-    @XStreamAlias("NameA") private String nameA;
-    @XStreamAlias("NameB") private String nameB;
+    //
+    @XStreamAlias("GroupNumber")
+    @DatabaseField(index = true)
+    private int groupNumber;
+    //
+    @XStreamAlias("DateFirst")
+    @DatabaseField(index = true)
+    private String dateFirst;
+    //
+    @XStreamAlias("DateEnd")
+    @DatabaseField(index = true)
+    private String dateEnd;
+    //
+    @XStreamAlias("Line")
+    @XStreamConverter(LineConverter.class)
+    @DatabaseField(id = true, index = true)
+    private int line;
+    //
+    @XStreamAlias("Label")
+    @DatabaseField(index = true)
+    private String label;
+    //
+    @XStreamAlias("NameA")
+    @DatabaseField(index = true)
+    private String nameA;
+    //
+    @XStreamAlias("NameB")
+    @DatabaseField(index = true)
+    private String nameB;
 
     public Line() {
 
@@ -26,11 +53,11 @@ public class Line extends Model implements Comparable<Line> {
         return labelComparator;
     }
 
-    public String getGroupNumber() {
+    public int getGroupNumber() {
         return groupNumber;
     }
 
-    public void setGroupNumber(String groupNumber) {
+    public void setGroupNumber(int groupNumber) {
         this.groupNumber = groupNumber;
     }
 
@@ -50,11 +77,11 @@ public class Line extends Model implements Comparable<Line> {
         this.dateEnd = dateEnd;
     }
 
-    public String getLine() {
+    public int getLine() {
         return line;
     }
 
-    public void setLine(String line) {
+    public void setLine(int line) {
         this.line = line;
     }
 
@@ -85,6 +112,12 @@ public class Line extends Model implements Comparable<Line> {
     @Override
     public int compareTo(Line another) {
         return label.compareTo(another.label);
+    }
+
+    public static class LineConverter extends IntConverter {
+        @Override public Object fromString(String str) {
+            return Integer.parseInt(str);
+        }
     }
 
     /**

@@ -19,8 +19,8 @@ import java.sql.SQLException;
  */
 public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
 
-    public static final String DB_NAME = "emtdb";
-    public static final int DB_VERSION = 1;
+    public static final String DB_NAME = "emtdb.db";
+    public static final int DB_VERSION = 3;
     private Dao<Stop, Integer> stopsDao;
     private Dao<Line, Integer> linesDao;
 
@@ -45,6 +45,8 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Stop.class, true);
             TableUtils.dropTable(connectionSource, Line.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, Stop.class);
+            TableUtils.createTableIfNotExists(connectionSource, Line.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }

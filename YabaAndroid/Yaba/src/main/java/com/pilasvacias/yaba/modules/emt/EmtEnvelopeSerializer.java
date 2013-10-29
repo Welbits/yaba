@@ -88,8 +88,9 @@ public class EmtEnvelopeSerializer {
     public String toXML(EmtBody body) {
         try {
             XStream xStream = new XStream();
-            xStream.processAnnotations(body.getClass());
+            xStream.autodetectAnnotations(true);
             xStream.alias(body.getSoapAction(), body.getClass());
+
             String xml;
             xml = xStream.toXML(body);
             return String.format(ENVELOPE_TEMPLATE, xml);
@@ -122,7 +123,7 @@ public class EmtEnvelopeSerializer {
         xStream.alias("DESCRIPCION", String.class);
         xStream.alias("RESULTADO", Integer.class);
         xStream.alias("REG", responseType);
-        xStream.processAnnotations(responseType);
+        xStream.autodetectAnnotations(true);
 
         String tag = body.getSoapAction() + "Result";
         xml = extractXmlElement(xml, tag, tag);
@@ -152,6 +153,8 @@ public class EmtEnvelopeSerializer {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             L.og.e("Unable to read object for %s", body.getSoapAction());
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             closeStream(stream);
         }

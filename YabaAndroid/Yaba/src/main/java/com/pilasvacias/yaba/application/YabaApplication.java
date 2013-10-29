@@ -2,7 +2,9 @@ package com.pilasvacias.yaba.application;
 
 import android.app.Application;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.pilasvacias.yaba.modules.emt.EmtModule;
+import com.pilasvacias.yaba.modules.emt.persistence.EmtDBHelper;
 import com.pilasvacias.yaba.modules.util.ContextModule;
 import com.squareup.otto.Bus;
 
@@ -22,6 +24,12 @@ public class YabaApplication extends Application {
     @Override public void onCreate() {
         super.onCreate();
         applicationGraph = ObjectGraph.create(getModules().toArray());
+        OpenHelperManager.setOpenHelperClass(EmtDBHelper.class);
+    }
+
+    @Override public void onTerminate() {
+        super.onTerminate();
+        OpenHelperManager.releaseHelper();
     }
 
     /**

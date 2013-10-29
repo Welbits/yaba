@@ -24,6 +24,8 @@ public abstract class AbstractRequest<T> extends Request<T> {
     private ErrorHandler emtErrorHandler;
     private boolean verbose = false;
     private Object body;
+    private int method;
+    private String url;
 
     public AbstractRequest(
             int method,
@@ -31,9 +33,29 @@ public abstract class AbstractRequest<T> extends Request<T> {
             SuccessHandler<T> successHandler,
             ErrorHandler errorHandler) {
         super(method, url, errorHandler);
+        this.method = method;
+        this.url = url;
         this.emtErrorHandler = errorHandler;
         this.responseListener = successHandler;
     }
+
+//    @Override public String getUrl() {
+//        if (url != null)
+//            return url;
+//        return super.getUrl();
+//    }
+//
+//    public void setUrl(String url) {
+//        this.url = url;
+//    }
+//
+//    public int getMethod() {
+//        return method;
+//    }
+//
+//    public void setMethod(int method) {
+//      this.method = method;
+//   }
 
     public ErrorHandler getEmtErrorHandler() {
         return emtErrorHandler;

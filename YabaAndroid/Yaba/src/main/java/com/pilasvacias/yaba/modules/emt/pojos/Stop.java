@@ -3,6 +3,8 @@ package com.pilasvacias.yaba.modules.emt.pojos;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.converters.basic.DoubleConverter;
 
 /**
  * The pojo representing a stop. Everything is indexed because we perform searches based
@@ -30,15 +32,17 @@ public class Stop extends Pojo {
      * position X in geocoodinates
      */
     @XStreamAlias("PosxNode")
+    @XStreamConverter(PositionConverter.class)
     @DatabaseField(index = true)
-    private String posX;
+    private double posX;
     //
     /**
      * position Y in geocordinates
      */
     @XStreamAlias("PosyNode")
+    @XStreamConverter(PositionConverter.class)
     @DatabaseField(index = true)
-    private String posY;
+    private double posY;
     //
     /**
      * The name of the stop
@@ -67,19 +71,19 @@ public class Stop extends Pojo {
         this.node = node;
     }
 
-    public String getPosX() {
+    public double getPosX() {
         return posX;
     }
 
-    public void setPosX(String posX) {
+    public void setPosX(double posX) {
         this.posX = posX;
     }
 
-    public String getPosY() {
+    public double getPosY() {
         return posY;
     }
 
-    public void setPosY(String posY) {
+    public void setPosY(double posY) {
         this.posY = posY;
     }
 
@@ -102,6 +106,13 @@ public class Stop extends Pojo {
 
     public void setLines(String lines) {
         this.lines = lines;
+    }
+
+    public static class PositionConverter extends DoubleConverter {
+        @Override public Object fromString(String str) {
+            //Emt, in his infinite wisdom decided to use , instead of . for floats.
+            return Double.parseDouble(str.replace(',', '.'));
+        }
     }
 
 

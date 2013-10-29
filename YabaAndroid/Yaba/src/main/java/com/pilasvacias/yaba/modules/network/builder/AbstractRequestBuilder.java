@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
@@ -14,6 +15,8 @@ import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.modules.network.models.AbstractRequest;
 
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.util.HashMap;
 
 /**
  * Created by Pablo Orgaz - 10/22/13 - pabloogc@gmail.com - https://github.com/pabloogc
@@ -37,6 +40,14 @@ public abstract class AbstractRequestBuilder
                 SUCCESS_DATA_TYPE
                 > {
 
+    //Request
+    protected String url = "";
+    protected String baseUrl = "";
+    protected int method = Request.Method.GET;
+    protected String query;
+    protected HashMap<String, String> pathMap = new HashMap<String, String>();
+    protected HashMap<String, String> queryMap = new HashMap<String, String>();
+    protected boolean formUrlEncoded = false;
     //Cache
     protected boolean cacheSkip = false;
     protected boolean cacheResult = true;
@@ -66,6 +77,32 @@ public abstract class AbstractRequestBuilder
         this.cacheSkip = use;
         return (BUILDER_TYPE) this;
     }
+
+    public BUILDER_TYPE url(String url) {
+        this.url = url;
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE baseUrl(String baseUrl) {
+        this.baseUrl = url;
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE query(String key, String value) {
+        queryMap.put(key, value);
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE path(String key, String value) {
+        pathMap.put(key, value);
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE method(int method) {
+        this.method = method;
+        return (BUILDER_TYPE) this;
+    }
+
 
     /**
      * @param cacheResult whether this request should be cached or not.
@@ -187,8 +224,10 @@ public abstract class AbstractRequestBuilder
      * Execute the request
      */
     public void execute() {
-        REQUEST_TYPE emtRequest = create();
-        requestQueue.add(emtRequest);
+        REQUEST_TYPE request = create();
+        configureAbstractRequest(request);
+        configure(request);
+        requestQueue.add(request);
 
         if (!ignoreLoading && loadingHandler != null)
             loadingHandler.showLoading(loadingMessage);
@@ -202,6 +241,8 @@ public abstract class AbstractRequestBuilder
      */
     public SUCCESS_DATA_TYPE executeSync() {
         REQUEST_TYPE request = create();
+        configureAbstractRequest(request);
+        configure(request);
         HttpClientStack httpClientStack = new HttpClientStack(new DefaultHttpClient());
         BasicNetwork basicNetwork = new BasicNetwork(httpClientStack);
         try {
@@ -219,9 +260,19 @@ public abstract class AbstractRequestBuilder
     }
 
     /**
-     * Execute the request. Subclasses of the builder are responsible for creating
+     * Subclasses of the builder are responsible for creating
+     * and executing the request object.
+     */
+    public abstract void configure(REQUEST_TYPE request);
+
+    /**
+     * Subclasses of the builder are responsible for creating
      * and executing the request object.
      */
     public abstract REQUEST_TYPE create();
+
+    private void configureAbstractRequest(REQUEST_TYPE request) {
+        //TODO Do things to abstract requests
+    }
 
 }

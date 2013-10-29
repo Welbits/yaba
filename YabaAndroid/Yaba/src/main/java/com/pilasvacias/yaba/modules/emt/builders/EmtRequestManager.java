@@ -2,6 +2,7 @@ package com.pilasvacias.yaba.modules.emt.builders;
 
 import android.content.Context;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 /**
@@ -63,6 +64,7 @@ public class EmtRequestManager {
      */
     public <T> EmtRequestBuilder<T> beginRequest(Class<T> responseType) {
         return new EmtRequestBuilder<T>(requestQueue)
+                .method(Request.Method.POST)
                 .responseType(responseType)
                 .tag(tag)
                 .context(context);

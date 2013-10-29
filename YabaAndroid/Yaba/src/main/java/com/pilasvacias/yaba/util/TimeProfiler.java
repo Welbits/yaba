@@ -14,6 +14,7 @@ public interface TimeProfiler {
 
     public static TimeProfiler DEBUG = new TimeProfiler() {
 
+        private boolean error = false;
         private String tag;
         private long init;
         private long last;
@@ -26,6 +27,7 @@ public interface TimeProfiler {
         }
 
         public void reset() {
+            error = false;
             tag = null;
             last = init = System.currentTimeMillis();
             timeMarks.clear();
@@ -42,7 +44,10 @@ public interface TimeProfiler {
         @Override public void end() {
             String separator = String.format("·----------> begin %s", tag);
             StringBuilder builder;
-            Log.d("TimerProfiler", separator);
+            if (!error)
+                Log.d("TimerProfiler", separator);
+            else
+                Log.e("TimerProfiler", separator);
             long sum = 0;
             long total = System.currentTimeMillis() - init;
             for (int i = 0; i < timeMarks.size(); i++) {
@@ -50,14 +55,25 @@ public interface TimeProfiler {
                 builder = new StringBuilder();
                 builder.append("| +").append(format(timeMarks.get(i))).append(" | ").append(percent(total, timeMarks.get(i))).append(" \t")
                         .append(stringMarks.get(i));
-                Log.d("TimerProfiler", builder.toString());
+                if (!error)
+                    Log.d("TimerProfiler", builder.toString());
+                else
+                    Log.e("TimerProfiler", builder.toString());
             }
 
             builder = new StringBuilder();
             builder.append("···").append(total).append(" ms <==== end ").append(tag);
-            Log.d("TimerProfiler", builder.toString());
+            if (!error)
+                Log.d("TimerProfiler", builder.toString());
+            else
+                Log.e("TimerProfiler", builder.toString());
             //Log.d("TimerProfiler", separator);
             reset();
+        }
+
+        @Override public void error() {
+            error = true;
+            end();
         }
 
         private String format(long time) {
@@ -81,6 +97,10 @@ public interface TimeProfiler {
         @Override public void end() {
 
         }
+
+        @Override public void error() {
+
+        }
     };
 
     void begin(String tag, Object... args);
@@ -88,4 +108,6 @@ public interface TimeProfiler {
     void addMark(String mark, Object... args);
 
     void end();
+
+    void error();
 }
