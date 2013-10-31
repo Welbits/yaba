@@ -3,9 +3,11 @@ package com.pilasvacias.yaba.modules.network.builder;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.HttpClientStack;
@@ -52,6 +54,7 @@ public abstract class PlayaRequestBuilder
     protected String path = "";
     protected HashMap<String, String> queryMap = new HashMap<String, String>();
     protected HashMap<String, String> paramsMap = new HashMap<String, String>();
+    protected RetryPolicy retryPolicy = new DefaultRetryPolicy();
     //Cache
     protected boolean cacheSkip = false;
     protected boolean cacheResult = true;
@@ -82,6 +85,11 @@ public abstract class PlayaRequestBuilder
 
     public BUILDER_TYPE url(String url) {
         this.url = url;
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE retryPolicy(RetryPolicy retryPolicy) {
+        this.retryPolicy = retryPolicy;
         return (BUILDER_TYPE) this;
     }
 
@@ -295,6 +303,7 @@ public abstract class PlayaRequestBuilder
                 e.printStackTrace();
             }
         }
+
         request.setSuccessHandler(successHandler);
         request.setParams(paramsMap.isEmpty() ? null : paramsMap);
         request.setUrl(baseUrl + url + path + queryString);
@@ -306,6 +315,7 @@ public abstract class PlayaRequestBuilder
         request.setCacheExpireTime(expireTime);
         request.setCacheSkip(cacheSkip);
         request.setShouldCache(cacheResult);
+        request.setRetryPolicy(retryPolicy);
 
     }
 

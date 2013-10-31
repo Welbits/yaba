@@ -1,11 +1,7 @@
 package com.pilasvacias.yaba.modules.emt;
 
-import android.content.Context;
-
 import com.android.volley.RequestQueue;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
-import com.pilasvacias.yaba.modules.emt.persistence.EmtDBHelper;
 import com.pilasvacias.yaba.modules.emt.persistence.EmtUpdateService;
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
@@ -13,8 +9,6 @@ import com.pilasvacias.yaba.screens.ProbaActivity;
 import com.pilasvacias.yaba.screens.lines.LineListFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 import com.pilasvacias.yaba.screens.search.SearchActivity;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -44,9 +38,5 @@ public class EmtModule {
 
     @Provides EmtRequestManager provideEmtRequestManager(RequestQueue requestQueue) {
         return new EmtRequestManager(requestQueue);
-    }
-
-    @Provides @Singleton EmtDBHelper provideEmtDBHelper(Context context) {
-        return OpenHelperManager.getHelper(context, EmtDBHelper.class);
     }
 }
