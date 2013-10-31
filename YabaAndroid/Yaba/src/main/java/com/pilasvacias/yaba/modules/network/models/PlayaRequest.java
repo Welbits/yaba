@@ -6,11 +6,11 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.pilasvacias.yaba.BuildConfig;
 import com.pilasvacias.yaba.modules.network.CacheMaker;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +25,23 @@ public abstract class PlayaRequest<T> extends Request<T> {
     private long cacheExpireTime = 0;
     private boolean cacheSkip = false;
     private SuccessHandler<T> successHandler;
-    private ErrorHandler errorHandler;
     private boolean verbose = false;
+    private String bodyContentType;
+    private Map<String, String> headers = Collections.emptyMap();
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
+    public void setBody(Object body) {
+        this.body = body;
+    }
+
     private Object body;
     private int method = Method.GET;
     private String url;
@@ -34,7 +49,6 @@ public abstract class PlayaRequest<T> extends Request<T> {
 
     public PlayaRequest(ErrorHandler errorHandler) {
         super(Method.GET, "http://you.forgot/to/set/the/url", errorHandler);
-        this.errorHandler = errorHandler;
     }
 
     @Override public String getUrl() {
@@ -51,14 +65,6 @@ public abstract class PlayaRequest<T> extends Request<T> {
 
     public void setMethod(int method) {
         this.method = method;
-    }
-
-    public ErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
-    public SuccessHandler<T> getSuccesHandler() {
-        return successHandler;
     }
 
     public void setSuccessHandler(SuccessHandler<T> responseListener) {
@@ -79,10 +85,6 @@ public abstract class PlayaRequest<T> extends Request<T> {
 
     public void setCacheRefreshTime(long cacheRefreshTime) {
         this.cacheRefreshTime = cacheRefreshTime;
-    }
-
-    public long getCacheExpireTime() {
-        return cacheExpireTime;
     }
 
     public void setCacheExpireTime(long cacheExpireTime) {
@@ -108,7 +110,7 @@ public abstract class PlayaRequest<T> extends Request<T> {
 
     private void fakeLongRequest() {
         //Just in case someone uses it and forgets
-        if (!BuildConfig.DEBUG)
+        if (fakeExecutionTime <= 0)
             return;
 
         try {
@@ -128,8 +130,8 @@ public abstract class PlayaRequest<T> extends Request<T> {
 
     public abstract boolean responseIsOk(NetworkResponse response, T data);
 
-    public boolean skippingCache() {
-        return cacheSkip;
+    public Object getBodyObject() {
+        return body;
     }
 
     public void setCacheSkip(boolean cacheSkip) {
@@ -146,7 +148,16 @@ public abstract class PlayaRequest<T> extends Request<T> {
         return entry;
     }
 
-    @Override public String getCacheKey() {
+    @Override public String getBodyContentType() {
+        return bodyContentType;
+    }
+
+    public void setBodyContentType(String bodyContentType) {
+        this.bodyContentType = bodyContentType;
+    }
+
+    @Override
+    public String getCacheKey() {
         if (cacheKey != null)
             return cacheKey;
         else

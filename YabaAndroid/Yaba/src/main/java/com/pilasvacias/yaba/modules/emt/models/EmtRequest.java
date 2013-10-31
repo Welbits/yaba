@@ -18,16 +18,16 @@ import java.util.Map;
  */
 public class EmtRequest<T> extends PlayaRequest<EmtData<T>> {
 
-    private final EmtBody body;
     private final Class<T> responseType;
+    private EmtBody body;
 
-    public EmtRequest(ErrorHandler errorHandler, EmtBody body, Class<T> responseType) {
+    public EmtRequest(ErrorHandler errorHandler, Class<T> responseType) {
         super(errorHandler);
-        this.body = body;
         this.responseType = responseType;
     }
 
-    @Override public byte[] getBody() throws AuthFailureError {
+    @Override
+    public byte[] getBody() throws AuthFailureError {
         String xml = EmtEnvelopeSerializer.getInstance().toXML(body);
         if (isVerbose())
             L.og.d("emt sent action %s with body => \n%s", body.getSoapAction(), xml);
@@ -39,17 +39,25 @@ public class EmtRequest<T> extends PlayaRequest<EmtData<T>> {
         }
     }
 
-    @Override public String getBodyContentType() {
+    @Override
+    public String getBodyContentType() {
         return "text/xml";
     }
 
-    @Override public Map<String, String> getHeaders() throws AuthFailureError {
+    @Override
+    public void setBody(Object body) {
+        this.body = (EmtBody) body;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("SOAPAction", "http://tempuri.org/" + body.getSoapAction());
         return headers;
     }
 
-    @Override public EmtData<T> getParsedData(NetworkResponse response) {
+    @Override
+    public EmtData<T> getParsedData(NetworkResponse response) {
         String xml = new String(response.data);
         try {
             return EmtEnvelopeSerializer.getInstance().fromXML(xml, responseType, body);
@@ -59,16 +67,19 @@ public class EmtRequest<T> extends PlayaRequest<EmtData<T>> {
         }
     }
 
-    @Override public VolleyError generateErrorResponse(NetworkResponse response, EmtData<T> data) {
+    @Override
+    public VolleyError generateErrorResponse(NetworkResponse response, EmtData<T> data) {
         return new EmtError(data, response);
 
     }
 
-    @Override public boolean responseIsOk(NetworkResponse response, EmtData<T> data) {
+    @Override
+    public boolean responseIsOk(NetworkResponse response, EmtData<T> data) {
         return data != null && data.getEmtInfo().getResultCode() == 0;
     }
 
-    @Override public String getCacheKey() {
+    @Override
+    public String getCacheKey() {
         return body.getSoapAction() + "." + super.getCacheKey();
     }
 }

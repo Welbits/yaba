@@ -14,12 +14,12 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 public class EmtRequestBuilder<T> extends PlayaRequestBuilder<
         EmtRequestBuilder<T>, //Type used to allow cast in abstract builder
         EmtRequest<T>, //Type of the request
-        EmtData<T> //Type of the data obtained
+        EmtData<T>, //Type of the data obtained
+        EmtBody //Type of the body
         > {
 
 
     //Visibility is package local to avoid getters
-    EmtBody body;
     Class<T> responseType;
 
     /**
@@ -31,16 +31,6 @@ public class EmtRequestBuilder<T> extends PlayaRequestBuilder<
         super(requestQueue);
     }
 
-    /**
-     * Every EMT request has a body.
-     * see: {@link com.pilasvacias.yaba.modules.emt.models.EmtBody}
-     *
-     * @param body The pojo that represents the body. It will be serialized as XML
-     */
-    public EmtRequestBuilder<T> body(EmtBody body) {
-        this.body = body;
-        return this;
-    }
 
     /**
      * Every EMT request must have an action. A request with no body may
@@ -58,8 +48,9 @@ public class EmtRequestBuilder<T> extends PlayaRequestBuilder<
         return this;
     }
 
-    @Override public EmtRequest<T> create() {
-        return new EmtRequest<T>(errorHandler, body, responseType);
+    @Override
+    public EmtRequest<T> create() {
+        return new EmtRequest<T>(errorHandler, responseType);
     }
 
     @Override
@@ -74,7 +65,8 @@ public class EmtRequestBuilder<T> extends PlayaRequestBuilder<
             this.action = action;
         }
 
-        @Override public String getSoapAction() {
+        @Override
+        public String getSoapAction() {
             return action;
         }
     }

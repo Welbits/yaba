@@ -44,7 +44,8 @@ public abstract class PlayaRequestBuilder
         <
                 BUILDER_TYPE extends PlayaRequestBuilder,
                 REQUEST_TYPE extends PlayaRequest,
-                SUCCESS_DATA_TYPE
+                SUCCESS_DATA_TYPE,
+                BODY_TYPE
                 > {
 
     //Request
@@ -55,7 +56,10 @@ public abstract class PlayaRequestBuilder
     protected String path = "";
     protected HashMap<String, String> queryMap = new HashMap<String, String>();
     protected HashMap<String, String> paramsMap = new HashMap<String, String>();
+    protected HashMap<String, String> headers = new HashMap<String, String>();
     protected RetryPolicy retryPolicy = new DefaultRetryPolicy();
+    protected BODY_TYPE body;
+    protected String bodyContentType;
     //Cache
     protected boolean cacheSkip = false;
     protected boolean cacheResult = true;
@@ -104,8 +108,23 @@ public abstract class PlayaRequestBuilder
         return (BUILDER_TYPE) this;
     }
 
+    public BUILDER_TYPE header(String key, Object value) {
+        headers.put(key, String.valueOf(value));
+        return (BUILDER_TYPE) this;
+    }
+
     public BUILDER_TYPE param(String key, Object value) {
         paramsMap.put(key, String.valueOf(value));
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE body(BODY_TYPE body){
+        this.body = body;
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE bodyContentType(String bodyContentType){
+        this.bodyContentType = bodyContentType;
         return (BUILDER_TYPE) this;
     }
 
@@ -307,6 +326,7 @@ public abstract class PlayaRequestBuilder
         request.setParams(paramsMap.isEmpty() ? null : paramsMap);
         request.setUrl(baseUrl + url + path + queryString);
         request.setMethod(method);
+        request.setHeaders(headers);
         request.setTag(tag);
         request.setVerbose(verbose);
         request.setFakeExecutionTime(fakeTime);
@@ -315,6 +335,9 @@ public abstract class PlayaRequestBuilder
         request.setCacheSkip(cacheSkip);
         request.setShouldCache(cacheResult);
         request.setRetryPolicy(retryPolicy);
+        request.setBody(body);
+        request.setBodyContentType(bodyContentType);
+
 
     }
 
