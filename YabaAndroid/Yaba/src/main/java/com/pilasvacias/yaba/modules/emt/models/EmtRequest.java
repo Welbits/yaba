@@ -4,9 +4,8 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
-import com.pilasvacias.yaba.modules.network.models.AbstractRequest;
+import com.pilasvacias.yaba.modules.network.models.PlayaRequest;
 import com.pilasvacias.yaba.util.L;
 
 import java.io.UnsupportedEncodingException;
@@ -17,13 +16,13 @@ import java.util.Map;
  * Created by pablo on 10/12/13.
  * welvi-android
  */
-public class EmtRequest<T> extends AbstractRequest<EmtData<T>> {
+public class EmtRequest<T> extends PlayaRequest<EmtData<T>> {
 
     private final EmtBody body;
     private final Class<T> responseType;
 
-    public EmtRequest(ErrorHandler errorHandler, EmtSuccessHandler<T> successHandler, EmtBody body, Class<T> responseType) {
-        super(Method.POST, "https://servicios.emtmadrid.es:8443/bus/servicebus.asmx", successHandler, errorHandler);
+    public EmtRequest(ErrorHandler errorHandler, EmtBody body, Class<T> responseType) {
+        super(errorHandler);
         this.body = body;
         this.responseType = responseType;
     }

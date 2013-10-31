@@ -12,11 +12,15 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
-import com.pilasvacias.yaba.modules.network.models.AbstractRequest;
+import com.pilasvacias.yaba.modules.network.models.PlayaRequest;
+import com.pilasvacias.yaba.util.L;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by Pablo Orgaz - 10/22/13 - pabloogc@gmail.com - https://github.com/pabloogc
@@ -25,17 +29,17 @@ import java.util.HashMap;
  * <p/>
  * {@code
  * <p/>
- * public class MyBuilder<SUCCESS_HANDLER_TYPE> extends AbstractRequestBuilder<MyBuilder<SUCCESS_HANDLER_TYPE>, SUCCESS_HANDLER_TYPE>{
+ * public class MyBuilder<SUCCESS_HANDLER_TYPE> extends PlayaRequestBuilder<MyBuilder<SUCCESS_HANDLER_TYPE>, SUCCESS_HANDLER_TYPE>{
  * <p/>
  * ...
  * <p/>
  * }
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractRequestBuilder
+public abstract class PlayaRequestBuilder
         <
-                BUILDER_TYPE extends AbstractRequestBuilder,
-                REQUEST_TYPE extends AbstractRequest,
+                BUILDER_TYPE extends PlayaRequestBuilder,
+                REQUEST_TYPE extends PlayaRequest,
                 SUCCESS_HANDLER_TYPE extends SuccessHandler,
                 SUCCESS_DATA_TYPE
                 > {
@@ -44,10 +48,10 @@ public abstract class AbstractRequestBuilder
     protected String url = "";
     protected String baseUrl = "";
     protected int method = Request.Method.GET;
-    protected String query;
-    protected HashMap<String, String> pathMap = new HashMap<String, String>();
+    protected String queryString = "";
+    protected String path = "";
     protected HashMap<String, String> queryMap = new HashMap<String, String>();
-    protected boolean formUrlEncoded = false;
+    protected HashMap<String, String> paramsMap = new HashMap<String, String>();
     //Cache
     protected boolean cacheSkip = false;
     protected boolean cacheResult = true;
@@ -65,11 +69,9 @@ public abstract class AbstractRequestBuilder
     protected Object tag;
     //User part
     protected boolean verbose = false;
-    protected boolean ignoreLoading = false;
-    protected boolean ignoreErrors = false;
     protected String loadingMessage;
 
-    public AbstractRequestBuilder(RequestQueue requestQueue) {
+    public PlayaRequestBuilder(RequestQueue requestQueue) {
         this.requestQueue = requestQueue;
     }
 
@@ -88,13 +90,26 @@ public abstract class AbstractRequestBuilder
         return (BUILDER_TYPE) this;
     }
 
-    public BUILDER_TYPE query(String key, String value) {
-        queryMap.put(key, value);
+    public BUILDER_TYPE query(String key, Object value) {
+        queryMap.put(key, String.valueOf(value));
         return (BUILDER_TYPE) this;
     }
 
-    public BUILDER_TYPE path(String key, String value) {
-        pathMap.put(key, value);
+    public BUILDER_TYPE param(String key, Object value) {
+        paramsMap.put(key, String.valueOf(value));
+        return (BUILDER_TYPE) this;
+    }
+
+    public BUILDER_TYPE path(Object... elements) {
+        StringBuilder pathBuilder = new StringBuilder();
+        if (!url.endsWith("/"))
+            pathBuilder.append("/");
+        for (Object e : elements) {
+            if (e == null || String.valueOf(e).isEmpty())
+                continue;
+            pathBuilder.append(String.valueOf(e)).append("/");
+        }
+        path = pathBuilder.toString();
         return (BUILDER_TYPE) this;
     }
 
@@ -102,7 +117,6 @@ public abstract class AbstractRequestBuilder
         this.method = method;
         return (BUILDER_TYPE) this;
     }
-
 
     /**
      * @param cacheResult whether this request should be cached or not.
@@ -168,22 +182,6 @@ public abstract class AbstractRequestBuilder
     }
 
     /**
-     * @param ignore Whether this request will show loading feedback or not
-     */
-    public BUILDER_TYPE ignoreLoading(boolean ignore) {
-        this.ignoreLoading = ignore;
-        return (BUILDER_TYPE) this;
-    }
-
-    /**
-     * @param ignore Whether this request will use default error handling or ignore them
-     */
-    public BUILDER_TYPE ignoreErrors(boolean ignore) {
-        this.ignoreErrors = ignore;
-        return (BUILDER_TYPE) this;
-    }
-
-    /**
      * @param tag the tag identifying this request. Used for cancelling.
      */
     public BUILDER_TYPE tag(Object tag) {
@@ -229,7 +227,7 @@ public abstract class AbstractRequestBuilder
         configure(request);
         requestQueue.add(request);
 
-        if (!ignoreLoading && loadingHandler != null)
+        if (loadingHandler != null)
             loadingHandler.showLoading(loadingMessage);
     }
 
@@ -272,7 +270,43 @@ public abstract class AbstractRequestBuilder
     public abstract REQUEST_TYPE create();
 
     private void configureAbstractRequest(REQUEST_TYPE request) {
-        //TODO Do things to abstract requests
+        if (errorHandler != null)
+            errorHandler.setLoadingHandler(loadingHandler);
+
+        if (successHandler != null)
+            successHandler.setLoadingHandler(loadingHandler);
+
+        if (!queryMap.isEmpty()) {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.append("?");
+            Iterator<String> it = queryMap.keySet().iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                String value = queryMap.get(key);
+                queryBuilder.append(key).append("=").append(value);
+                if (it.hasNext())
+                    queryBuilder.append("&");
+            }
+
+            try {
+                queryString = URLEncoder.encode(queryBuilder.toString(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                L.og.e("Unable to encode query %s", queryBuilder.toString());
+                e.printStackTrace();
+            }
+        }
+        request.setSuccessHandler(successHandler);
+        request.setParams(paramsMap.isEmpty() ? null : paramsMap);
+        request.setUrl(baseUrl + url + path + queryString);
+        request.setMethod(method);
+        request.setTag(tag);
+        request.setVerbose(verbose);
+        request.setFakeExecutionTime(fakeTime);
+        request.setCacheRefreshTime(refreshTime);
+        request.setCacheExpireTime(expireTime);
+        request.setCacheSkip(cacheSkip);
+        request.setShouldCache(cacheResult);
+
     }
 
 }

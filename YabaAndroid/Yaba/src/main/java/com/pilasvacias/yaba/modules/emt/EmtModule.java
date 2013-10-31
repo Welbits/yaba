@@ -48,6 +48,5 @@ public class EmtModule {
 
     @Provides @Singleton EmtDBHelper provideEmtDBHelper(Context context) {
         return OpenHelperManager.getHelper(context, EmtDBHelper.class);
-
     }
 }

@@ -1,5 +1,6 @@
 package com.pilasvacias.yaba.modules.network.models;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -10,67 +11,58 @@ import com.pilasvacias.yaba.modules.network.CacheMaker;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Pablo Orgaz - 10/23/13 - pabloogc@gmail.com - https://github.com/pabloogc
  */
-public abstract class AbstractRequest<T> extends Request<T> {
+public abstract class PlayaRequest<T> extends Request<T> {
 
     private String cacheKey;
     private long fakeExecutionTime = 0;
     private long cacheRefreshTime = 0;
     private long cacheExpireTime = 0;
     private boolean cacheSkip = false;
-    private SuccessHandler<T> responseListener;
-    private ErrorHandler emtErrorHandler;
+    private SuccessHandler<T> successHandler;
+    private ErrorHandler errorHandler;
     private boolean verbose = false;
     private Object body;
-    private int method;
+    private int method = Method.GET;
     private String url;
+    private HashMap<String, String> params;
 
-    public AbstractRequest(
-            int method,
-            String url,
-            SuccessHandler<T> successHandler,
-            ErrorHandler errorHandler) {
-        super(method, url, errorHandler);
-        this.method = method;
+    public PlayaRequest(ErrorHandler errorHandler) {
+        super(Method.GET, "http://you.forgot/to/set/the/url", errorHandler);
+        this.errorHandler = errorHandler;
+    }
+
+    @Override public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
         this.url = url;
-        this.emtErrorHandler = errorHandler;
-        this.responseListener = successHandler;
     }
 
-//    @Override public String getUrl() {
-//        if (url != null)
-//            return url;
-//        return super.getUrl();
-//    }
-//
-//    public void setUrl(String url) {
-//        this.url = url;
-//    }
-//
-//    public int getMethod() {
-//        return method;
-//    }
-//
-//    public void setMethod(int method) {
-//      this.method = method;
-//   }
-
-    public ErrorHandler getEmtErrorHandler() {
-        return emtErrorHandler;
+    @Override public int getMethod() {
+        return method;
     }
 
-    public void setEmtErrorHandler(ErrorHandler emtErrorHandler) {
-        this.emtErrorHandler = emtErrorHandler;
+    public void setMethod(int method) {
+        this.method = method;
     }
 
-    public SuccessHandler<T> getResponseListener() {
-        return responseListener;
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 
-    public void setResponseListener(SuccessHandler<T> responseListener) {
-        this.responseListener = responseListener;
+    public SuccessHandler<T> getSuccesHandler() {
+        return successHandler;
+    }
+
+    public void setSuccessHandler(SuccessHandler<T> responseListener) {
+        this.successHandler = responseListener;
     }
 
     public void setFakeExecutionTime(long fakeTime) {
@@ -97,9 +89,16 @@ public abstract class AbstractRequest<T> extends Request<T> {
         this.cacheExpireTime = cacheExpireTime;
     }
 
+    @Override protected Map<String, String> getParams() throws AuthFailureError {
+        return params;
+    }
+
+    public void setParams(HashMap<String, String> params) {
+        this.params = params;
+    }
+
     @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
         fakeLongRequest();
-
         T data = getParsedData(response);
         if (responseIsOk(response, data))
             return Response.success(data, CacheMaker.generateCache(response, cacheRefreshTime, cacheExpireTime));
@@ -119,8 +118,8 @@ public abstract class AbstractRequest<T> extends Request<T> {
     }
 
     @Override protected void deliverResponse(T response) {
-        if (responseListener != null && !isCanceled())
-            responseListener.onResponse(response);
+        if (successHandler != null && !isCanceled())
+            successHandler.onResponse(response);
     }
 
     public abstract T getParsedData(NetworkResponse response);

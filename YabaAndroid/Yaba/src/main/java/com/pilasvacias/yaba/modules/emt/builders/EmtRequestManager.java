@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 
 /**
  * Created by pablo on 10/14/13.
@@ -16,9 +17,7 @@ public class EmtRequestManager {
      * so cancelling all request will cancel the requests done by this manager.
      */
     private final Object DEFAULT_TAG = new Object();
-
     private RequestQueue requestQueue;
-
     private Object tag = DEFAULT_TAG;
     /**
      * The container context it should be an activity.
@@ -64,9 +63,11 @@ public class EmtRequestManager {
      */
     public <T> EmtRequestBuilder<T> beginRequest(Class<T> responseType) {
         return new EmtRequestBuilder<T>(requestQueue)
+                .url("https://servicios.emtmadrid.es:8443/bus/servicebus.asmx")
                 .method(Request.Method.POST)
                 .responseType(responseType)
                 .tag(tag)
+                .error(new EmtErrorHandler())
                 .context(context);
     }
 

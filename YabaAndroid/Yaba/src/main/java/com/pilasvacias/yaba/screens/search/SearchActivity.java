@@ -127,8 +127,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
                         arrayAdapter.addAll(result.getPayload());
                     }
                 })
-                .ignoreErrors(true)
-                .ignoreLoading(true)
+                .error(null)
                 .cacheResult(false)
                 .verbose(true)
                 .cacheSkip(true)

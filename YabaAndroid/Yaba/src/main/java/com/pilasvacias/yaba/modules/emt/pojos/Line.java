@@ -81,7 +81,7 @@ public class Line extends Model implements Comparable<Line> {
         return line;
     }
 
-    public void setLine(int line) {
+    public void setLineNumber(int line) {
         this.line = line;
     }
 

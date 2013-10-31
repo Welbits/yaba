@@ -1,27 +1,23 @@
 package com.pilasvacias.yaba.modules.emt.builders;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtErrorHandler;
 import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
-import com.pilasvacias.yaba.modules.network.builder.AbstractRequestBuilder;
-import com.pilasvacias.yaba.modules.network.handlers.impl.DialogLoadingHandler;
-import com.pilasvacias.yaba.modules.network.handlers.impl.FakeErrorHandler;
+import com.pilasvacias.yaba.modules.network.builder.PlayaRequestBuilder;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
  * Created by pablo on 10/14/13.
  * welvi-android
  */
-public class EmtRequestBuilder<T> extends AbstractRequestBuilder
-        <
-                EmtRequestBuilder<T>, //Type used to allow cast in abstract builder
-                EmtRequest<T>, //Type of the request
-                EmtSuccessHandler<T>, //Type of the handler
-                EmtData<T> //Type of the data obtained
-                > {
+public class EmtRequestBuilder<T> extends PlayaRequestBuilder<
+        EmtRequestBuilder<T>, //Type used to allow cast in abstract builder
+        EmtRequest<T>, //Type of the request
+        EmtSuccessHandler<T>, //Type of the handler
+        EmtData<T> //Type of the data obtained
+        > {
 
 
     //Visibility is package local to avoid getters
@@ -65,37 +61,11 @@ public class EmtRequestBuilder<T> extends AbstractRequestBuilder
     }
 
     @Override public EmtRequest<T> create() {
-        return new EmtRequest<T>(errorHandler, successHandler, body, responseType);
+        return new EmtRequest<T>(errorHandler, body, responseType);
     }
 
     @Override
     public void configure(EmtRequest<T> request) {
-        if (!ignoreErrors && errorHandler == null) {
-            errorHandler = new EmtErrorHandler();
-            errorHandler.setContext(context);
-        } else {
-            errorHandler = new FakeErrorHandler();
-        }
-
-
-        request.setTag(tag);
-        request.setVerbose(verbose);
-        request.setFakeExecutionTime(fakeTime);
-        request.setCacheRefreshTime(refreshTime);
-        request.setCacheExpireTime(expireTime);
-        request.setCacheSkip(cacheSkip);
-        request.setShouldCache(cacheResult);
-
-        if (!ignoreLoading && loadingHandler == null)
-            loadingHandler = new DialogLoadingHandler(context, request);
-
-        if (!ignoreErrors)
-            errorHandler.setLoadingHandler(loadingHandler);
-
-        //This doesn't make much sense in EMT, perform and request and ignore the result.
-        //but it's useful in POST, PUT or chained requests.
-        if (successHandler != null)
-            successHandler.setLoadingHandler(loadingHandler);
     }
 
     public static class FakeEmtBody extends EmtBody {

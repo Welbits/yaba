@@ -60,7 +60,6 @@ public class Stop extends Pojo {
      * the direction.
      */
     @XStreamAlias("Lines")
-    @DatabaseField(index = true)
     private String lines;
 
     public int getNode() {

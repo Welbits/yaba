@@ -5,10 +5,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
+import com.pilasvacias.yaba.modules.emt.pojos.LineStop;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.util.L;
 
@@ -20,9 +21,10 @@ import java.sql.SQLException;
 public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DB_NAME = "emtdb.db";
-    public static final int DB_VERSION = 3;
-    private Dao<Stop, Integer> stopsDao;
-    private Dao<Line, Integer> linesDao;
+    public static final int DB_VERSION = 4;
+    private RuntimeExceptionDao<Stop, Integer> stopsDao;
+    private RuntimeExceptionDao<Line, Integer> linesDao;
+    private RuntimeExceptionDao<LineStop, Integer> linesStopsDao;
 
     public EmtDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -34,6 +36,7 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTableIfNotExists(connectionSource, Stop.class);
             TableUtils.createTableIfNotExists(connectionSource, Line.class);
+            TableUtils.createTableIfNotExists(connectionSource, LineStop.class);
         } catch (SQLException e) {
             L.og.e(e.getCause(), "Error creating database");
         }
@@ -45,8 +48,10 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Stop.class, true);
             TableUtils.dropTable(connectionSource, Line.class, true);
+            TableUtils.dropTable(connectionSource, LineStop.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Stop.class);
             TableUtils.createTableIfNotExists(connectionSource, Line.class);
+            TableUtils.createTableIfNotExists(connectionSource, LineStop.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,13 +60,9 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
     /**
      * @return the Line Dao or null is something went wrong
      */
-    public Dao<Line, Integer> getLinesDao() {
+    public RuntimeExceptionDao<Line, Integer> getLinesDao() {
         if (linesDao == null) {
-            try {
-                linesDao = getDao(Line.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            linesDao = getRuntimeExceptionDao(Line.class);
         }
         return linesDao;
     }
@@ -69,15 +70,21 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
     /**
      * @return the Stops Dao or null is something went wrong
      */
-    public Dao<Stop, Integer> getStopsDao() {
+    public RuntimeExceptionDao<Stop, Integer> getStopsDao() {
         if (stopsDao == null) {
-            try {
-                stopsDao = getDao(Stop.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            stopsDao = getRuntimeExceptionDao(Stop.class);
         }
         return stopsDao;
+    }
+
+    /**
+     * @return the Stops Dao or null is something went wrong
+     */
+    public RuntimeExceptionDao<LineStop, Integer> getLinesStopsDao() {
+        if (linesStopsDao == null) {
+            linesStopsDao = getRuntimeExceptionDao(LineStop.class);
+        }
+        return linesStopsDao;
     }
 
     @Override public void close() {

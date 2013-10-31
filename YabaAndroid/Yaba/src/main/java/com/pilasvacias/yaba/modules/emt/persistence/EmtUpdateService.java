@@ -9,11 +9,14 @@ import com.pilasvacias.yaba.application.YabaApplication;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
+import com.pilasvacias.yaba.modules.emt.pojos.LineStop;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.modules.emt.requests.GetListLines;
 import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
 import com.pilasvacias.yaba.util.L;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
@@ -59,19 +62,27 @@ public class EmtUpdateService extends IntentService {
             return;
         }
 
-        dbHelper.getRuntimeExceptionDao(Line.class).callBatchTasks(new Callable<Object>() {
-            @Override public Object call() throws Exception {
-                L.time.addMark("clear old lines");
-                TableUtils.clearTable(dbHelper.getConnectionSource(), Line.class);
-                L.time.addMark("start writing lines");
-                for (Line line : lines.getPayload()) {
-                    dbHelper.getLinesDao().create(line);
+        final List<LineStop> lineStops = getLinesFromStops(stops.getPayload());
+        L.time.addMark("finished creating %d relations of lines and stops", lineStops.size());
+
+        //Save the relations
+        dbHelper.getLinesStopsDao().callBatchTasks(new Callable<LineStop>() {
+            @Override public LineStop call() throws Exception {
+                L.time.addMark("clear old line stops relations");
+                TableUtils.clearTable(dbHelper.getConnectionSource(), LineStop.class);
+                L.time.addMark("start writing relations");
+                for (LineStop lineStop : lineStops) {
+                    dbHelper.getLinesStopsDao().create(lineStop);
                 }
-                L.time.addMark("finished writing lines");
+                L.time.addMark("finished writing line stops relations");
+                lineStops.clear();
+
                 return null;
             }
         });
-        dbHelper.getRuntimeExceptionDao(Stop.class).callBatchTasks(new Callable<Object>() {
+
+        //Save the stops
+        dbHelper.getStopsDao().callBatchTasks(new Callable<Object>() {
             @Override public Object call() throws Exception {
                 L.time.addMark("clear old stops");
                 TableUtils.clearTable(dbHelper.getConnectionSource(), Stop.class);
@@ -80,10 +91,53 @@ public class EmtUpdateService extends IntentService {
                     dbHelper.getStopsDao().create(stop);
                 }
                 L.time.addMark("finished writing stops");
+                stops.getPayload().clear();
+                return null;
+            }
+        });
+
+        //Save the lines
+        dbHelper.getLinesDao().callBatchTasks(new Callable<Object>() {
+            @Override public Object call() throws Exception {
+                L.time.addMark("clear old lines");
+                TableUtils.clearTable(dbHelper.getConnectionSource(), Line.class);
+                L.time.addMark("start writing lines");
+                for (Line line : lines.getPayload()) {
+                    dbHelper.getLinesDao().create(line);
+                }
+                L.time.addMark("finished writing lines");
+                lines.getPayload().clear();
                 return null;
             }
         });
         L.time.end();
+    }
+
+    private List<LineStop> getLinesFromStops(List<Stop> stops) {
+        //Stops format: 29/1 30/1 31/2
+        LinkedList<LineStop> data = new LinkedList<LineStop>();
+        for (Stop stop : stops) {
+            String[] lines = stop.getLines().split("\\s+");
+            for (String line : lines) {
+                // 29/1 or 145/2
+                String[] lineAndDirection = line.split("/");
+                int lineNumber = Integer.parseInt(lineAndDirection[0]);
+                int lineDirection = Integer.parseInt(lineAndDirection[1]);
+
+                //Create the relation entry
+                LineStop lineStop = new LineStop();
+                Line relationLine = new Line();
+                relationLine.setLineNumber(lineNumber);
+
+                lineStop.setLine(relationLine);
+                lineStop.setDirection(lineDirection);
+                lineStop.setStop(stop);
+
+                data.add(lineStop);
+            }
+        }
+
+        return data;
     }
 
     private EmtData<Stop> getNodes(int retries) {
@@ -94,7 +148,6 @@ public class EmtUpdateService extends IntentService {
         do {
             data = requestManager.beginRequest(Stop.class)
                     .body(body)
-                    .ignoreLoading(true)
                     .cacheSkip(true)
                     .cacheResult(false)
                     .executeSync();
@@ -119,7 +172,6 @@ public class EmtUpdateService extends IntentService {
         do {
             data = requestManager.beginRequest(Line.class)
                     .body(body)
-                    .ignoreLoading(true)
                     .cacheSkip(true)
                     .cacheResult(false)
                     .executeSync();

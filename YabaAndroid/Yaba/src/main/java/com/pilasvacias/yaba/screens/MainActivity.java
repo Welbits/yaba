@@ -24,7 +24,6 @@ import com.pilasvacias.yaba.core.debug.DummyFragment;
 import com.pilasvacias.yaba.core.experimental.MagicTurn;
 import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.emt.persistence.EmtUpdateService;
 import com.pilasvacias.yaba.screens.alerts.AlertsFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 import com.pilasvacias.yaba.screens.search.NfcScanActivity;
@@ -74,9 +73,9 @@ public class MainActivity extends NetworkActivity {
         }
         setTitle(title);
 
-        Intent intent = new Intent(this, EmtUpdateService.class);
-        intent.setAction(EmtUpdateService.ACTION_UPDATE);
-        startService(intent);
+        //Intent intent = new Intent(this, EmtUpdateService.class);
+        //intent.setAction(EmtUpdateService.ACTION_UPDATE);
+        //startService(intent);
 
     }
 
