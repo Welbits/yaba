@@ -26,7 +26,7 @@ public class Stop extends Pojo {
      */
     @XStreamAlias("Node")
     @DatabaseField(id = true, index = true)
-    private int node;
+    private int stopNumber;
     //
     /**
      * position X in geocoodinates
@@ -60,14 +60,15 @@ public class Stop extends Pojo {
      * the direction.
      */
     @XStreamAlias("Lines")
+    @DatabaseField()
     private String lines;
 
-    public int getNode() {
-        return node;
+    public int getStopNumber() {
+        return stopNumber;
     }
 
-    public void setNode(int node) {
-        this.node = node;
+    public void setStopNumber(int stopNumber) {
+        this.stopNumber = stopNumber;
     }
 
     public double getPosX() {

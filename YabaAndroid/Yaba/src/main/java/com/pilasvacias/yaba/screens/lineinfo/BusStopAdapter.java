@@ -23,7 +23,7 @@ public class BusStopAdapter extends WBaseAdapter<Stop, BusStopAdapter.ViewHolder
     @Override
     protected void changeView(Stop item, ViewHolder viewHolder) {
         viewHolder.name.setText(item.getName());
-        viewHolder.number.setText(item.getNode());
+        viewHolder.number.setText(item.getStopNumber());
         // TODO lines and street
 
     }

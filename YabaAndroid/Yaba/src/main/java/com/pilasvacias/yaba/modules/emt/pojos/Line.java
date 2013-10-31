@@ -31,7 +31,7 @@ public class Line extends Model implements Comparable<Line> {
     @XStreamAlias("Line")
     @XStreamConverter(LineConverter.class)
     @DatabaseField(id = true, index = true)
-    private int line;
+    private int lineNumber;
     //
     @XStreamAlias("Label")
     @DatabaseField(index = true)
@@ -77,12 +77,12 @@ public class Line extends Model implements Comparable<Line> {
         this.dateEnd = dateEnd;
     }
 
-    public int getLine() {
-        return line;
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     public void setLineNumber(int line) {
-        this.line = line;
+        this.lineNumber = line;
     }
 
     public String getLabel() {

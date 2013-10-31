@@ -2,6 +2,7 @@ package com.pilasvacias.yaba.modules.emt.persistence;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -21,13 +22,19 @@ import java.sql.SQLException;
 public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DB_NAME = "emtdb.db";
-    public static final int DB_VERSION = 4;
+    public static final int DB_VERSION = 7;
     private RuntimeExceptionDao<Stop, Integer> stopsDao;
     private RuntimeExceptionDao<Line, Integer> linesDao;
     private RuntimeExceptionDao<LineStop, Integer> linesStopsDao;
 
     public EmtDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    public void updateDB(Context context) {
+        Intent intent = new Intent(context, EmtUpdateService.class);
+        intent.setAction(EmtUpdateService.ACTION_UPDATE);
+        context.startService(intent);
     }
 
     @Override

@@ -50,6 +50,7 @@ public class EmtUpdateService extends IntentService {
     }
 
     private void updateDB() {
+        L.og.d("Updating DB");
         final EmtDBHelper dbHelper = OpenHelperManager.getHelper(this, EmtDBHelper.class);
         L.time.begin("UPDATING NODES AND LINES");
         final EmtData<Stop> stops = getNodes(3);
