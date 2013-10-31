@@ -54,9 +54,9 @@ public abstract class PlayaRequestBuilder
     protected int method = Request.Method.GET;
     protected String queryString = "";
     protected String path = "";
-    protected HashMap<String, String> queryMap = new HashMap<String, String>();
-    protected HashMap<String, String> paramsMap = new HashMap<String, String>();
-    protected HashMap<String, String> headers = new HashMap<String, String>();
+    protected HashMap<String, String> queryMap = new HashMap<>();
+    protected HashMap<String, String> paramsMap = new HashMap<>();
+    protected HashMap<String, String> headers = new HashMap<>();
     protected RetryPolicy retryPolicy = new DefaultRetryPolicy();
     protected BODY_TYPE body;
     protected String bodyContentType;
@@ -69,7 +69,7 @@ public abstract class PlayaRequestBuilder
     protected String cacheKey;
     //Handlers
     protected ErrorHandler errorHandler = new FakeErrorHandler();
-    protected SuccessHandler<SUCCESS_DATA_TYPE> successHandler = new FakeSuccessHandler<SUCCESS_DATA_TYPE>();
+    protected SuccessHandler<SUCCESS_DATA_TYPE> successHandler = new FakeSuccessHandler<>();
     protected LoadingHandler loadingHandler;
     //Meta
     protected RequestQueue requestQueue;
