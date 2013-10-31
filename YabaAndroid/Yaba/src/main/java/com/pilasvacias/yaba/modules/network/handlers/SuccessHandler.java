@@ -22,10 +22,6 @@ public abstract class SuccessHandler<T> implements Response.Listener<T> {
         this.visitor = visitor;
     }
 
-    public void setLoadingHandler(LoadingHandler loadingHandler) {
-        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
-    }
-
     @Override public void onResponse(T response) {
         if (loadingHandler != null && loadingHandler.get() != null)
             loadingHandler.get().hideLoading(null, true);
@@ -34,9 +30,25 @@ public abstract class SuccessHandler<T> implements Response.Listener<T> {
         onSuccess(response);
         if (visitor != null)
             visitor.afterResponse(response);
+
+        hideLoadingHandler();
     }
 
     public abstract void onSuccess(T result);
+
+    public LoadingHandler getLoadingHandler() {
+        return loadingHandler.get();
+    }
+
+    public void setLoadingHandler(LoadingHandler loadingHandler) {
+        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
+    }
+
+    public void hideLoadingHandler() {
+        LoadingHandler loadingHandler = getLoadingHandler();
+        if (loadingHandler != null)
+            loadingHandler.hideLoading(null, false);
+    }
 
     public interface Visitor {
         void beforeResponse(Object response);

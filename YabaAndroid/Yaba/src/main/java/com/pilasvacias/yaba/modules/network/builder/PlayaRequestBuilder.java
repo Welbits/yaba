@@ -14,6 +14,8 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
 import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.network.handlers.impl.FakeErrorHandler;
+import com.pilasvacias.yaba.modules.network.handlers.impl.FakeSuccessHandler;
 import com.pilasvacias.yaba.modules.network.models.PlayaRequest;
 import com.pilasvacias.yaba.util.L;
 
@@ -42,7 +44,6 @@ public abstract class PlayaRequestBuilder
         <
                 BUILDER_TYPE extends PlayaRequestBuilder,
                 REQUEST_TYPE extends PlayaRequest,
-                SUCCESS_HANDLER_TYPE extends SuccessHandler,
                 SUCCESS_DATA_TYPE
                 > {
 
@@ -63,9 +64,9 @@ public abstract class PlayaRequestBuilder
     protected long refreshTime = 0L;
     protected String cacheKey;
     //Handlers
-    protected ErrorHandler errorHandler;
+    protected ErrorHandler errorHandler = new FakeErrorHandler();
+    protected SuccessHandler<SUCCESS_DATA_TYPE> successHandler = new FakeSuccessHandler<SUCCESS_DATA_TYPE>();
     protected LoadingHandler loadingHandler;
-    protected SUCCESS_HANDLER_TYPE successHandler;
     //Meta
     protected RequestQueue requestQueue;
     protected Context context;
@@ -137,7 +138,7 @@ public abstract class PlayaRequestBuilder
     /**
      * @param successHandler the listener of the request
      */
-    public BUILDER_TYPE success(SUCCESS_HANDLER_TYPE successHandler) {
+    public BUILDER_TYPE success(SuccessHandler<SUCCESS_DATA_TYPE> successHandler) {
         this.successHandler = successHandler;
         return (BUILDER_TYPE) this;
     }
@@ -278,11 +279,9 @@ public abstract class PlayaRequestBuilder
     public abstract REQUEST_TYPE create();
 
     private void configureAbstractRequest(REQUEST_TYPE request) {
-        if (errorHandler != null)
-            errorHandler.setLoadingHandler(loadingHandler);
 
-        if (successHandler != null)
-            successHandler.setLoadingHandler(loadingHandler);
+        errorHandler.setLoadingHandler(loadingHandler);
+        successHandler.setLoadingHandler(loadingHandler);
 
         if (!queryMap.isEmpty()) {
             StringBuilder queryBuilder = new StringBuilder();

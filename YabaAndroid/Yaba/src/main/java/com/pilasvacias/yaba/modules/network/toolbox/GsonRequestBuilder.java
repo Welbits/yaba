@@ -4,12 +4,11 @@ import com.android.volley.RequestQueue;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pilasvacias.yaba.modules.network.builder.PlayaRequestBuilder;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 
 /**
  * Created by Pablo Orgaz - 10/30/13 - pabloogc@gmail.com - https://github.com/pabloogc
  */
-public class GsonRequestBuilder<T> extends PlayaRequestBuilder<GsonRequestBuilder<T>, GsonRequest<T>, SuccessHandler<T>, T> {
+public class GsonRequestBuilder<T> extends PlayaRequestBuilder<GsonRequestBuilder<T>, GsonRequest<T>, T> {
 
     private TypeToken<T> token;
     private Class<T> clazz;

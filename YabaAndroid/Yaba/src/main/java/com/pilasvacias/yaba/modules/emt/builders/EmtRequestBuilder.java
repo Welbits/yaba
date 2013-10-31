@@ -1,7 +1,6 @@
 package com.pilasvacias.yaba.modules.emt.builders;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
@@ -15,7 +14,6 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 public class EmtRequestBuilder<T> extends PlayaRequestBuilder<
         EmtRequestBuilder<T>, //Type used to allow cast in abstract builder
         EmtRequest<T>, //Type of the request
-        EmtSuccessHandler<T>, //Type of the handler
         EmtData<T> //Type of the data obtained
         > {
 

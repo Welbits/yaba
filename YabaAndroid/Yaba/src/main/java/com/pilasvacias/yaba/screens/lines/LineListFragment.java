@@ -16,10 +16,10 @@ import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.experimental.Token;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
+import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.util.DateUtils;
 import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
@@ -115,9 +115,8 @@ public class LineListFragment extends NetworkFragment {
         getRequestManager()
                 .beginRequest(Line.class)
                 .body(new GetListLines())
-                .success(new EmtSuccessHandler<Line>() {
-                    @Override
-                    public void onSuccess(final EmtData<Line> result) {
+                .success(new SuccessHandler<EmtData<Line>>() {
+                    @Override public void onSuccess(EmtData<Line> result) {
                         lineEmtData = result;
                         addLines();
                     }

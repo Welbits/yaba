@@ -16,10 +16,10 @@ import android.widget.SearchView;
 import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.core.widget.EmptyView;
-import com.pilasvacias.yaba.modules.emt.handlers.EmtSuccessHandler;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
+import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.util.L;
 import com.pilasvacias.yaba.util.Time;
 
@@ -120,7 +120,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
         getRequestManager().cancelAllRequests();
         getRequestManager().beginRequest(Stop.class)
                 .body(body)
-                .success(new EmtSuccessHandler<Stop>() {
+                .success(new SuccessHandler<EmtData<Stop>>() {
                     @Override public void onSuccess(EmtData<Stop> result) {
                         nodes = result;
                         arrayAdapter.clear();

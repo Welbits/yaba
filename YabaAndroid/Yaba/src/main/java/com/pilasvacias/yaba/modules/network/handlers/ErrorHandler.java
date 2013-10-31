@@ -20,17 +20,25 @@ public abstract class ErrorHandler implements Response.ErrorListener {
         return visitor;
     }
 
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
+
+    }
+
     public LoadingHandler getLoadingHandler() {
         return loadingHandler.get();
+    }
+
+    public void setLoadingHandler(LoadingHandler loadingHandler) {
+        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
     }
 
     public Context getContext() {
         return context.get();
     }
 
-    public void setVisitor(Visitor visitor) {
-        this.visitor = visitor;
-
+    public void setContext(Context context) {
+        this.context = new WeakReference<Context>(context);
     }
 
     @Override
@@ -40,16 +48,16 @@ public abstract class ErrorHandler implements Response.ErrorListener {
         handleError(error);
         if (visitor != null)
             visitor.afterError(error);
+
+        hideLoadingHandler();
     }
 
     public abstract void handleError(VolleyError error);
 
-    public void setContext(Context context) {
-        this.context = new WeakReference<Context>(context);
-    }
-
-    public void setLoadingHandler(LoadingHandler loadingHandler) {
-        this.loadingHandler = new WeakReference<LoadingHandler>(loadingHandler);
+    public void hideLoadingHandler() {
+        LoadingHandler loadingHandler = getLoadingHandler();
+        if (loadingHandler != null)
+            loadingHandler.hideLoading(null, false);
     }
 
     public interface Visitor {

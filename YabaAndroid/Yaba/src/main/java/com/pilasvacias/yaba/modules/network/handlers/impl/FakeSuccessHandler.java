@@ -7,6 +7,5 @@ import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
  */
 public class FakeSuccessHandler<T> extends SuccessHandler<T> {
     @Override public void onSuccess(T result) {
-
     }
 }
