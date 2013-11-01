@@ -17,11 +17,12 @@ import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.modules.emt.persistence.EmtQueryManager;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.util.L;
-import com.pilasvacias.yaba.util.Time;
+
+import java.util.List;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -32,7 +33,7 @@ import butterknife.Views;
 public class SearchActivity extends NetworkActivity implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     // Constants
-    private static final long SEARCH_DELAY = Time.millis(2000);
+    private static final long SEARCH_DELAY = 100;
     // Inject views
     @InjectView(R.id.search_listView)
     ListView listView;
@@ -49,11 +50,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     };
     private ArrayAdapter<Stop> arrayAdapter;
     private EmtData<Stop> nodes;
-
-    public static long getSearchDelay() {
-        //TODO: Tweak this value to avoid wasting bandwidth
-        return SEARCH_DELAY;
-    }
+    private EmtQueryManager queryManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +63,14 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         handleIntent(intent);
+
+        queryManager = new EmtQueryManager();
+        queryManager.init(this);
     }
 
     private void configureListView() {
         EmptyView.makeText(R.string.empty_search).into(listView);
-        arrayAdapter = new ArrayAdapter<Stop>(this, android.R.layout.simple_list_item_1);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(arrayAdapter);
     }
 
@@ -112,26 +112,9 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
 
     private void search(String query) {
         searchView.setQuery(query, false);
-
         GetNodesLines body = new GetNodesLines();
         body.setNodes(query.split("\\s+"), false);
         L.og.d(body.getNodesAsString());
-
-        getRequestManager().cancelAllRequests();
-        getRequestManager().beginRequest(Stop.class)
-                .body(body)
-                .success(new SuccessHandler<EmtData<Stop>>() {
-                    @Override public void onSuccess(EmtData<Stop> result) {
-                        nodes = result;
-                        arrayAdapter.clear();
-                        arrayAdapter.addAll(result.getPayload());
-                    }
-                })
-                .error(null)
-                .cacheResult(false)
-                .verbose(true)
-                .cacheSkip(true)
-                .execute();
     }
 
     /**
@@ -162,6 +145,13 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
             arrayAdapter.clear();
             return false;
         }
+
+        arrayAdapter.clear();
+        L.time.begin("query %s", newText);
+        List<Stop> data = queryManager.stops().query(newText).execute();
+        L.time.end();
+        arrayAdapter.addAll(data);
+
         return true;
     }
 
@@ -180,5 +170,10 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     public boolean onMenuItemActionCollapse(MenuItem item) {
         finish();
         return false;
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        queryManager.release();
     }
 }

@@ -53,9 +53,9 @@ public class EmtUpdateService extends IntentService {
         L.og.d("Updating DB");
         final EmtDBHelper dbHelper = OpenHelperManager.getHelper(this, EmtDBHelper.class);
         L.time.begin("UPDATING NODES AND LINES");
-        final EmtData<Stop> stops = getNodes(3);
+        final EmtData<Stop> stops = getNodes();
         L.time.addMark("got %d stops from EMT", stops.getPayload().size());
-        final EmtData<Line> lines = getLines(3);
+        final EmtData<Line> lines = getLines();
         L.time.addMark("got %d lines from EMT", lines.getPayload().size());
 
         if (stops == null || lines == null) {
@@ -118,7 +118,7 @@ public class EmtUpdateService extends IntentService {
 
     private List<LineStop> getLinesFromStops(List<Stop> stops) {
         //Stops format: 29/1 30/1 31/2
-        LinkedList<LineStop> data = new LinkedList<LineStop>();
+        LinkedList<LineStop> data = new LinkedList<>();
         for (Stop stop : stops) {
             String[] lines = stop.getLines().split("\\s+");
             for (String line : lines) {
@@ -143,7 +143,7 @@ public class EmtUpdateService extends IntentService {
         return data;
     }
 
-    private EmtData<Stop> getNodes(int retries) {
+    private EmtData<Stop> getNodes() {
         GetNodesLines body = new GetNodesLines();
         body.setNodes(new String[]{}, true);
 
@@ -156,7 +156,7 @@ public class EmtUpdateService extends IntentService {
 
     }
 
-    private EmtData<Line> getLines(int retries) {
+    private EmtData<Line> getLines() {
         return requestManager.beginRequest(Line.class)
                 .body(new GetListLines())
                 .cacheSkip(true)

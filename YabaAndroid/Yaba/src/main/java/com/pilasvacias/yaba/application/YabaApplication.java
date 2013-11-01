@@ -40,7 +40,7 @@ public class YabaApplication extends Application {
      * @return the list of modules
      */
     protected List<Object> getModules() {
-        return Arrays.<Object>asList(
+        return Arrays.asList(
                 new ContextModule(this),
                 new EmtModule());
     }

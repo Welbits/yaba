@@ -27,7 +27,7 @@ public class ProbaActivity extends NetworkActivity {
         MagicTurn.restore(this, savedInstanceState);
         VolleyLog.DEBUG = true;
         dbHelper = OpenHelperManager.getHelper(this, EmtDBHelper.class);
-        //dbHelper.updateDB(this);
+        dbHelper.updateDB(this);
 
         QueryBuilder<LineStop, Integer> lineStopQueryBuilder
                 = dbHelper.getLinesStopsDao().queryBuilder();
