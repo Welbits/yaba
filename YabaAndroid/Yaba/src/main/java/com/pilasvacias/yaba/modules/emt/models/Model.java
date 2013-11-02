@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.core.model;
+package com.pilasvacias.yaba.modules.emt.models;
 
 import com.google.gson.Gson;
 

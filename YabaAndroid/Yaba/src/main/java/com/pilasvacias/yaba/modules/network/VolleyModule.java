@@ -6,6 +6,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.pilasvacias.yaba.modules.util.ContextModule;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -19,7 +21,7 @@ import dagger.Provides;
 @Module(includes = ContextModule.class, library = true)
 public class VolleyModule {
 
-    @Provides RequestQueue providesRequestQueue(Context context) {
+    @Provides @Singleton RequestQueue providesRequestQueue(/*injected*/Context context) {
         return Volley.newRequestQueue(context);
     }
 

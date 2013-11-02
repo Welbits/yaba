@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.modules.emt.pojos;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.pilasvacias.yaba.core.model.Model;
+import com.pilasvacias.yaba.modules.emt.models.Model;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;

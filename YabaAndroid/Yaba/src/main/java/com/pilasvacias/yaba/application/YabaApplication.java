@@ -2,8 +2,8 @@ package com.pilasvacias.yaba.application;
 
 import android.app.Application;
 
-import com.pilasvacias.yaba.core.sync.util.SyncUtils;
 import com.pilasvacias.yaba.modules.emt.EmtModule;
+import com.pilasvacias.yaba.modules.sync.util.SyncUtils;
 import com.pilasvacias.yaba.modules.util.ContextModule;
 import com.squareup.otto.Bus;
 

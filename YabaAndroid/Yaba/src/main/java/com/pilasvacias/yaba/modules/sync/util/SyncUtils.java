@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pilasvacias.yaba.core.sync.util;
+package com.pilasvacias.yaba.modules.sync.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -23,7 +23,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import com.pilasvacias.yaba.core.sync.accounts.GenericAccountService;
+import com.pilasvacias.yaba.modules.sync.accounts.GenericAccountService;
 import com.pilasvacias.yaba.util.Time;
 
 /**

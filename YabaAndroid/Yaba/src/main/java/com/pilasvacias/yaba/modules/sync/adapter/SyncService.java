@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pilasvacias.yaba.core.sync.adapter;
+package com.pilasvacias.yaba.modules.sync.adapter;
 
 import android.app.Service;
 import android.content.Intent;

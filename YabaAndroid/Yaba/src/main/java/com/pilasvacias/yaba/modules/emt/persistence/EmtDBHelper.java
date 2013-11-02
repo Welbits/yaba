@@ -11,6 +11,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.modules.emt.pojos.LineStop;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
+import com.pilasvacias.yaba.modules.sync.util.SyncUtils;
 import com.pilasvacias.yaba.util.L;
 
 import java.sql.SQLException;
@@ -52,6 +53,7 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Stop.class);
             TableUtils.createTableIfNotExists(connectionSource, Line.class);
             TableUtils.createTableIfNotExists(connectionSource, LineStop.class);
+            SyncUtils.triggerRefresh();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,7 +80,7 @@ public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
-     * @return the Stops Dao or null is something went wrong
+     * @return the LinesStops Dao or null is something went wrong
      */
     public RuntimeExceptionDao<LineStop, Integer> getLinesStopsDao() {
         if (linesStopsDao == null) {

@@ -110,14 +110,14 @@
         We use a stub because we ormlite is more convenient to use, a ContentProvider is pain but
         it must exist for this to work-->
         <provider
-            android:name=".core.sync.provider.StubProvider"
+            android:name=".modules.sync.provider.StubProvider"
             android:authorities="com.pilasvacias.yaba"
             android:exported="false"/>
 
         <!-- This service implements our SyncAdapter. It needs to be exported, so that the system
         sync framework can access it. -->
         <service
-            android:name=".core.sync.adapter.SyncService"
+            android:name=".modules.sync.adapter.SyncService"
             android:exported="true">
             <!-- This intent filter is required. It allows the system to launch the sync service
             as needed. -->
@@ -136,7 +136,7 @@
 
         It's also possible to attach a SyncAdapter to an existing account provided by another
         package. In that case, this element could be omitted here. -->
-        <service android:name=".core.sync.accounts.GenericAccountService">
+        <service android:name=".modules.sync.accounts.GenericAccountService">
             <!-- Required filter used by the system to launch our account service. -->
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
