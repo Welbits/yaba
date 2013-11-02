@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.pilasvacias.yaba.core.widget.NonSwipeableViewPager
+    <com.pilasvacias.yaba.core.drawer.DrawerViewPager
         android:id="@+id/main_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -24,7 +24,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#222222"
+        android:background="@color/drawer_list_bg"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
 

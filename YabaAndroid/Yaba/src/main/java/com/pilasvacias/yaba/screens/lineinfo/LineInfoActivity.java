@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.google.gson.Gson;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
+import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapterNative;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 
@@ -19,12 +19,14 @@ import butterknife.Views;
  */
 public class LineInfoActivity extends NetworkActivity {
 
+    // Constants
+    public static final String LINE_KEY = "line";
     // Inject views
     @InjectView(R.id.lines_tabStrip)
     PagerSlidingTabStrip tabStrip;
     @InjectView(R.id.lines_viewPager)
     ViewPager viewPager;
-    //
+    // Fields
     private Line line;
 
 
@@ -35,11 +37,10 @@ public class LineInfoActivity extends NetworkActivity {
         Views.inject(this);
 
         Intent intent = getIntent();
-        String lineClass;
-        if (intent.hasExtra("line")) {
-            lineClass = getIntent().getStringExtra("line");
+        if (intent.hasExtra(LINE_KEY)) {
+            String lineString = getIntent().getStringExtra(LINE_KEY);
             Gson gson = new Gson();
-            line = gson.fromJson(lineClass, Line.class);
+            line = gson.fromJson(lineString, Line.class);
         }
 
         setTitle(getString(R.string.line, line.getLabel()));
@@ -49,13 +50,13 @@ public class LineInfoActivity extends NetworkActivity {
     }
 
     private void configureViewPager() {
-        WPagerAdapter
+        WPagerAdapterNative
                 .with(getFragmentManager())
                 .setFragments(
-                        new LineDestinationFragment(line.getNameA()),
-                        new LineDestinationFragment(line.getNameB())
+                        LineDestinationFragment.newInstance(line, line.getNameA()),
+                        LineDestinationFragment.newInstance(line, line.getNameB())
                 )
-                .setOffscreenLimit(2)
+                .setOffscreenLimit(WPagerAdapterNative.ALL_FRAGMENTS)
                 .setTitles(line.getNameA(), line.getNameB())
                 .into(viewPager);
         tabStrip.setViewPager(viewPager);

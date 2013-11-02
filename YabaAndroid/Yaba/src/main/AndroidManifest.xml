@@ -46,6 +46,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".screens.lineinfo.LineInfoActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity"/>
+        <activity
             android:name=".screens.search.SearchActivity"
             android:launchMode="singleTop"
             android:parentActivityName="com.pilasvacias.yaba.screens.MainActivity"

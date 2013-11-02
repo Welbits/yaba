@@ -38,16 +38,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     @InjectView(R.id.search_listView)
     ListView listView;
     // Fields
-    private String query = "";
-    private Long elapsedTime = 0L;
     private SearchView searchView;
-    private Handler handler = new Handler();
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            search(query);
-        }
-    };
     private ArrayAdapter<Stop> arrayAdapter;
     private EmtData<Stop> nodes;
     private EmtQueryManager queryManager;
@@ -86,8 +77,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             // handles a search query
-            query = intent.getStringExtra(SearchManager.QUERY);
-            runnable.run();
+            search(intent.getStringExtra(SearchManager.QUERY));
         }
     }
 
@@ -110,11 +100,19 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
         return true;
     }
 
-    private void search(String query) {
-        searchView.setQuery(query, false);
-        GetNodesLines body = new GetNodesLines();
-        body.setNodes(query.split("\\s+"), false);
-        L.og.d(body.getNodesAsString());
+    private boolean search(String query) {
+        if (query.isEmpty()) {
+            arrayAdapter.clear();
+            return false;
+        }
+
+        arrayAdapter.clear();
+        L.time.begin("query %s", query);
+        List<Stop> data = queryManager.stops().query(query).execute();
+        L.time.end();
+        arrayAdapter.addAll(data);
+
+        return true;
     }
 
     /**
@@ -125,8 +123,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
-        this.query = query;
-        runnable.run();
+        search(query);
         return true;
     }
 
@@ -141,17 +138,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (newText.isEmpty()) {
-            arrayAdapter.clear();
-            return false;
-        }
-
-        arrayAdapter.clear();
-        L.time.begin("query %s", newText);
-        List<Stop> data = queryManager.stops().query(newText).execute();
-        L.time.end();
-        arrayAdapter.addAll(data);
-
+        search(newText);
         return true;
     }
 

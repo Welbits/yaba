@@ -1,8 +1,6 @@
 package com.pilasvacias.yaba.core.adapter;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
@@ -15,16 +13,17 @@ import java.util.List;
 /**
  * Created by IzanRodrigo on 16/10/13.
  */
-public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
+public abstract class WBaseAdapter<Item> extends BaseAdapter {
 
     private ArrayList<Item> items;
-    private int layoutResource;
-    private Context context;
+    protected int layoutResource;
+    protected Context context;
 
     /**
      * Returns a simple BaseAdapter wrapper that uses
      * ViewHolder pattern to improve list performance.
-     * @param context Context needed by adapter.
+     *
+     * @param context        Context needed by adapter.
      * @param layoutResource List item layout resource.
      */
     public WBaseAdapter(Context context, int layoutResource) {
@@ -45,11 +44,12 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     @Override
     public synchronized long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     /**
      * Add item at the end of the adapter.
+     *
      * @param item
      */
     public synchronized void add(Item item) {
@@ -59,6 +59,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Inserts item at location.
+     *
      * @param item
      * @param location
      */
@@ -69,6 +70,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Add collection at the end of the adapter.
+     *
      * @param items
      */
     public synchronized void addAll(Collection<? extends Item> items) {
@@ -78,6 +80,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Add array at the end of the adapter.
+     *
      * @param items
      */
     public synchronized void addAll(Item... items) {
@@ -86,6 +89,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Insert collection at location.
+     *
      * @param items
      */
     public synchronized void addAll(int location, List<? extends Item> items) {
@@ -95,6 +99,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Insert array at location.
+     *
      * @param items
      */
     public synchronized void addAll(int location, Item... items) {
@@ -103,6 +108,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Remove item from the adapter.
+     *
      * @param item
      */
     public synchronized void remove(Item item) {
@@ -112,6 +118,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Remove item at location.
+     *
      * @param location
      */
     public synchronized void remove(int location) {
@@ -121,6 +128,7 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Returns all items in the adapter, but not removes them.
+     *
      * @return all items in the adapter
      */
     public ArrayList<Item> getAllItems() {
@@ -137,41 +145,11 @@ public abstract class WBaseAdapter<Item, ViewHolder> extends BaseAdapter {
 
     /**
      * Sort items using Comparator.
+     *
      * @param comparator
      */
     public synchronized void sort(Comparator<Item> comparator) {
         Collections.sort(items, comparator);
         notifyDataSetChanged();
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Item item = getItem(position);
-        ViewHolder viewHolder;
-        if (convertView != null) {
-            viewHolder = (ViewHolder) convertView.getTag();
-        } else {
-            convertView = View.inflate(context, layoutResource, null);
-            viewHolder = createViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        }
-        changeView(item, viewHolder);
-        return convertView;
-    }
-
-    /**
-     * Modify ViewHolder views as needed, using item.
-     * @param item
-     * @param viewHolder
-     */
-    protected abstract void changeView(Item item, ViewHolder viewHolder);
-
-    /**
-     * Method needed due to generic types limitation.
-     * Simply return new ViewHolder(view).
-     * @param view
-     * @return
-     */
-    protected abstract ViewHolder createViewHolder(View view);
 }

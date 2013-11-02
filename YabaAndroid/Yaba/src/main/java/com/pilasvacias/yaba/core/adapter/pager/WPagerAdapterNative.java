@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by IzanRodrigo on 14/10/13.
  */
-public class WPagerAdapter extends FragmentPagerAdapter {
+public class WPagerAdapterNative extends FragmentPagerAdapter {
 
     // Constants
     /**
@@ -42,7 +42,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
     private boolean reverseDrawingOrder;
     private int titlesResource = NO_TITLES;
 
-    private WPagerAdapter(FragmentManager fragmentManager) {
+    private WPagerAdapterNative(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
@@ -52,8 +52,8 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param fragmentManager
      * @return
      */
-    public static WPagerAdapter with(FragmentManager fragmentManager) {
-        return new WPagerAdapter(fragmentManager);
+    public static WPagerAdapterNative with(FragmentManager fragmentManager) {
+        return new WPagerAdapterNative(fragmentManager);
     }
 
     /**
@@ -121,7 +121,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param fragments
      * @return
      */
-    public WPagerAdapter setFragments(List<? extends Fragment> fragments) {
+    public WPagerAdapterNative setFragments(List<? extends Fragment> fragments) {
         this.fragments = fragments;
         return this;
     }
@@ -132,7 +132,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param fragments
      * @return
      */
-    public WPagerAdapter setFragments(Fragment... fragments) {
+    public WPagerAdapterNative setFragments(Fragment... fragments) {
         this.fragments = Arrays.asList(fragments);
         return this;
     }
@@ -143,7 +143,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param titles
      * @return
      */
-    public WPagerAdapter setTitles(List<? extends CharSequence> titles) {
+    public WPagerAdapterNative setTitles(List<? extends CharSequence> titles) {
         this.titles = titles;
         return this;
     }
@@ -154,7 +154,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param titles
      * @return
      */
-    public WPagerAdapter setTitles(CharSequence... titles) {
+    public WPagerAdapterNative setTitles(CharSequence... titles) {
         this.titles = Arrays.asList(titles);
         return this;
     }
@@ -165,7 +165,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param titlesResource
      * @return
      */
-    public WPagerAdapter setTitles(int titlesResource) {
+    public WPagerAdapterNative setTitles(int titlesResource) {
         this.titlesResource = titlesResource;
         return this;
     }
@@ -176,7 +176,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param offscreenLimit
      * @return
      */
-    public WPagerAdapter setOffscreenLimit(int offscreenLimit) {
+    public WPagerAdapterNative setOffscreenLimit(int offscreenLimit) {
         this.offscreenLimit = offscreenLimit;
         return this;
     }
@@ -188,7 +188,7 @@ public class WPagerAdapter extends FragmentPagerAdapter {
      * @param pageTransformer
      * @return
      */
-    public WPagerAdapter setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer pageTransformer) {
+    public WPagerAdapterNative setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer pageTransformer) {
         this.reverseDrawingOrder = reverseDrawingOrder;
         this.pageTransformer = pageTransformer;
         return this;
