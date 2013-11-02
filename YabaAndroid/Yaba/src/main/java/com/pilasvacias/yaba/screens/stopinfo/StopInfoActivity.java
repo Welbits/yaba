@@ -13,8 +13,9 @@ import com.pilasvacias.yaba.modules.emt.pojos.Stop;
  */
 public class StopInfoActivity extends NetworkActivity {
 
-
-    //
+    // Constants
+    public static final String BUS_STOP_KEY = "bus_stop";
+    // Fields
     private Stop busStop;
 
     @Override
@@ -23,8 +24,8 @@ public class StopInfoActivity extends NetworkActivity {
 
         Intent intent = getIntent();
         String busStopClass;
-        if (intent.hasExtra("busStop")) {
-            busStopClass = getIntent().getStringExtra("busStop");
+        if (intent.hasExtra(BUS_STOP_KEY)) {
+            busStopClass = getIntent().getStringExtra(BUS_STOP_KEY);
             Gson gson = new Gson();
             busStop = gson.fromJson(busStopClass, Stop.class);
         }

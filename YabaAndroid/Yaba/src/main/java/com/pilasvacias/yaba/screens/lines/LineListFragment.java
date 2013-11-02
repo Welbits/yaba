@@ -1,16 +1,20 @@
 package com.pilasvacias.yaba.screens.lines;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyLog;
 import com.google.gson.reflect.TypeToken;
 import com.pilasvacias.yaba.R;
+import com.pilasvacias.yaba.core.adapter.WBaseAdapter;
+import com.pilasvacias.yaba.core.adapter.WBaseAdapterNative;
 import com.pilasvacias.yaba.core.experimental.MagicTurn;
 import com.pilasvacias.yaba.core.experimental.Save;
 import com.pilasvacias.yaba.core.experimental.Token;
@@ -20,9 +24,9 @@ import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.screens.lineinfo.LineInfoActivity;
 import com.pilasvacias.yaba.util.DateUtils;
 import com.pilasvacias.yaba.util.Time;
-import com.pilasvacias.yaba.util.WToast;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -38,7 +42,7 @@ public class LineListFragment extends NetworkFragment {
     @InjectView(R.id.simple_list_listView)
     ListView listView;
     // Fields
-    private LinesAdapter adapter;
+    private WBaseAdapter<Line> adapter;
     private LineListType listType;
     @Save(token = "lineToken")
     private EmtData<Line> lineEmtData;
@@ -72,14 +76,24 @@ public class LineListFragment extends NetworkFragment {
     }
 
     private void configureListView() {
-        adapter = new LinesAdapter(getBaseActivity(), R.layout.list_item_line);
+        adapter = new WBaseAdapterNative<Line>(getBaseActivity(), R.layout.list_item_line) {
+            @Override
+            protected void changeView(Line line, Inflater inflater) {
+                TextView label = inflater.inflate(R.id.list_item_line_textViewLabel);
+                label.setText(line.getLabel());
+                TextView startEnd = inflater.inflate(R.id.list_item_line_textViewStartEnd);
+                startEnd.setText(line.getNameA() + " - " + line.getNameB());
+            }
+        };
 
         EmptyView.makeText(R.string.empty_list).into(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Line item = adapter.getItem(position);
-                WToast.showShort(getBaseActivity(), item);
+                Intent intent = new Intent(getBaseActivity(), LineInfoActivity.class);
+                intent.putExtra(LineInfoActivity.LINE_KEY, item.toString());
+                startActivity(intent);
             }
         });
         listView.setAdapter(adapter);
@@ -98,17 +112,17 @@ public class LineListFragment extends NetworkFragment {
         if (lineEmtData == null) {
             loadLines();
         } else {
-            addLines();
+            addLines(lineEmtData);
         }
     }
 
-    private void addLines() {
+    private void addLines(EmtData<Line> lineEmtData) {
         for (Line line : lineEmtData.getPayload()) {
             if (listType.check(line)) {
                 adapter.add(line);
             }
         }
-        adapter.sort();
+        adapter.sort(Line.getLabelComparator());
     }
 
     public void loadLines() {
@@ -118,7 +132,7 @@ public class LineListFragment extends NetworkFragment {
                 .success(new SuccessHandler<EmtData<Line>>() {
                     @Override public void onSuccess(EmtData<Line> result) {
                         lineEmtData = result;
-                        addLines();
+                        addLines(result);
                     }
                 })
                 .cacheKey("lines")

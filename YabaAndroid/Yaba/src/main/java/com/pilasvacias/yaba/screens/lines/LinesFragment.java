@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyLog;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.pilasvacias.yaba.R;
-import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapter;
+import com.pilasvacias.yaba.core.adapter.pager.WPagerAdapterNative;
 import com.pilasvacias.yaba.core.adapter.pager.ZoomOutPageTransformer;
 import com.pilasvacias.yaba.core.network.NetworkFragment;
 
@@ -44,14 +44,14 @@ public class LinesFragment extends NetworkFragment {
     }
 
     private void configureViewPager() {
-        WPagerAdapter.with(getFragmentManager())
+        WPagerAdapterNative.with(getFragmentManager())
                 .setFragments(
                         LineListFragment.newInstance(LineListFragment.LineListType.DAILY),
                         LineListFragment.newInstance(LineListFragment.LineListType.NIGHTLY),
                         LineListFragment.newInstance(LineListFragment.LineListType.UNIVERSITY)
                 )
                 .setTitles(R.array.lines_tab_titles)
-                .setOffscreenLimit(WPagerAdapter.ALL_FRAGMENTS)
+                .setOffscreenLimit(WPagerAdapterNative.ALL_FRAGMENTS)
                 .setPageTransformer(true, new ZoomOutPageTransformer())
                 .into(viewPager);
         tabStrip.setViewPager(viewPager);

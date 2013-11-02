@@ -3,7 +3,7 @@ package com.pilasvacias.yaba.core.network;
 import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
-import com.pilasvacias.yaba.core.BaseActivity;
+import com.pilasvacias.yaba.core.activity.BaseActivity;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 
 import javax.inject.Inject;

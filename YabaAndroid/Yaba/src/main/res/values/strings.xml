@@ -12,8 +12,8 @@
     <string name="tab_lines">Líneas</string>
     <string name="tab_nocturnos">Nocturnos</string>
     <string name="tab_find">Buscar parada</string>
-    <string name="navigation_drawer_open">Abrir navigation drawer</string>
-    <string name="navigation_drawer_close">Cerrar navigation drawer</string>
+    <string name="drawer_open">Abrir navigation drawer</string>
+    <string name="drawer_close">Cerrar navigation drawer</string>
     <string name="line">Línea %1$s</string>
     <string name="action_nfc_scan">Escanear con NFC</string>
     <string name="activity_nfc_scan">Escanear con NFC</string>

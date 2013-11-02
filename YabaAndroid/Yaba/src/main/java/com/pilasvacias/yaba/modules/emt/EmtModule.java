@@ -5,6 +5,8 @@ import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.network.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
+import com.pilasvacias.yaba.screens.lineinfo.LineDestinationFragment;
+import com.pilasvacias.yaba.screens.lineinfo.LineInfoActivity;
 import com.pilasvacias.yaba.screens.lines.LineListFragment;
 import com.pilasvacias.yaba.screens.lines.LinesFragment;
 import com.pilasvacias.yaba.screens.search.SearchActivity;
@@ -23,6 +25,8 @@ import dagger.Provides;
                 MainActivity.class,
                 LinesFragment.class,
                 LineListFragment.class,
+                LineInfoActivity.class,
+                LineDestinationFragment.class,
                 ProbaActivity.class,
                 SearchActivity.class,
         },

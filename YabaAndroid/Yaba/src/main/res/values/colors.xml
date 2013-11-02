@@ -2,4 +2,5 @@
 <resources>
     <color name="orange_light">#FF9B21</color>
     <color name="orange_dark">#F37B0E</color>
+    <color name="drawer_list_bg">#222222</color>
 </resources>
