@@ -1,15 +1,36 @@
-package com.pilasvacias.yaba.modules.emt.persistence;
+/*
+ * Copyright 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import android.app.IntentService;
-import android.content.Intent;
+package com.pilasvacias.yaba.core.sync.adapter;
+
+import android.accounts.Account;
+import android.content.AbstractThreadedSyncAdapter;
+import android.content.ContentProviderClient;
+import android.content.Context;
+import android.content.SyncResult;
+import android.os.Bundle;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.table.TableUtils;
-import com.pilasvacias.yaba.application.YabaApplication;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.modules.emt.persistence.EmtDBHelper;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.modules.emt.pojos.LineStop;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
@@ -21,37 +42,68 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.inject.Inject;
-
 /**
- * Created by Pablo Orgaz - 10/28/13 - pabloogc@gmail.com - https://github.com/pabloogc
+ * Define a sync adapter for the app.
+ * <p/>
+ * <p>This class is instantiated in {@link SyncService}, which also binds SyncAdapter to the system.
+ * SyncAdapter should only be initialized in SyncService, never anywhere else.
+ * <p/>
+ * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
+ * SyncService.
  */
-public class EmtUpdateService extends IntentService {
+class SyncAdapter extends AbstractThreadedSyncAdapter {
+    protected EmtRequestManager requestManager;
+    protected RequestQueue requestQueue;
 
-    public static final String SERVICE_NAME = "EmtUpdateService";
-    public static final String ACTION_UPDATE = "ActionUpdateDB";
-    @Inject protected EmtRequestManager requestManager;
-    @Inject protected RequestQueue requestQueue;
+    /**
+     * Project used when querying content provider. Returns all known fields.
+     */
 
-    public EmtUpdateService() {
-        super(SERVICE_NAME);
-
+    /**
+     * Constructor. Obtains handle to content resolver for later use.
+     */
+    public SyncAdapter(Context context, boolean autoInitialize) {
+        super(context, autoInitialize);
+        init(context);
     }
 
-    @Override protected void onHandleIntent(Intent intent) {
-        if (intent.getAction().equals(ACTION_UPDATE))
-            updateDB();
+    /**
+     * Constructor. Obtains handle to content resolver for later use.
+     */
+    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+        super(context, autoInitialize, allowParallelSyncs);
+        init(context);
     }
 
-    @Override public void onCreate() {
-        super.onCreate();
-        YabaApplication application = (YabaApplication) getApplication();
-        application.getApplicationGraph().inject(this);
+    private void init(Context context) {
+        requestQueue = Volley.newRequestQueue(context);
+        requestManager = new EmtRequestManager(requestQueue);
     }
 
-    private void updateDB() {
+    /**
+     * Called by the Android system in response to a request to run the sync adapter. The work
+     * required to read data from the network, parse it, and store it in the ormlite db is done here.
+     * Extending AbstractThreadedSyncAdapter ensures that all methods within SyncAdapter
+     * run on a background thread. For this reason, blocking I/O and other long-running tasks can be
+     * run <em>in situ</em>, and you don't have to set up a separate thread for them.
+     * .
+     * <p/>
+     * <p>This is where we actually perform any work required to perform a sync.
+     * {@link android.content.AbstractThreadedSyncAdapter} guarantees that this will be called on a non-UI thread,
+     * so it is safe to peform blocking I/O here.
+     * <p/>
+     * <p>The syncResult argument allows you to pass information back to the method that triggered
+     * the sync.
+     */
+    @Override
+    public void onPerformSync(Account account, Bundle extras, String authority,
+                              ContentProviderClient provider, SyncResult syncResult) {
+        updateEmtDB();
+    }
+
+    private void updateEmtDB() {
         L.og.d("Updating DB");
-        final EmtDBHelper dbHelper = OpenHelperManager.getHelper(this, EmtDBHelper.class);
+        final EmtDBHelper dbHelper = OpenHelperManager.getHelper(getContext(), EmtDBHelper.class);
         L.time.begin("UPDATING NODES AND LINES");
         final EmtData<Stop> stops = getNodes();
         L.time.addMark("got %d stops from EMT", stops.getPayload().size());
@@ -165,5 +217,6 @@ public class EmtUpdateService extends IntentService {
                 .executeSync();
 
     }
+
 
 }
