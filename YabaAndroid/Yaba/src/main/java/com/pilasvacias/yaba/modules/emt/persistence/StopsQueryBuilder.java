@@ -2,6 +2,7 @@ package com.pilasvacias.yaba.modules.emt.persistence;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
+import com.pilasvacias.yaba.modules.emt.pojos.LineStop;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 
 import java.sql.SQLException;
@@ -13,18 +14,28 @@ import java.util.List;
  */
 public class StopsQueryBuilder {
 
-
     private static final int AND = 0;
     private static final int OR = 1;
     private EmtDBHelper dbHelper;
-    private QueryBuilder<Stop, Integer> query;
+    private QueryBuilder<Stop, Integer> stopsQuery;
+    private QueryBuilder<LineStop, Integer> joinQuery;
     private Where<Stop, Integer> where;
-    private boolean firstWhere = true;
+    private boolean hasWhere = false;
 
     public StopsQueryBuilder(EmtDBHelper dbHelper) {
         this.dbHelper = dbHelper;
-        query = dbHelper.getStopsDao().queryBuilder();
-        where = query.where();
+        stopsQuery = dbHelper.getStopsDao().queryBuilder();
+    }
+
+    public StopsQueryBuilder inLine(Object line) {
+        try {
+            joinQuery = dbHelper.getLinesStopsDao().queryBuilder();
+            joinQuery.where().eq("line_id", line);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            joinQuery = null;
+        }
+        return this;
     }
 
     public StopsQueryBuilder query(String queryText) {
@@ -33,8 +44,14 @@ public class StopsQueryBuilder {
         if (args.length > 1) {
             //There are multiple words, like burgos 30
             //safe to assume that you are not entering a stop number
-            for (String arg : args) {
-                name(arg, AND);
+            for (int i = 0; i < args.length; i++) {
+                //linea 30 or l 30 to search in a line
+                if (args[i].matches("l|linea") && i < args.length - 1 && args[i + 1].matches("\\d+")) {
+                    inLine(Integer.parseInt(args[i + 1]));
+                    i++;
+                } else {
+                    name(args[i], AND);
+                }
             }
         } else {
             //Its only numbers, match for stop number
@@ -79,9 +96,16 @@ public class StopsQueryBuilder {
     }
 
     public List<Stop> execute() {
-        query.setWhere(where);
+        if (hasWhere)
+            stopsQuery.setWhere(where);
+        else
+            stopsQuery.setWhere(null);
+
         try {
-            return dbHelper.getStopsDao().query(query.prepare());
+            if (joinQuery == null)
+                return dbHelper.getStopsDao().query(stopsQuery.prepare());
+            else
+                return dbHelper.getStopsDao().query(stopsQuery.join(joinQuery).prepare());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,8 +114,9 @@ public class StopsQueryBuilder {
     }
 
     private Where<Stop, Integer> addWhere(int mode) {
-        if (firstWhere) {
-            firstWhere = false;
+        if (!hasWhere) {
+            hasWhere = true;
+            where = stopsQuery.where();
             return where;
         } else {
             if (mode == AND)
@@ -101,5 +126,4 @@ public class StopsQueryBuilder {
             else return where.or();
         }
     }
-
 }

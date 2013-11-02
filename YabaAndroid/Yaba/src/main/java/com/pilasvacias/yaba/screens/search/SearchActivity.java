@@ -5,7 +5,6 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +18,6 @@ import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.persistence.EmtQueryManager;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
-import com.pilasvacias.yaba.modules.emt.requests.GetNodesLines;
 import com.pilasvacias.yaba.util.L;
 
 import java.util.List;
@@ -60,7 +58,7 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
     }
 
     private void configureListView() {
-        EmptyView.makeText(R.string.empty_search).into(listView);
+        EmptyView.makeText(R.string.empty_search_guide).into(listView);
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(arrayAdapter);
     }

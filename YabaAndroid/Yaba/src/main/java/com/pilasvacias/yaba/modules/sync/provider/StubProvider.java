@@ -5,8 +5,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-/*
- * Define an implementation of ContentProvider that stubs out
+/**
+ * Implementation of ContentProvider that stubs out
  * all methods
  */
 public class StubProvider extends ContentProvider {

@@ -16,22 +16,22 @@ public class GetNodesLines extends EmtBody {
     /**
      * Format {@code 134|90|... or empty for all}
      */
-    @XStreamAlias("Nodes") private String nodes = "";
-    @XStreamOmitField private TreeSet<String> nodeSet;
+    @XStreamAlias("Nodes") private String stops = "";
+    @XStreamOmitField private TreeSet<String> stopsSet;
 
-    public void setNodes(TreeSet<String> nodes, boolean allIfEmpty) {
+    public void setNodes(TreeSet<String> stopsTreeSet, boolean allIfEmpty) {
         StringBuilder builder = new StringBuilder();
-        for (String node : nodes) {
+        for (String node : stopsTreeSet) {
             builder.append(node.trim()).append("|");
         }
-        this.nodeSet = nodes;
+        this.stopsSet = stopsTreeSet;
 
         //Append -1 at the end so
-        //no nodes will be returned instead of all
+        //no stops will be returned instead of all
         if (!allIfEmpty)
             builder.append("-1");
 
-        this.nodes = builder.toString();
+        this.stops = builder.toString();
     }
 
     public void setNodes(String[] nodes, boolean allIfEmpty) {
@@ -42,8 +42,8 @@ public class GetNodesLines extends EmtBody {
         setNodes(nodeSet, allIfEmpty);
     }
 
-    public String getNodesAsString() {
-        return nodes;
+    public String getStopsString() {
+        return stops;
     }
 
     /**
@@ -52,7 +52,7 @@ public class GetNodesLines extends EmtBody {
      *
      * @return
      */
-    public TreeSet<String> getNodes() {
-        return nodeSet;
+    public TreeSet<String> getStops() {
+        return stopsSet;
     }
 }

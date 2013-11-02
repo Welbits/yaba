@@ -22,7 +22,7 @@ import java.sql.SQLException;
 public class EmtDBHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DB_NAME = "emtdb.db";
-    public static final int DB_VERSION = 7;
+    public static final int DB_VERSION = 8;
     private RuntimeExceptionDao<Stop, Integer> stopsDao;
     private RuntimeExceptionDao<Line, Integer> linesDao;
     private RuntimeExceptionDao<LineStop, Integer> linesStopsDao;

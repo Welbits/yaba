@@ -9,14 +9,11 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class LineStop {
 
-    public static final String LINE_COLUMN_NAME = "line";
-    public static final String STOP_COLUMN_NAME = "stop";
-
     @DatabaseField(generatedId = true)
     private int _id;
-    @DatabaseField(foreign = true, columnName = LINE_COLUMN_NAME)
+    @DatabaseField(foreign = true, index = true)
     private Line line;
-    @DatabaseField(foreign = true, columnName = STOP_COLUMN_NAME)
+    @DatabaseField(foreign = true, index = true)
     private Stop stop;
     @DatabaseField
     private int direction;
