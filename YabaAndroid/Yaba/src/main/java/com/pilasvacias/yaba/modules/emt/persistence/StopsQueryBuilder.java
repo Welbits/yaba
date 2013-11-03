@@ -27,6 +27,24 @@ public class StopsQueryBuilder {
         stopsQuery = dbHelper.getStopsDao().queryBuilder();
     }
 
+    /**
+     * Query for lines in a direction
+     * @param line a String or an Integer representing the line (NOT a {@link com.pilasvacias.yaba.modules.emt.pojos.Line} object)
+     *             Only 1 and 2 are correct values, others will give empty results.
+     * @param direction A String or an Integer representing the direction
+     * @return
+     */
+    public StopsQueryBuilder inLine(Object line, Object direction) {
+        try {
+            joinQuery = dbHelper.getLinesStopsDao().queryBuilder();
+            joinQuery.where().eq("line_id", line).and().eq("direction", direction);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            joinQuery = null;
+        }
+        return this;
+    }
+
     public StopsQueryBuilder inLine(Object line) {
         try {
             joinQuery = dbHelper.getLinesStopsDao().queryBuilder();

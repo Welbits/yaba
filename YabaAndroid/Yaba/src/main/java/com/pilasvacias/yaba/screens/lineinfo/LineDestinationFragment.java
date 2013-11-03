@@ -37,6 +37,7 @@ public class LineDestinationFragment extends NetworkFragment {
     // Constants
     private static final String LINE_KEY = "line";
     private static final String DESTINATION_KEY = "destination";
+    private static final String DIRECTION_KEY = "direction";
     // Inject views
     @InjectView(R.id.simple_list_listView)
     ListView listView;
@@ -44,14 +45,16 @@ public class LineDestinationFragment extends NetworkFragment {
     @Save private Line line;
     @Save private String destination;
     @Save private EmtData<Stop> stopEmtData;
+    @Save private int direction;
     private WBaseAdapter<Stop> adapter;
     private EmtQueryManager queryManager;
 
-    public static Fragment newInstance(Line line, String destination) {
+    public static Fragment newInstance(Line line, String destination, int direction) {
         Fragment fragment = new LineDestinationFragment();
         Bundle args = new Bundle();
         args.putString(LINE_KEY, line.toString());
         args.putString(DESTINATION_KEY, destination);
+        args.putInt(DIRECTION_KEY, direction);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,6 +66,7 @@ public class LineDestinationFragment extends NetworkFragment {
         VolleyLog.DEBUG = true;
         line = new Gson().fromJson(getArguments().getString(LINE_KEY), Line.class);
         destination = getArguments().getString(DESTINATION_KEY);
+        direction = getArguments().getInt(DIRECTION_KEY);
         queryManager = new EmtQueryManager();
         queryManager.init(getActivity());
     }
@@ -129,7 +133,7 @@ public class LineDestinationFragment extends NetworkFragment {
     //FIXME: Not working
     public void loadStops() {
         EmtData<Stop> result = new EmtData<>();
-        result.setPayload(queryManager.stops().inLine(line.getLineNumber()).execute());
+        result.setPayload(queryManager.stops().inLine(line.getLineNumber(), direction).execute());
         addStops(result);
     }
 

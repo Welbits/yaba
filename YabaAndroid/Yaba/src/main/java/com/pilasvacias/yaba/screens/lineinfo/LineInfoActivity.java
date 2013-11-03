@@ -53,8 +53,8 @@ public class LineInfoActivity extends NetworkActivity {
         WPagerAdapterNative
                 .with(getFragmentManager())
                 .setFragments(
-                        LineDestinationFragment.newInstance(line, line.getNameA()),
-                        LineDestinationFragment.newInstance(line, line.getNameB())
+                        LineDestinationFragment.newInstance(line, line.getNameA(), 1),
+                        LineDestinationFragment.newInstance(line, line.getNameB(), 2)
                 )
                 .setOffscreenLimit(WPagerAdapterNative.ALL_FRAGMENTS)
                 .setTitles(line.getNameA(), line.getNameB())
