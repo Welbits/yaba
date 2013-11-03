@@ -20,11 +20,10 @@ import com.pilasvacias.yaba.core.network.NetworkFragment;
 import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
+import com.pilasvacias.yaba.modules.emt.persistence.EmtQueryManager;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
 import com.pilasvacias.yaba.util.DateUtils;
-import com.pilasvacias.yaba.util.Time;
 import com.pilasvacias.yaba.util.WToast;
 
 import butterknife.InjectView;
@@ -46,6 +45,7 @@ public class LineDestinationFragment extends NetworkFragment {
     @Save private String destination;
     @Save private EmtData<Stop> stopEmtData;
     private WBaseAdapter<Stop> adapter;
+    private EmtQueryManager queryManager;
 
     public static Fragment newInstance(Line line, String destination) {
         Fragment fragment = new LineDestinationFragment();
@@ -63,6 +63,8 @@ public class LineDestinationFragment extends NetworkFragment {
         VolleyLog.DEBUG = true;
         line = new Gson().fromJson(getArguments().getString(LINE_KEY), Line.class);
         destination = getArguments().getString(DESTINATION_KEY);
+        queryManager = new EmtQueryManager();
+        queryManager.init(getActivity());
     }
 
     @Override
@@ -126,20 +128,9 @@ public class LineDestinationFragment extends NetworkFragment {
 
     //FIXME: Not working
     public void loadStops() {
-        getRequestManager()
-                .beginRequest(Stop.class)
-                .body(new GetLineStops())
-                .success(new SuccessHandler<EmtData<Stop>>() {
-                    @Override
-                    public void onSuccess(EmtData<Stop> result) {
-                        stopEmtData = result;
-                        addStops(result);
-                    }
-                })
-                .cacheKey("stops")
-                .verbose(true)
-                .cacheTime(Time.days(1D))
-                .execute();
+        EmtData<Stop> result = new EmtData<>();
+        result.setPayload(queryManager.stops().inLine(line.getLineNumber()).execute());
+        addStops(result);
     }
 
     @Override
@@ -151,5 +142,10 @@ public class LineDestinationFragment extends NetworkFragment {
     public class GetLineStops extends EmtBody {
         String SelectDate = DateUtils.getToday();
         String Lines = String.valueOf(line.getLineNumber());
+    }
+
+    @Override public void onDestroy() {
+        super.onDestroy();
+        queryManager.release();
     }
 }
