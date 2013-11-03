@@ -44,9 +44,9 @@ public interface TimeProfiler {
             String separator = String.format("·----------> %s", tag);
             StringBuilder builder;
             if (!error)
-                Log.d("TimerProfiler", separator);
+                Log.d(tag, separator);
             else
-                Log.e("TimerProfiler", separator);
+                Log.e(tag, separator);
             long sum = 0;
             long total = System.currentTimeMillis() - init;
             for (int i = 0; i < timeMarks.size(); i++) {
@@ -55,18 +55,18 @@ public interface TimeProfiler {
                 builder.append("| +").append(format(timeMarks.get(i))).append(" | ").append(percent(total, timeMarks.get(i))).append(" \t")
                         .append(stringMarks.get(i));
                 if (!error)
-                    Log.d("TimerProfiler", builder.toString());
+                    Log.d(tag, builder.toString());
                 else
-                    Log.e("TimerProfiler", builder.toString());
+                    Log.e(tag, builder.toString());
             }
 
             builder = new StringBuilder();
             builder.append("···").append(total).append(" ms <==== ").append(tag);
             if (!error)
-                Log.d("TimerProfiler", builder.toString());
+                Log.d(tag, builder.toString());
             else
-                Log.e("TimerProfiler", builder.toString());
-            //Log.d("TimerProfiler", separator);
+                Log.e(tag, builder.toString());
+            //Log.d("TimeProfiler", separator);
             reset();
         }
 
