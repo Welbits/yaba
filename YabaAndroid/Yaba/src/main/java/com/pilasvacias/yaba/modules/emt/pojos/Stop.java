@@ -3,7 +3,7 @@ package com.pilasvacias.yaba.modules.emt.pojos;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.converters.basic.DoubleConverter;
 
 /**
@@ -31,16 +31,18 @@ public class Stop extends Pojo {
     /**
      * position X in geocoodinates
      */
+//FIXME: Doubles not working @XStreamConverter(PositionConverter.class)
     @XStreamAlias("PosxNode")
-    @XStreamConverter(PositionConverter.class)
+    @XStreamOmitField
     @DatabaseField(index = true)
     private double posX;
     //
     /**
      * position Y in geocordinates
      */
+//FIXME: Doubles not working @XStreamConverter(PositionConverter.class)
     @XStreamAlias("PosyNode")
-    @XStreamConverter(PositionConverter.class)
+    @XStreamOmitField
     @DatabaseField(index = true)
     private double posY;
     //

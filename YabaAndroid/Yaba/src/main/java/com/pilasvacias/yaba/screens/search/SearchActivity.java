@@ -21,6 +21,8 @@ import com.pilasvacias.yaba.modules.emt.pojos.Stop;
 import com.pilasvacias.yaba.util.L;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.InjectView;
 import butterknife.Views;
@@ -103,6 +105,12 @@ public class SearchActivity extends NetworkActivity implements SearchView.OnQuer
             arrayAdapter.clear();
             return false;
         }
+
+        Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+).*");
+        Matcher matcher = pattern.matcher("cosas");
+
+
+        "0000313".replaceAll("\\G0", " ");
 
         arrayAdapter.clear();
         L.time.begin("query %s", query);
