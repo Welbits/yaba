@@ -31,7 +31,7 @@ public class Stop extends Pojo {
     /**
      * position X in geocoodinates
      */
-//FIXME: Doubles not working @XStreamConverter(PositionConverter.class)
+    //FIXME: Doubles not working @XStreamConverter(PositionConverter.class)
     @XStreamAlias("PosxNode")
     @XStreamOmitField
     @DatabaseField(index = true)
@@ -40,7 +40,7 @@ public class Stop extends Pojo {
     /**
      * position Y in geocordinates
      */
-//FIXME: Doubles not working @XStreamConverter(PositionConverter.class)
+    //FIXME: Doubles not working @XStreamConverter(PositionConverter.class)
     @XStreamAlias("PosyNode")
     @XStreamOmitField
     @DatabaseField(index = true)
