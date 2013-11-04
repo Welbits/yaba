@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import com.android.volley.VolleyLog;
 import com.pilasvacias.yaba.R;
+import com.pilasvacias.yaba.application.sync.util.SyncUtils;
 import com.pilasvacias.yaba.core.experimental.MagicTurn;
 import com.pilasvacias.yaba.core.network.NetworkActivity;
-import com.pilasvacias.yaba.modules.sync.util.SyncUtils;
 
 import butterknife.OnClick;
 import butterknife.Views;

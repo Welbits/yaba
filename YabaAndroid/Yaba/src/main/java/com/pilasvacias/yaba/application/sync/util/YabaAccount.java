@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.sync.util;
+package com.pilasvacias.yaba.application.sync.util;
 
 /**
  * Created by Pablo Orgaz - 11/2/13 - pabloogc@gmail.com - https://github.com/pabloogc

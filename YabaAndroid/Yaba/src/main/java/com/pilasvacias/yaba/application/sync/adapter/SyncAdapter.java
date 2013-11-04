@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pilasvacias.yaba.modules.sync.adapter;
+package com.pilasvacias.yaba.application.sync.adapter;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;

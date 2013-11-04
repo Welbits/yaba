@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pilasvacias.yaba.modules.sync.accounts;
+package com.pilasvacias.yaba.application.sync.accounts;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -27,7 +27,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.pilasvacias.yaba.modules.sync.util.YabaAccount;
+import com.pilasvacias.yaba.application.sync.util.YabaAccount;
 
 public class GenericAccountService extends Service {
     private static final String TAG = "GenericAccountService";
@@ -37,7 +37,7 @@ public class GenericAccountService extends Service {
      * Obtain a handle to the {@link android.accounts.Account} used for sync in this application.
      *
      * @return Handle to application's account (not guaranteed to resolve unless
-     * {@link com.pilasvacias.yaba.modules.sync.util.SyncUtils#createSyncAccount(android.content.Context)}
+     * {@link com.pilasvacias.yaba.application.sync.util.SyncUtils#createSyncAccount(android.content.Context)}
      * has been called)
      */
     public static Account getAccount() {

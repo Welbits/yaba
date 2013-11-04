@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.sync.provider;
+package com.pilasvacias.yaba.application.sync.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

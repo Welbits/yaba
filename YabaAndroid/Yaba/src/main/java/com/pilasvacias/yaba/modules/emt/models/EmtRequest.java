@@ -70,7 +70,6 @@ public class EmtRequest<T> extends PlayaRequest<EmtData<T>> {
     @Override
     public VolleyError generateErrorResponse(NetworkResponse response, EmtData<T> data) {
         return new EmtError(data, response);
-
     }
 
     @Override

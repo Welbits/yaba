@@ -8,10 +8,10 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.pilasvacias.yaba.application.sync.util.SyncUtils;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
 import com.pilasvacias.yaba.modules.emt.pojos.LineStop;
 import com.pilasvacias.yaba.modules.emt.pojos.Stop;
-import com.pilasvacias.yaba.modules.sync.util.SyncUtils;
 import com.pilasvacias.yaba.util.L;
 
 import java.sql.SQLException;
