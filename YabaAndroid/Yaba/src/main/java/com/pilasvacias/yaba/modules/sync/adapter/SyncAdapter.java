@@ -102,9 +102,9 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void updateEmtDB() {
-        L.og.d("Updating DB");
+        L.og.d("Updating EMT database");
         final EmtDBHelper dbHelper = OpenHelperManager.getHelper(getContext(), EmtDBHelper.class);
-        L.time.begin("UPDATING NODES AND LINES");
+        L.time.begin("Updating EMT database");
         final EmtData<Stop> stops = getNodes();
         L.time.addMark("got %d stops from EMT", stops.getPayload().size());
         final EmtData<Line> lines = getLines();
