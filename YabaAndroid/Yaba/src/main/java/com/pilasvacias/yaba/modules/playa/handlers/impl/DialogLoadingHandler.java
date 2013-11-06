@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.network.handlers.impl;
+package com.pilasvacias.yaba.modules.playa.handlers.impl;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.LoadingHandler;
 import com.pilasvacias.yaba.util.L;
 
 /**

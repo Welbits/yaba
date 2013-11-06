@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.network.models;
+package com.pilasvacias.yaba.modules.playa.models;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
@@ -6,9 +6,9 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.pilasvacias.yaba.modules.network.CacheMaker;
-import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.playa.CacheMaker;
+import com.pilasvacias.yaba.modules.playa.handlers.ErrorHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.SuccessHandler;
 
 import java.util.Collections;
 import java.util.HashMap;

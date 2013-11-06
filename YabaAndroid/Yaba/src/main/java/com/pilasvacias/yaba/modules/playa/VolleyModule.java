@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.network;
+package com.pilasvacias.yaba.modules.playa;
 
 import android.content.Context;
 

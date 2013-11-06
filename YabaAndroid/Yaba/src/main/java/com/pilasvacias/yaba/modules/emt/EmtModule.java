@@ -2,7 +2,7 @@ package com.pilasvacias.yaba.modules.emt;
 
 import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.modules.emt.builders.EmtRequestManager;
-import com.pilasvacias.yaba.modules.network.VolleyModule;
+import com.pilasvacias.yaba.modules.playa.VolleyModule;
 import com.pilasvacias.yaba.screens.MainActivity;
 import com.pilasvacias.yaba.screens.ProbaActivity;
 import com.pilasvacias.yaba.screens.lineinfo.LineDestinationFragment;

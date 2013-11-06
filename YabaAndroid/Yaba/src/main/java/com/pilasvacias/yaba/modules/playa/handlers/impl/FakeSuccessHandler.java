@@ -1,6 +1,6 @@
-package com.pilasvacias.yaba.modules.network.handlers.impl;
+package com.pilasvacias.yaba.modules.playa.handlers.impl;
 
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.SuccessHandler;
 
 /**
  * Created by Pablo Orgaz - 10/27/13 - pabloogc@gmail.com - https://github.com/pabloogc

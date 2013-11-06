@@ -23,7 +23,7 @@ import com.pilasvacias.yaba.core.widget.EmptyView;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.pojos.Line;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.SuccessHandler;
 import com.pilasvacias.yaba.screens.lineinfo.LineInfoActivity;
 import com.pilasvacias.yaba.util.DateUtils;
 import com.pilasvacias.yaba.util.Time;

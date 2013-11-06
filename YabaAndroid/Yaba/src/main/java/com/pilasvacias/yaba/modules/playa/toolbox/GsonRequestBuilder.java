@@ -1,9 +1,9 @@
-package com.pilasvacias.yaba.modules.network.toolbox;
+package com.pilasvacias.yaba.modules.playa.toolbox;
 
 import com.android.volley.RequestQueue;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.pilasvacias.yaba.modules.network.builder.PlayaRequestBuilder;
+import com.pilasvacias.yaba.modules.playa.builder.PlayaRequestBuilder;
 
 /**
  * Created by Pablo Orgaz - 10/30/13 - pabloogc@gmail.com - https://github.com/pabloogc

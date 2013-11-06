@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.network.builder;
+package com.pilasvacias.yaba.modules.playa.builder;
 
 import android.content.Context;
 
@@ -11,12 +11,12 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.HttpClientStack;
-import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
-import com.pilasvacias.yaba.modules.network.handlers.LoadingHandler;
-import com.pilasvacias.yaba.modules.network.handlers.SuccessHandler;
-import com.pilasvacias.yaba.modules.network.handlers.impl.FakeErrorHandler;
-import com.pilasvacias.yaba.modules.network.handlers.impl.FakeSuccessHandler;
-import com.pilasvacias.yaba.modules.network.models.PlayaRequest;
+import com.pilasvacias.yaba.modules.playa.handlers.ErrorHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.LoadingHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.SuccessHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.impl.FakeErrorHandler;
+import com.pilasvacias.yaba.modules.playa.handlers.impl.FakeSuccessHandler;
+import com.pilasvacias.yaba.modules.playa.models.PlayaRequest;
 import com.pilasvacias.yaba.util.L;
 
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -99,7 +99,7 @@ public abstract class PlayaRequestBuilder
     }
 
     public BUILDER_TYPE baseUrl(String baseUrl) {
-        this.baseUrl = url;
+        this.baseUrl = baseUrl;
         return (BUILDER_TYPE) this;
     }
 
@@ -118,12 +118,12 @@ public abstract class PlayaRequestBuilder
         return (BUILDER_TYPE) this;
     }
 
-    public BUILDER_TYPE body(BODY_TYPE body){
+    public BUILDER_TYPE body(BODY_TYPE body) {
         this.body = body;
         return (BUILDER_TYPE) this;
     }
 
-    public BUILDER_TYPE bodyContentType(String bodyContentType){
+    public BUILDER_TYPE bodyContentType(String bodyContentType) {
         this.bodyContentType = bodyContentType;
         return (BUILDER_TYPE) this;
     }
@@ -249,7 +249,7 @@ public abstract class PlayaRequestBuilder
     /**
      * Execute the request
      */
-    public void execute() {
+    public REQUEST_TYPE execute() {
         REQUEST_TYPE request = create();
         configureAbstractRequest(request);
         configure(request);
@@ -257,6 +257,8 @@ public abstract class PlayaRequestBuilder
 
         if (loadingHandler != null)
             loadingHandler.showLoading(loadingMessage);
+
+        return request;
     }
 
     /**
@@ -267,8 +269,8 @@ public abstract class PlayaRequestBuilder
      */
     public SUCCESS_DATA_TYPE executeSync() {
         REQUEST_TYPE request = create();
-        configureAbstractRequest(request);
         configure(request);
+        configureAbstractRequest(request);
         HttpClientStack httpClientStack = new HttpClientStack(new DefaultHttpClient());
         BasicNetwork basicNetwork = new BasicNetwork(httpClientStack);
         try {
@@ -306,16 +308,16 @@ public abstract class PlayaRequestBuilder
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append("?");
             Iterator<String> it = queryMap.keySet().iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                String value = queryMap.get(key);
-                queryBuilder.append(key).append("=").append(value);
-                if (it.hasNext())
-                    queryBuilder.append("&");
-            }
-
             try {
-                queryString = URLEncoder.encode(queryBuilder.toString(), "utf-8");
+                while (it.hasNext()) {
+                    String key = it.next();
+                    String value = URLEncoder.encode(queryMap.get(key), "utf-8");
+                    queryBuilder.append(key).append("=").append(value);
+                    if (it.hasNext())
+                        queryBuilder.append("&");
+                }
+
+                queryString = queryBuilder.toString();
             } catch (UnsupportedEncodingException e) {
                 L.og.e("Unable to encode query %s", queryBuilder.toString());
                 e.printStackTrace();
@@ -337,8 +339,6 @@ public abstract class PlayaRequestBuilder
         request.setRetryPolicy(retryPolicy);
         request.setBody(body);
         request.setBodyContentType(bodyContentType);
-
-
     }
 
 }

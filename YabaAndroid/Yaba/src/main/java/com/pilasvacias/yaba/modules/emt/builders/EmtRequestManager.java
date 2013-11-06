@@ -25,7 +25,7 @@ public class EmtRequestManager {
     private Context context;
 
     /**
-     * @param requestQueue injected {@link com.pilasvacias.yaba.modules.network.VolleyModule}
+     * @param requestQueue injected {@link com.pilasvacias.yaba.modules.playa.VolleyModule}
      */
     public EmtRequestManager(RequestQueue requestQueue) {
         this.requestQueue = requestQueue;

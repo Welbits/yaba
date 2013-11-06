@@ -1,4 +1,4 @@
-package com.pilasvacias.yaba.modules.network.handlers;
+package com.pilasvacias.yaba.modules.playa.handlers;
 
 import com.android.volley.Response;
 

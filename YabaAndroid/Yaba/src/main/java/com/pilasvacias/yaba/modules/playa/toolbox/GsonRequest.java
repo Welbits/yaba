@@ -1,11 +1,11 @@
-package com.pilasvacias.yaba.modules.network.toolbox;
+package com.pilasvacias.yaba.modules.playa.toolbox;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
-import com.pilasvacias.yaba.modules.network.models.PlayaRequest;
+import com.pilasvacias.yaba.modules.playa.handlers.ErrorHandler;
+import com.pilasvacias.yaba.modules.playa.models.PlayaRequest;
 
 /**
  * Created by Pablo Orgaz - 10/30/13 - pabloogc@gmail.com - https://github.com/pabloogc

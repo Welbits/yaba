@@ -4,7 +4,7 @@ import com.android.volley.RequestQueue;
 import com.pilasvacias.yaba.modules.emt.models.EmtBody;
 import com.pilasvacias.yaba.modules.emt.models.EmtData;
 import com.pilasvacias.yaba.modules.emt.models.EmtRequest;
-import com.pilasvacias.yaba.modules.network.builder.PlayaRequestBuilder;
+import com.pilasvacias.yaba.modules.playa.builder.PlayaRequestBuilder;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**

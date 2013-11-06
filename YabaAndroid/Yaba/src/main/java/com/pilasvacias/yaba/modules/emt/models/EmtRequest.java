@@ -4,8 +4,8 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.pilasvacias.yaba.modules.emt.EmtEnvelopeSerializer;
-import com.pilasvacias.yaba.modules.network.handlers.ErrorHandler;
-import com.pilasvacias.yaba.modules.network.models.PlayaRequest;
+import com.pilasvacias.yaba.modules.playa.handlers.ErrorHandler;
+import com.pilasvacias.yaba.modules.playa.models.PlayaRequest;
 import com.pilasvacias.yaba.util.L;
 
 import java.io.UnsupportedEncodingException;
