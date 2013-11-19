@@ -92,6 +92,9 @@ dependencies {
     //Testing
     instrumentTestCompile 'junit:junit:3.8'
 
+    //Advertisement
+    compile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+
     //instrumentTestCompile 'junit:junit:4.10'
     //instrumentTestCompile 'org.robolectric:robolectric:2.2'
 }

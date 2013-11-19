@@ -32,4 +32,8 @@
     <string name="open_source_licenses">Licencias de código abierto</string>
     <string name="yaba_version">Versión de Yaba</string>
 
+
+    <string name="testDevice">580E219CE5DF3BCA11CA7283DA73EE06</string>
+    <string name="adMobId">ca-app-pub-2882270206435242/3411773013</string>
+
 </resources>

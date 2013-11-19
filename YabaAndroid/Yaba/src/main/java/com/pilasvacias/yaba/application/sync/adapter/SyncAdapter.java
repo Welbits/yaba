@@ -170,7 +170,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private List<LineStop> getLinesFromStops(List<Stop> stops) {
         //Stops format: 29/1 30/1 31/2
-        LinkedList<LineStop> data = new LinkedList<>();
+        LinkedList<LineStop> data = new LinkedList<LineStop>();
         for (Stop stop : stops) {
             String[] lines = stop.getLines().split("\\s+");
             for (String line : lines) {

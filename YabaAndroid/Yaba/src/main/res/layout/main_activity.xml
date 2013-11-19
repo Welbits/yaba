@@ -9,15 +9,32 @@
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
-    <FrameLayout
-        android:id="@+id/container"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:id="@+id/base_fragment_container"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"/>
+
+    </LinearLayout>
 
     <com.pilasvacias.yaba.core.drawer.DrawerViewPager
         android:id="@+id/main_viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <ListView
         android:id="@+id/drawer_listView"
@@ -26,6 +43,6 @@
         android:layout_gravity="start"
         android:background="@color/drawer_list_bg"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"/>
 
 </android.support.v4.widget.DrawerLayout>

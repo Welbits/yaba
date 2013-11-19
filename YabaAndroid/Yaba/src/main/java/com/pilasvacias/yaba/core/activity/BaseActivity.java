@@ -3,7 +3,9 @@ package com.pilasvacias.yaba.core.activity;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.pilasvacias.yaba.R;
 import com.pilasvacias.yaba.application.YabaApplication;
+import com.pilasvacias.yaba.core.ads.AdFragment;
 import com.pilasvacias.yaba.util.BusUtils;
 
 import java.util.ArrayList;
@@ -26,13 +28,23 @@ public class BaseActivity extends Activity {
         return (YabaApplication) getApplication();
     }
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onCreateExtraModules(modules);
         activityGraph = getYabaApplication().getApplicationGraph().plus(modules.toArray());
+
+
+        AdFragment adFragment = new AdFragment();
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.base_fragment_container, adFragment)
+                .commit();
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         BusUtils.unregisterBus(isBusRegistered, this);
         activityGraph = null;
         super.onDestroy();

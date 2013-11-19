@@ -132,7 +132,7 @@ public class LineDestinationFragment extends NetworkFragment {
 
     //FIXME: Not working
     public void loadStops() {
-        EmtData<Stop> result = new EmtData<>();
+        EmtData<Stop> result = new EmtData<Stop>();
         result.setPayload(queryManager.stops().inLine(line.getLineNumber(), direction).execute());
         addStops(result);
     }
