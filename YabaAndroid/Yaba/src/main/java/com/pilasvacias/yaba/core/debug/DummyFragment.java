@@ -52,6 +52,7 @@ public class DummyFragment extends Fragment {
         title = getArguments().getString(TITLE_KEY);
         textView.setText(title);
         textView.setBackgroundColor(randomColor());
+      //  textView.setVisibility(View.GONE);
         return rootView;
     }
 }
